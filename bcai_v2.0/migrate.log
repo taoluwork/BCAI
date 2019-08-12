@@ -1,0 +1,71 @@
+Compiling ./contracts/bcai_2.0.sol...
+
+Compilation warnings encountered:
+
+/home/taurus/blockchain/gitLab/bcai_v2.0/contracts/bcai_2.0.sol:21:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;           //enable returning self-defined type, 
+^-------------------------------^
+
+Writing artifacts to ./client/src/contracts
+
+⚠️  Important ⚠️
+If you're using an HDWalletProvider, it must be Web3 1.0 enabled or your migration will hang.
+Try: npm install --save truffle-hdwallet-provider@web3-one
+
+
+Starting migrations...
+======================
+> Network name:    'ropsten'
+> Network id:      3
+> Block gas limit: 8000029
+
+
+1_initial_migration.js
+======================
+
+   Replacing 'Migrations'
+   ----------------------
+   > transaction hash:    0xbfd71ad2939d0d9f32969bb88cdfec573252c47cebf7ebfb7fb060e0f63edbf6
+   > Blocks: 1            Seconds: 4
+   > contract address:    0xc456f22B7f2A06Af02104E01223d2171Fcd97210
+   > account:             0xDd1b08A150842540Fdbb26c663cc9357F5DA7202
+   > balance:             21.11872456415454682
+   > gas used:            284908
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.00569816 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:          0.00569816 ETH
+
+
+2_deploy_contracts.js
+=====================
+
+   Replacing 'TaskContract'
+   ------------------------
+   > transaction hash:    0xec15550576fcebfd86f5a75bb7f684cf727f8a934b0529a20fedb4bd3912d8d3
+   > Blocks: 1            Seconds: 8
+   > contract address:    0x13e2bA05B958793CE675b57D196226644bAe7F94
+   > account:             0xDd1b08A150842540Fdbb26c663cc9357F5DA7202
+   > balance:             20.98868234415454682
+   > gas used:            6460077
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.12920154 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:          0.12920154 ETH
+
+
+Summary
+=======
+> Total deployments:   2
+> Final cost:          0.1348997 ETH
+

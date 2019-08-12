@@ -1,0 +1,27 @@
+{
+  "name": "bcai_localuser",
+  "version": "1.0.0",
+  "description": "the local client for bcai v2.0 stable",
+  "main": "localEnv.js",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "express": "^4.17.1",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.0",
+    "prompts": "^2.2.1",
+    "public-ip": "^3.1.0",
+    "socket.io": "^2.2.0",
+    "util": "^0.12.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "client",
+    "user",
+    "bcai"
+  ],
+  "author": "Pedro R., Tao L.",
+  "license": "ISC"
+}

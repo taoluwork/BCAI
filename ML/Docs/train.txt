@@ -1,0 +1,55 @@
+Goal:
+  parse a python file
+  create execute.py to train the model in the docker
+  create eval.py to evaluate the model in the docker
+  create version.json from the version stated in the given python file
+  
+Note:
+  this file should only be called by localEnv.js so keep these files in the same directory
+  the files generated will be stored in the result.zip
+  this file assumes that you are using keras based tensorflow 
+  this file assumes that you have followed the styling guide found in styling.txt
+  
+Process:
+  fileCont is a variable to store the contents of the file
+  from the provided python file loop through each line
+  for each line look for the style tags defined in styling.txt
+    if ###tfVersion
+      save the version listed to be later written into the json file
+    if ###model
+      save the name for the model to be used later on
+    if this line is where the model is compiled and more than one gpu
+      add a line before compiling to make keras run on each gpus
+    if ###accuracy = 
+      save the name for the accuracy variable
+    if ###loss = 
+      save the name for the loss variable
+    else
+      add the line to fileCont
+
+  insert a line that saves the model to a model.h5
+
+  insert a line that writes the accuracy and the loss to result.txt
+
+  create version.json that will store the tensorflow version for use in localEnv.js
+
+  create a file execute.py and write what is stored in fileCont to it
+
+  reset needed values.
+  
+  from the provided python file loop through each line
+  for each line look for the style tags defined in styling.txt
+    if ###model
+      save the name for the model to be used later on
+    if this line is where the model is compiled and more than one gpu
+      insert a line that loads the model.h5 file
+    if ###accuracy = 
+      save the name for the accuracy variable
+    if ###loss = 
+      save the name for the loss variable
+    else
+      add the line to fileCont
+
+  insert a line that writes the accuracy and the loss to eval.txt
+
+

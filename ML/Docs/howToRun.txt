@@ -1,0 +1,9 @@
+step 1: navigate to the folder that localEnv.js is located at
+step 2: execute(exclude the $  and sign): $ node localEnv.js [ip option]
+  options: the options for this file are based on the version of IP your public IP address is 
+           (replace [ip option] with an option below)
+    Default: IPv4 (nothing typed after node localEnv.js)
+    IPv4: $ node localEnv.js -4
+    IPv6: $ node localEnv.js -6
+
+
