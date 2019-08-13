@@ -73,25 +73,25 @@ class App extends Component {
     //the following bind enable calling the function directly using func() syntax
     //NOTE: adding bind for new added functions is necessary
     //If missed bind may result in error : "cannot access property of undefined"
-    this.captureFile = this.captureFile.bind(this);
-    this.showPools = this.showPools.bind(this);
-    this.TimeChange = this.TimeChange.bind(this);
+    this.captureFile  = this.captureFile.bind(this);
+    this.showPools    = this.showPools.bind(this);
+    this.TimeChange   = this.TimeChange.bind(this);
     this.TargetChange = this.TargetChange.bind(this);
-    this.PriceChange = this.PriceChange.bind(this);
+    this.PriceChange  = this.PriceChange.bind(this);
     this.submitRequest = this.submitRequest.bind(this);
-    this.submitJob = this.submitJob.bind(this);
+    this.submitJob    = this.submitJob.bind(this);
     this.submitValidation = this.submitValidation.bind(this);
     this.serverSubmit = this.serverSubmit.bind(this);
-    this.changeMode = this.changeMode.bind(this);
+    this.changeMode   = this.changeMode.bind(this);
     this.changeAccount = this.changeAccount.bind(this);
-    this.showIDs = this.showIDs.bind(this);
+    this.showIDs      = this.showIDs.bind(this);
     this.addNotification = this.addNotification.bind(this);
     this.applyAsProvider = this.applyAsProvider.bind(this);
-    this.submitValidationTrue = this.submitValidationTrue.bind(this);
-    this.submitValidationFalse = this.submitValidationFalse.bind(this);
-    this.stopJob = this.stopJob.bind(this);
+    this.submitValidationTrue   = this.submitValidationTrue.bind(this);
+    this.submitValidationFalse  = this.submitValidationFalse.bind(this);
+    this.stopJob      = this.stopJob.bind(this);
     this.stopProviding = this.stopProviding.bind(this);
-    this.buildSocket = this.buildSocket.bind(this);
+    this.buildSocket  = this.buildSocket.bind(this);
     this.DownloadInfo = this.DownloadInfo.bind(this);
     this.notificationDOMRef = React.createRef();
   }
@@ -121,6 +121,20 @@ class App extends Component {
         this.setState({accounts: newAccount });
         console.log(accounts);
       });
+      
+      
+      //this is an example for web3's subscribe, wait a short period and see the effect in console
+      //you can add functional method into the callback functions (under console.log)
+      // official doc: https://web3js.readthedocs.io/en/v1.2.1/web3-eth-subscribe.html?highlight=monitor%20block#subscribe-newblockheaders
+      // NOTE: this can also be used as a counter or timer.
+      // NOTE: using arrow function instead of old-school function is necessary, 
+      // refer to this link: https://stackoverflow.com/questions/20279484/how-to-access-the-correct-this-inside-a-callback
+      web3.eth.subscribe('newBlockHeaders', (err, result) => {
+        if(err) console.log("ERRRR", err, result);
+        console.log("================================================   <- updated! #", result.number);
+        console.log(result);
+        this.showPools();
+      })
       
     }
     catch (error) {

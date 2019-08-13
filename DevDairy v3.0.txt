@@ -15,7 +15,7 @@ The modification is like the following.
 
 
 
-2. File code updates: ./bcai_deploy/contracts/bcai.sol
+2. A. File code updates: ./bcai_deploy/contracts/bcai.sol
         a. Annoying wave line (Solidity plug-in's warning) is removed by adjusting the format of code. 
             Tailing whitespace are removed.
             However, assigning is remained to keep good-looking.
@@ -26,7 +26,7 @@ The modification is like the following.
         f. new .sol deployed successfully, test passed! tx : 0x5355dc83cead3e53978300239a21c18c8750510553d43b7bb321afe9e59b5b4b (ropsten)
         g. For demo reason, the number of validators is hard-coded as ONE.
 
-    File code updates: ./bcai_deploy/client/src/App.js
+    B. File code updates: ./bcai_deploy/client/src/App.js
         a. Add tempSocket to state declaration
         b. Add TODO in notification part
 	    c. Fixed the issue 
@@ -39,8 +39,9 @@ The modification is like the following.
             by using the stringify safe, https://www.npmjs.com/package/json-stringify-safe
             add line : var stringify = require('json-stringify-safe');
             add package to npm $ npm install json-stringify-safe --save
+        d. added an example for web3 subscribe
 
-    File udpate: /Doc/Demo Instuction.docx
+    C. File udpate: /Doc/Demo Instuction.docx
         git repository redirect to BCAI project instead of gitLab.
         folder name is updated
 
