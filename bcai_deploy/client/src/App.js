@@ -659,6 +659,7 @@ class App extends Component {
   // Checking status of account. 
   //note: CheckEvents has been edited to keep track of only the current transaction's information and
   //      is used to identify the resultID and dataID if necessary for that person's specific role
+  //TODO: add assigned address to any assignment notification.
   checkEvents = async () => {
     let pastEvents = await this.state.myContract.getPastEvents("allEvents", {fromBlock:  this.state.RequestStartTime, toBlock: 'latest'});
     console.log("Event range: ", this.state.RequestStartTime)

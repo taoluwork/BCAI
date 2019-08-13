@@ -26,7 +26,7 @@ The modification is like the following.
 
     File code updates: ./bcai_deploy/client/src/App.js
         a. Add tempSocket to state declaration
-        
+        b. Add TODO in notification part
 
 3. Package the ML/localUser using npm init, added the dependency description to the package.json file.
 
