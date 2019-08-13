@@ -4,8 +4,11 @@ The whole BCAI project is isolated from gitLab to make it clean and neat. Versio
 The modification is like the following. 
 1. [Important]: Some modules are renamed based on their current role in order to remove the confusion of naming and version.
     a. folder: bcai_v2.0 -> bcai_deploy     //NOTE: .gitignore file has updated with the new folder name.
-    c. files:  /bcai_deploy/contracts/bcai_2.0.sol -> bcai.sol
-
+                ML/files -> ML/examples     
+                add ML/localWorker folder   //plan to add docker dependency to localWorker in order to remove the addtional install, have not applied this.
+    b. files:  /bcai_deploy/contracts/bcai_2.0.sol -> bcai.sol
+    c. ignore files: add ML/localUsers/result.zip to gitignore
+                    add ML/localUsers/node_modules and same with lcoalWorkers
 
 
 

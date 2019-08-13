@@ -1,5 +1,5 @@
 {
-  "name": "bcai_localuser",
+  "name": "bcai_localworker",
   "version": "1.0.0",
   "description": "the local client for bcai v2.0 stable",
   "main": "localEnv.js",

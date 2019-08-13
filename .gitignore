@@ -1,5 +1,8 @@
 /bcai_deploy/node_modules/
 /bcai_deploy/client/build/
+
 /ML/localUser/node_modules/
 /ML/client/node_modules/
 /ML/localWorker/node_modules/
+/ML/localUser/result.zip
+/ML/localWorker/result.zip
