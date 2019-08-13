@@ -12,8 +12,8 @@ The modification is like the following.
 
 
 
-File code updates:
-1. ./bcai_deploy/contracts/bcai.sol
+
+2. File code updates: ./bcai_deploy/contracts/bcai.sol
         a. Annoying wave line (Solidity plug-in's warning) is removed by adjusting the format of code. 
             Tailing whitespace are removed.
             However, assigning is remained to keep good-looking.
@@ -22,6 +22,10 @@ File code updates:
         d. line 328 around, explain the import popArray logic and issue.
         e. brief update notes added on top
         f. new .sol deployed successfully, test passed! tx : 0x5355dc83cead3e53978300239a21c18c8750510553d43b7bb321afe9e59b5b4b (ropsten)
+
+3. Package the ML/localUser using npm init, added the dependency description to the package.json file.
+
+4. Created the github branche release-v3.0-stable as archive branch. Any developing updates should be pushed to master*
 
 
 
