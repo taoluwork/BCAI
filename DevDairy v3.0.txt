@@ -28,15 +28,15 @@ The modification is like the following.
         a. Add tempSocket to state declaration
         b. Add TODO in notification part
 	c. Fixed the issue 
-	**********************************************	
-	/home/landry/Desktop/BCAI/ML/localWorker/localEnv.js:99
-  	let data = JSON.stringify(curState);
-                  ^
-	TypeError: Converting circular structure to JSON
-	************************************************
-	by using the stringify safe, 
-	add line : var stringify = require('json-stringify-safe');
-	add package to npm $ npm install json-stringify-safe --save
+        **********************************************	
+        /home/landry/Desktop/BCAI/ML/localWorker/localEnv.js:99
+        let data = JSON.stringify(curState);
+                    ^
+        TypeError: Converting circular structure to JSON
+        ************************************************
+        by using the stringify safe, https://www.npmjs.com/package/json-stringify-safe
+        add line : var stringify = require('json-stringify-safe');
+        add package to npm $ npm install json-stringify-safe --save
 
 
 
@@ -45,6 +45,9 @@ The modification is like the following.
 
 4. Created the github branche release-v3.0-stable as archive branch. Any developing updates should be pushed to master*
 
+5. TODO: add notification to a provider submitted his result, saying : you result has been submitted (and you need to keep socket.io running). 
+    TODO: add notification for user what stage is his task.
+    TODO: the task is completed, the final download is abnormal. In addtion, need to visualize the result somehow.
 
 
     
