@@ -1,0 +1,99 @@
+////////////////////////////////////////////////////////////////////////
+// Example Documentation
+// version: 1.0.2, (optional: aligned with some version v0.9.4 //NOTE: do not use early versions.)
+// Author: TaurusLu tlu4@lsu.edu
+//
+// Description: 
+// Please use this file as a doc template. You can change contents but keep the section format.
+// Please read through the tips and examples.
+// <put your overall description of this file here, keep this short>
+//
+// update:
+// <optional update notes: such as "upgraded from v0.9.1 -- fixed bug">
+//////////////////////////////////////////////////////////////////////// 
+Introduction
+<brief introduction here>
+
+Some tips and rule about docs:
+1. Generally, these docs we make will serve as two roles. 
+        A: a tutorial for others to use,
+        B: our design and develop guide.
+2. You can keep your technical details in the comments of design files. Only illustrate your idea and usage here.
+3. Mark your version alignment and copyright at top (see my example). Coders are glorified to have names there.
+    About version: name sketches/unfinished as 0.9.x, and first availble version should start from v1.0.0
+4. Break the sections with some clear format, such as multiple lines in between or use '//////' as I like.
+5. Keep txt format. Keep length of each line limited. Conventional industrial standard is around 120 charactors per line.
+
+
+
+/////////////////////////////////////////////////////////////////////////
+<Setup or env initiation, dependency install.. etc.>
+
+[example]
+This file works with truffle template and ganache-cli.
+    To install truffle: $ npm install truffle
+    To install ganache: $ npm install ganache
+
+Nodejs is also needed to run .js files
+    To install nodejs: $ npm install node
+    (optional: node can also be installed via nvm(node version manager), which will provide version capatibility)
+
+////////////////////////////////////////////////////////////
+<how to use here>
+
+[example]
+Usage:
+1. start ganache : $ ganache-cli -i 512
+2. run this script: $ node client.js
+
+
+//////////////////////////////////////////////////////////////////
+NOTE: 
+All the above will be the tutorial/user-guide and will be potentially expose to our user.
+All things below will be the developer guide. 
+You can assume reader has qualified skills, so keep your ideas simple and clear.
+You can use pseudo-code or anything else to avoid verbosity, such as no need to explain a simple loop, etc.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<design introduction>
+
+[A good example from Sam:]
+
+main functions:
+Get the accounts from ganache: web3.eth.getAccounts(), if successful...
+Display the default info such as: account, mode, display level(all/ my/ view)
+state changing function will be called (userFireMessage or workerFireMessage)
+then wait for event to be emitted from blockchain
+once event recieved, call PrintEvent() or DisplayAfterEvent()
+
+TODO: priority design
+TODO: concurrent firing
+
+////////////////////////////////////////////////////////////////
+<detailed explanation of essential functions>
+Tips: you can use pseudo-code for simplicity.
+
+[example]:
+
+Entry point: startProviding()
+if provider is_new
+	add to providerPool
+	emit "Provider Added"
+	try an instant pairing : assignProvider()
+else 
+	updateProvider()
+	
+	
+	
+assignProvider()
+check ValidatingPool, try a pairing
+if matches:   
+	assign to validation
+else:   
+	check PendingPool, try a pairing
+	if matches:
+		assign to provider
+	else:
+		do nothing (leave inn providerPool)
+
+
+......

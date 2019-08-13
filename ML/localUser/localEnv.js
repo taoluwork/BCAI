@@ -346,7 +346,7 @@ getIp().then(() => {
       console.log("emit:fin to:" + msg + " with tag:" + tag);
     });
     socket.on('recieved', (msg) => {
-      console.log("message was recieved");          
+      console.log("message was recieved" + msg);          
     });
   });
 

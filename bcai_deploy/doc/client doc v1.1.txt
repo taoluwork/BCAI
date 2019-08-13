@@ -1,0 +1,269 @@
+////////////////////////////////////////////////////////////////////////
+// 'client.js' Documentation
+// version 1.0, aligned with client.js v0.9.4
+// Author: Samuel Pritchett
+////////////////////////////////////////////////////////////////////////
+// argument handling: get arguments from the terminal, handle the mode and parameters
+////////////////////////////////////////////////////////////////////////
+main functions:
+Get the accounts from ganache: web3.eth.getAccounts(), if successful...
+Display the default info such as: account, mode, display level(all/ my/ view)
+state changing function will be called (userFireMessage or workerFireMessage)
+then wait for event to be emitted from blockchain
+once event recieved, call PrintEvent() or DisplayAfterEvent()
+
+TODO: priority design
+TODO: concurrent firing
+
+//////////////////////////////////////////////////////////////////////// Setup
+
+User and worker modes of the front-end
+
+Define the version and networkID as constants
+
+define various variables
+
+include arguments from console
+
+when user types help, outputs what each argument does
+
+if the user uses the -v or -version argument, logs out the version of bcai client
+
+if user or worker arguments used, change mode, otherwise log an error specifying that they need to type user or worker
+
+setting parameters based on if user or worker
+
+create web3 instance in a variable 'Web3'
+
+creates a new variable 'web3' which will use a websocket provider
+
+require that the user has TaskContract.json, will be accessed from the variable 'TaskContract'
+
+TaskContract.abi will be stored into variable 'abi' to be accessed later
+
+TaskContract.networks[NetworkID].address will be stored into variable 'addr' to be accessed later
+
+a constant variable myContract gets a new web3.eth.Contract(abi,addr) so this contract can be accessed later
+
+the main assumes the blockchain or test environment is accessable
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Main
+
+web3.eth.getAccounts() returns a list of accounts the node controls. These addresses are in an array. A promise is initiated
+        if argv['a'] > 9, then the accounts will all be listed
+        then if argv['a] is undefined (which means the user didn't pass -a in command line)
+            the variable myAccount will be set to either accounts[0] or accounts [9] depending on if the client is a user or worker
+            a message is then logged out saying that using the user is using the default account and can infer a specific amount by pasing -a on the command line
+        else (so if the user actually passes -a)
+            myAccount is set to accounts[argv['a']]
+            if myAccount comes out as underfined, an error is logged saying that the account they tried to access didn't worker
+        finally, the mode that the client is on is logged out (user or worker)
+        accounts is returned to fufill the promise
+another promise is chained after the previous one
+        if the user passed 'all' on command line, the functions AllRequests is called if the client is a user or AllProviders if the client is a worker
+        if the user passed 'my' on command line, the functions RequestOnlyMy is called if the client is a user or ProviderOnlyMy if the client is a worker
+        if the user passed 'view' on command line, the functions PoolRequests is called if the client is a user or ProvidorPool is called if the client is a worker
+        else the functions userFireMessage or workerFireMessage are called based on the client's mode
+another promise is chained after the previous one
+        myContract.events.SystemInfo is used to recieve an event transmit from bcai
+
+if the original function threw an error, this .catch() will run the following
+        error message is logged out and process exits
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Supporting functions
+
+function userFireMessage
+        if the user passes '-stop' or '-s' to console
+            execute the stopRequest function in bcai
+            send the contract gas to execute this function, promise started here
+            message logged to console showing the block that the user wishes to cancel
+            if the event SystemInfo is undefined, logs an error message and throw
+            catch error here and log the error and a message telling client to check their reqID
+        if the user passes '-u' to console
+            execute the updateProviding function in bcai
+            send the contract gas to execute this function, promise started here
+            messages logged to console showing the block number, time, target and price
+            if user passed 'recpt' they are given a reciept number
+            catch error here if the request does not belong to the user
+        else
+            execute startRequest function in bcai
+            send the contract gas to execute this function, promise started here
+            message logged to console showing that the request has been submitted and its parameters
+            if user passed 'recpt' they are given a reciept number
+            if the event SystemInfo is undefined, logs an error message and throw
+            catch error here and log error message
+
+function workerFireMessage
+        if the worker passes 'C' to console
+            if worker does not pass 'R' to console
+                log message saying that worker did not specify a result ID and that the default wil be used
+                default result ID is set
+            call the completeRequest function from bcai while also sending gas to perform the function, promise started here
+                log message telling the worker the request has been completed along with the request id and the block number
+                if worker passes 'recpt' they are given the reciept number
+                catch error here if thrown
+        if the worker passes 'stop' or 's' to console
+            call the stopProviding function from bcai while sending gas to perform the function, promise started here
+            log message telling the worker that they have stopped providing along with the block number 
+            if worker passes 'recpt' they are given the reciept number
+            if SystemInfo is undefined, throw error that stop provider failed
+            catch error here that logs message and tells worker that they can only stop their own provider and how to check their id
+        if the worker passes 'u' to console
+            call the updateProvider function from bcai while sending gas to perform the function, promise started here
+            log message telling the worker that they have updated their information along with block number, time, target, max and min prices
+            if worker passes 'recpt' they are given the reciept number
+            if SystemInfo is undefined, throw error that update provider has failed
+            catch same errors as previous function
+        else, the default function will be run
+            call the startProviding function from bcai while sending gas to perform the function, promise started here
+            log message telling the user they have started providing along with block number, time, target, max and min prices
+            if worker passes 'recpt' they are given the reciept number
+            if systeminfo is undefined, throw error that start providing has failed
+            catch same errors as previous 2
+
+function RequestOnlyMy
+        call getRequestPool function from bcai without parameter, start promise
+            log message containing the active request count and the active request pool
+        chain another promise
+            call getRequestPool function from bcai with 'myAccount' as a parameter, starting a new promise inside
+                log message with all the user's posted requests
+                end promise
+            end promise
+        chain another promise
+            call DisplayNonZeroInList function from bcai with IDList as a parameter
+
+function ProviderOnlyMy
+        call getProviderPool function from bcai without parameter, start promise
+            log message containing the active provider count and the active provider pool
+        chain another promise
+            call getProviderPool function from bcai with 'myAccount' as a parameter, starting a new promise inside
+                log message with all the user's posted providers
+                end promise
+            end promise
+        chain another promise
+            call DisplayNonZeroInList function from bcai with IDList as a parameter
+
+function PoolRequests
+        call getRequestCount from bcai, start promise
+            console log the total number of requests since start
+        chain promise
+            call getRequestPool from bcai, start promise
+                console log the total active requests
+        chain promise
+            call ListoutPool function with 'requests' as parameter
+        catch error here
+            if any of the promises failed, console log error that the attempt to list pool request info failed
+
+function PoolProviders
+        call getProviderCount from bcai, start promise
+            console log the total number of providers since start
+        chain promise
+            call getProviderPool from bcai, start promise
+                console log the total active providers
+        chain promise
+            call ListoutPool function with 'provider' as parameter
+        catch error here
+            if any of the promises failed, console log error that the attempt to list pool provider info failed
+
+function LatestRequest
+        call getRequestCount from bcai, start promise
+            console log the total request count
+        chain promise
+            call getRequestPool from bcai, start promise
+                console log the active request count
+        chain promise
+            if the user passed 'debug' to console
+                call getRequest(totalCount - 1) from bcai, begin promise
+                    console log the latest request number
+
+function LatestProvider
+        call getProviderCount from bcai, start promise
+            console log the total provider count
+        chain promise
+            call getProviderPool from bcai, start promise
+                console log the active provider count
+        chain promise
+            if the user passed 'debug' to console
+                call getRequest(totalCount - 1) from bcai, begin promise
+                    console log the latest provider number
+
+function AllRequests
+        call getRequestcount from bcai, start promise
+            console log the total number of requests since start
+        chain promise
+            call listAllRequests from bcai, start promise
+                if total number of requests is greater than 0
+                    console log all requests in history
+                    call DisplayNonZeroInList(List, 'request')
+        catch error
+            if either promise failed, console log error that the list request history failed, exit function
+
+function AllProviders
+        call getProviderscount from bcai, start promise
+            console log the total number of providers since start
+        chain promise
+            call listAllProviderrs from bcai, start promise
+                if total number of providers is greater than 0
+                    console log all providers in history
+                    call DisplayNonZeroInList(proList, 'provider')
+        catch error
+            if either promise failed, console log error that the list request history failed, exit function
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////// Display Helpers
+
+function DisplayRequest 
+         callGetRequest with Id as parameter, start promise
+            console log the id
+
+function PrintEvent
+         if user passed 'debug' to console
+            console log the event object
+         else
+            console log the event name and the event blocknumber
+            if the event name is SystemInfo
+                console log the hex to ascii conversion of event.returnValues[2]
+            if the event name is UpdateInfo
+                console log the hex to ascii conversion of event.returnValues[1]
+            if the event name is PairingInfo
+                console log the hex to ascii conversion of event.returnValues[4]
+            return event.returnValues
+
+function DisplayAfterEvent
+         if the mode is user
+            if the eve.returnValues[2] is equal to the ascii to hex conversion of 'Request Stopped'
+                call RequestOnlyMy(myAccount)
+            else
+                call LatestRequest()
+        if the mode is worker
+            if the eve.returnValues[2] is equal to the ascii to hex conversion of 'Provider Stopped'
+                call ProviderOnlyMy(myAccount)
+            else if the eve.returnValues[2] is equal to the ascii to hex conversion of 'Provider Added' OR the conversion of 'Provider Updated'
+                call LatestProvider()
+            else if the eve.returnValues[2] is equal to the ascii to hex conversion of 'Request Computation Completed'
+                call DisplayRequest(eve.returnValues[0])
+                console log that the request was completed
+
+function DisplayNonZeroInList
+         if type is request
+            for loop that runs List.length() iterations
+                if user passed 'debug' in console
+                    just console log List[i]
+                else 
+                    console log the request id, address, provider and status of List[i]
+         if type is provider
+            for loop that runs List.length() iterations
+                if the List[i] address is not equal to 0
+                    if user passed debug to console
+                        just console log List[i]
+                    else
+                        console log the provider id, address and availability
+        else throw error
+
+function ListoutPool
+         if type is provider
+            call listProviders(Pool) from bcai, start promise
+                call DisplayNonZeroInList(prolist, 'provider')
+         else if type is request
+            call listRequests(Pool) from bcai, start promise
+                call DisplayNonZeroInList(pendList,'request')
+        else throw error
