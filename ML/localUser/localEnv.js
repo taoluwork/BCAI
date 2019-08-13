@@ -7,11 +7,11 @@ var io = require('socket.io')(http);
 var publicIp = require("public-ip")
 const prompts = require('prompts');
 
-var buffer;
+var buffer = [];
 var version = '';
 var name = '';
-var mode; 
-var ip;
+var mode = ""; 
+var ip = "";
 var ip4;
 var ip6;
 var training = false;
@@ -20,7 +20,7 @@ var flag = true; // this flag will be shared between the provider and the valida
 var conns = [];
 var connsI = [];
 var reconfigFlag = false;
-var website = "130.39.223.54:3000"
+var website = "130.39.223.127:5000"
 
 //structure of a conn
 //ip        -> (string)  the ip address of the connection

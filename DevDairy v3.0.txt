@@ -27,6 +27,19 @@ The modification is like the following.
     File code updates: ./bcai_deploy/client/src/App.js
         a. Add tempSocket to state declaration
         b. Add TODO in notification part
+	c. Fixed the issue 
+	**********************************************	
+	/home/landry/Desktop/BCAI/ML/localWorker/localEnv.js:99
+  	let data = JSON.stringify(curState);
+                  ^
+	TypeError: Converting circular structure to JSON
+	************************************************
+	by using the stringify safe, 
+	add line : var stringify = require('json-stringify-safe');
+	add package to npm $ npm install json-stringify-safe --save
+
+
+
 
 3. Package the ML/localUser using npm init, added the dependency description to the package.json file.
 
