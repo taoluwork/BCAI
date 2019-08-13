@@ -1,4 +1,4 @@
-This is the release notes of BCAI_v3.0. Previously, the latest stable version is contract version v2.1, app.js version v2.1, which locates in gitLab folder.
+This is the developers' dairy of BCAI_v3.0. Previously, the latest stable version is contract version v2.1, app.js version v2.1, which locates in gitLab folder.
 The whole BCAI project is isolated from gitLab to make it clean and neat. Version is updated to v3.0 targeting at a stable ready-to-release demo. Contract and app version should all update align with the project version number. The folder in gitLab remains unchanged and deprecated. Developers should move to this branch.
 
 The modification is like the following. 
@@ -9,7 +9,8 @@ The modification is like the following.
     b. files:  /bcai_deploy/contracts/bcai_2.0.sol -> bcai.sol
     c. ignore files: add ML/localUsers/result.zip to gitignore
                     add ML/localUsers/node_modules and same with lcoalWorkers
-
+                add /bcai_deploy/client/build to gitignore, people are encouraged deploy new contracts. 
+    d. Project version v3.0, contract v3.0.0, app.js v3.0.0
 
 
 
@@ -22,6 +23,10 @@ The modification is like the following.
         d. line 328 around, explain the import popArray logic and issue.
         e. brief update notes added on top
         f. new .sol deployed successfully, test passed! tx : 0x5355dc83cead3e53978300239a21c18c8750510553d43b7bb321afe9e59b5b4b (ropsten)
+
+    File code updates: ./bcai_deploy/client/src/App.js
+        a. Add tempSocket to state declaration
+        
 
 3. Package the ML/localUser using npm init, added the dependency description to the package.json file.
 

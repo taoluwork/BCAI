@@ -1,5 +1,5 @@
 // this is the main entrance of Application
-// version: v2.1.0, align with bcai_2.1.0.sol
+// version: v3.0.0 align with contract 3.0 and project version v3.0
 
 
 // TODO: fix the async function dependency. e.g. Need returned dataID to send Tx                          [needed for provider]
@@ -65,7 +65,6 @@ class App extends Component {
     providerList: null,
 
     tempSocket: null, //added by TL 0812, missing declaration in state.
-    
   };
 
   constructor(props) {
