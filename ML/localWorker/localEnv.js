@@ -21,7 +21,8 @@ var flag = true; // this flag will be shared between the provider and the valida
 var conns = [];
 var connsI = [];
 var reconfigFlag = false;
-var website = "130.39.223.127:5000"
+//var website = "130.39.223.127:5000"
+var website = "130.39.223.54:3000"
 
 //structure of a conn
 //ip        -> (string)  the ip address of the connection
@@ -43,6 +44,16 @@ exec('firefox ' + website , (err,stdout,stderr)=>{
     console.log(err);
   }
 }); 
+////////////////////////////////////////////////////////////////////////start screen watching///////////////////////////////////////////////////////////////////////
+setInterval(function() {
+  exec('python3 screen.py' , (err,stdout,stderr)=>{
+    if(err){
+      console.log(err);
+    }
+    console.log(stdout)
+  });
+  console.log("whaa");
+},15000);
 //////////////////////////////////////////////////////////////////////server functions section//////////////////////////////////////////////////////////////////////
 
 //this function is used so that close the socket and remove it from the list of connecitons
@@ -117,7 +128,7 @@ process.on('SIGINT', async () => {
   const response = await prompts({
     type: 'text',
     name: 'val',
-    message: 'Would you like to save the state? (please type Yes or No)'
+    message: 'Would you like to save the state? (please type Yes or No)\nType no if you wish to exit the network for a period of time\nType yes if you are in the middle of a transaction'
   });
  
   if(response.val.toLowerCase() === "yes"){
@@ -524,7 +535,7 @@ async function uploadResult(){
 fs.watch('.', (event, file)=>{
     //user mode case
     if(event === 'change' && file === 'result.zip' && mode === 2){ //user recieves files
-        exec('mv result.zip ~/Downloads' , (err,stdout,stderr)=>{
+        exec('mv result.zip result' + Date.now() + '.zip' , (err,stdout,stderr)=>{
             if(err){
               //console.log(err);
               //return;

@@ -111,7 +111,7 @@ class App extends Component {
       console.log("here is the instance " + instance);
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, myContract: instance, myAccount: accounts[0], events: [] , socket , data: undefined , result: undefined})
+      this.setState({ web3, accounts, myContract: instance, myAccount: accounts[0], events: [] , socket , data: undefined , result: undefined })
       this.setState({Time: 1, Price : 1, Target : 1, count : 0})
       this.setState({RequestStartTime: 0})
       console.log("contract set up!");
@@ -134,6 +134,7 @@ class App extends Component {
         console.log("================================================   <- updated! #", result.number);
         console.log(result);
         this.showPools();
+        this.checkEvents();
       })
       
     }
@@ -469,6 +470,7 @@ class App extends Component {
       .then(ret => {
         console.log("Job removed from pendingPool");
         this.state.socket.emit("dumpBuffer");
+        this.setState({dataID : null , data : undefined , resultID : null , result : undefined}); //////this is done to remove the ids and files which is no longer valid
       })
       .catch(err => {
         console.log(err)
@@ -548,6 +550,7 @@ class App extends Component {
     this.state.myContract.stopProviding({from: this.state.myAccount})
     .then(ret => {
       console.log("Worker removed from providerPool");
+      this.setState({dataID : null , data : undefined , resultID : null , result : undefined}); //////this is done to remove the ids and files which is no longer valid
     })
     .catch(err => {
       console.log(err)
@@ -675,6 +678,8 @@ class App extends Component {
   //      is used to identify the resultID and dataID if necessary for that person's specific role
   //TODO: add assigned address to any assignment notification.
   checkEvents = async () => {
+    var myEvents = [];
+    var list = document.getElementById("historyBar");
     let pastEvents = await this.state.myContract.getPastEvents("allEvents", {fromBlock:  this.state.RequestStartTime, toBlock: 'latest'});
     console.log("Event range: ", this.state.RequestStartTime)
     console.log("All events:", pastEvents)
@@ -697,18 +702,32 @@ class App extends Component {
 
     // For pairing info events
     for (var i = 0; i < this.state.events.length; i++) {
+
+      //Request Stopped
+      if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Request Stopped") {
+        myEvents = [];
+        list.innerHTML = "";
+      }
+
+      //Request Added
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Request Added" && this.state.myAccount === this.state.events[i].args.reqAddr) {
         pastEvents.slice(0,1);
         this.setState({events : pastEvents});
+        myEvents = [];
+        list.innerHTML = ""
+        myEvents.push("Task submitted");
       }
+
       // Request Assigned
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Request Assigned") {
         if (this.state.events[i] && this.state.myAccount === this.state.events[i].args.reqAddr) {
-          this.addNotification("Provider Found", "Your task is being completed", "success")
+          this.addNotification("Provider Found", "Your task is being completed by: " + this.state.events[i].args.provAddr, "success")
+          myEvents.push("Provider Found at: " + this.state.events[i].args.provAddr);
         }
         if (this.state.events[i] && this.state.myAccount === this.state.events[i].args.provAddr) {
-          this.addLongNotification("You Have Been Assigned A Task", "You have been chosen to complete a request. The server data ID is: " + this.state.dataID , "info");
+          this.addLongNotification("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + this.state.events[i].args.reqAddr + " The server id is:" + hex2ascii(this.state.events[i].args.extra) , "info");
           this.setState({dataID : hex2ascii(this.state.events[i].args.extra), resultID : undefined});
+          myEvents.push("Assigned to a task from: " + this.state.events[i].args.reqAddr );
         }
       }
 
@@ -716,24 +735,27 @@ class App extends Component {
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Request Computation Completed") {
         if (this.state.events[i] && this.state.myAccount === this.state.events[i].args.reqAddr) {
           this.addNotification("Awaiting validation", "Your task is finished and waiting to be validated", "info")
+          myEvents.push("Validation is now being completed");
         }
         if (this.state.events[i] && this.state.myAccount === this.state.events[i].args.provAddr) {
-          this.addNotification("Awaiting validation", "You have completed a task an are waiting for validation"
-            + this.state.events[i].args.reqAddr, "info");
+          this.addNotification("Awaiting validation", "You have completed a task an are waiting for validation", "info");
+          myEvents.push("Validation is now being completed");
         }
       }
 
       // Validation Assigned to Provider
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Validation Assigned to Provider") {
         if (this.state.events[i] && this.state.myAccount === this.state.events[i].args.reqAddr) {
-          this.addNotification("Validator Found", "A validator was found for your task but more are still needed", "info")
+          this.addNotification("Validator Found", "A validator (" + this.state.events[i].provAddr + ") was found for your task but more are still needed", "info")
+          myEvents.push("Validator " + this.state.events[i].provAddr + " assigned");
         }
         if (this.state.events[i] && this.state.myAccount === this.state.events[i].args.provAddr) {
-          this.addLongNotification("You are a validator", "You need to validate the task as true or false. The server id is:"
+          this.addLongNotification("You are a validator", "You need to validate the task for: " + this.state.events[i].reqAddr + " as true or false. The server id is:"
             + hex2ascii(this.state.events[i].args.extra), "info");
             this.setState({resultID : hex2ascii(this.state.events[i].args.extra)});
             console.log(hex2ascii(this.state.events[i].args.extra));
             this.setState({dataID : undefined});
+          myEvents.push("You are a validator for: " + this.state.events[i].reqAddr );
         }
       }
 
@@ -742,10 +764,12 @@ class App extends Component {
         if (this.state.myAccount === this.state.events[i].args.reqAddr) {
           this.addNotification("Not Enough Validators", "More validators are needed before the result can be sent to you"
             + this.state.events[i].args.provAddr, "warning")
+          myEvents.push("Not enough validators found yet");
         }
         if (this.state.myAccount === this.state.events[i].args.provAddr) {
           this.addNotification("Not Enough Validators", "There were not enough validators to verfiy your resulting work. Please wait."
             + this.state.events[i].args.reqAddr, "info");
+          myEvents.push("Not enough validators found yet");
         }
       }
 
@@ -754,9 +778,11 @@ class App extends Component {
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Enough Validators") {
         if (this.state.myAccount === this.state.events[i].args.reqAddr) {
           this.addNotification("All Validators Found", "Your task is being validated. Please hold.", "success")
+          myEvents.push("All validators have been found");
         }
         if (this.state.myAccount === this.state.events[i].args.provAddr) {
           this.addNotification("All Validators Found", "Your work is being validated. Please hold.", "info");
+          myEvents.push("All validators have been found");
         }
       }
 
@@ -764,10 +790,12 @@ class App extends Component {
       // Validator Signed
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Validator Signed") {
         if (this.state.myAccount === this.state.events[i].args.reqAddr) {
-          this.addNotification("Validator signed", "Your task is being validated", "info")
+          this.addNotification("Validator signed", "Validator " + this.state.events[i].args.provAddr + " has signed", "info")
+          myEvents.push("Validator " + this.state.events[i].args.provAddr + " has signed");
         }
         if (this.state.myAccount === this.state.events[i].args.provAddr) {
-          this.addNotification("You Have signed your validation", "You have validated the request from address", "info");
+          this.addNotification("You Have signed your validation", "You have validated the request for: " + this.state.events[i].args.reqAddr, "info");
+          myEvents.push("You have signed  a validaton for " + this.state.events[i].args.reqAddr );
         }
       }
 
@@ -775,18 +803,26 @@ class App extends Component {
       // Validation Complete
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Validation Complete") {
         if (this.state.myAccount === this.state.events[i].args.reqAddr) {
-          this.addLongNotification("Job Done", "Please download your resultant file from server using the hash " + hex2ascii(this.state.events[i].args.extra), "success")
+          this.addLongNotification("Job Done", "Please download your resultant file from the server at: " + hex2ascii(this.state.events[i].args.extra), "success")
           this.setState({resultID : hex2ascii(this.state.events[i].args.extra)});
+          myEvents.push("Your job has been finished");
         }
         if (this.state.myAccount === this.state.events[i].args.provAddr) {
           this.addNotification("Work Validated!", "Your work was validated and you should receive payment soon", "info");
+          myEvents.push("Your work has been validated");
         }
         console.log(this.state.events[i].blockNumber);
         this.setState({dataID: undefined, RequestStartTime: this.state.events[i].blockNumber+1});
         
       }
     }
-
+    var list = document.getElementById("historyBar");
+    console.log(list.innerHTML)
+    for (var j = 0; j < myEvents.length; j++){
+      var el = document.createElement("li");
+      el.appendChild(document.createTextNode(myEvents[j]));
+      list.appendChild(el);
+    }
   }
 
   addNotification(title, message, type) {
@@ -963,6 +999,16 @@ class App extends Component {
     }
   }
 
+  historyBar(){
+    return(
+      <div>
+        <h2>HISTORY</h2>
+        <ul id={"historyBar"} style={{ height:"200px" , overflow:"auto", marginRight:"40%", marginLeft:"40%" , listStyleType:"none"}}>
+        </ul>
+      </div>
+    )
+  }
+
   /////////////////////////////////////////////////////////////////////////////////
   //components of react: https://reactjs.org/docs/forms.html  
   render() {
@@ -1004,8 +1050,7 @@ class App extends Component {
         {this.showStopButtons()}
         {this.showValidationButtons()}
         {this.showUserDivider()}
-        
-
+        {this.historyBar()}
         <h2 style={{ marginTop: 20 }}>CURRENT ACCOUNT
         <button onClick={this.checkEvents} style={{marginLeft : 20, marginBottom: 10 }}> Check Status </button></h2>
         
