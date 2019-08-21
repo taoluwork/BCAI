@@ -6,3 +6,6 @@
 /ML/localWorker/node_modules/
 /ML/localUser/result.zip
 /ML/localWorker/result.zip
+
+/ML/localUser/curState.json
+/ML/localWorker/curState.json
