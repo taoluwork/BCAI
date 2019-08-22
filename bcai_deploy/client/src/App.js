@@ -470,7 +470,7 @@ class App extends Component {
       .then(ret => {
         console.log("Job removed from pendingPool");
         this.state.socket.emit("dumpBuffer");
-        this.setState({dataID : null , data : undefined , resultID : null , result : undefined}); //////this is done to remove the ids and files which is no longer valid
+        this.setState({dataID : undefined , data : undefined , resultID : undefined , result : undefined}); //////this is done to remove the ids and files which is no longer valid
       })
       .catch(err => {
         console.log(err)
