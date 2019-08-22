@@ -7,13 +7,13 @@ import pyautogui
 def click():
   #take screenshot adapted from https://python-mss.readthedocs.io/examples.html
   with mss() as sct:
-    sct.shot(mon=-1, output='cap.png')
+    sct.shot(mon=-1, output='screens/cap.png')
     #print(sct.monitors)
 
   #search image using cv2 adapted from  https://stackoverflow.com/questions/7853628/how-do-i-find-an-image-contained-within-an-image/35378944
   method = cv2.TM_CCOEFF_NORMED  #TM_CCOEFF
-  button = cv2.imread('Button.png')
-  screen = cv2.imread('cap.png')
+  button = cv2.imread('screens/Button.png')
+  screen = cv2.imread('screens/cap.png')
 
   ##I think that the result is a matrix to show the certainty of if the small image is in the big
   ##image at the given pixel (since we are only looking for one image then we only need the most

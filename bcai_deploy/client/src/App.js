@@ -550,7 +550,7 @@ class App extends Component {
     this.state.myContract.stopProviding({from: this.state.myAccount})
     .then(ret => {
       console.log("Worker removed from providerPool");
-      this.setState({dataID : null , data : undefined , resultID : null , result : undefined}); //////this is done to remove the ids and files which is no longer valid
+      this.setState({dataID : undefined , data : undefined , resultID : undefined , result : undefined}); //////this is done to remove the ids and files which is no longer valid
     })
     .catch(err => {
       console.log(err)
@@ -728,6 +728,7 @@ class App extends Component {
           this.addLongNotification("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + this.state.events[i].args.reqAddr + " The server id is:" + hex2ascii(this.state.events[i].args.extra) , "info");
           this.setState({dataID : hex2ascii(this.state.events[i].args.extra), resultID : undefined});
           myEvents.push("Assigned to a task from: " + this.state.events[i].args.reqAddr );
+          document.getElementById("dataButton").click();
         }
       }
 
@@ -756,6 +757,7 @@ class App extends Component {
             console.log(hex2ascii(this.state.events[i].args.extra));
             this.setState({dataID : undefined});
           myEvents.push("You are a validator for: " + this.state.events[i].reqAddr );
+          document.getElementById("resultButton").click();
         }
       }
 
@@ -806,6 +808,7 @@ class App extends Component {
           this.addLongNotification("Job Done", "Please download your resultant file from the server at: " + hex2ascii(this.state.events[i].args.extra), "success")
           this.setState({resultID : hex2ascii(this.state.events[i].args.extra)});
           myEvents.push("Your job has been finished");
+          document.getElementById("resultButton").click();
         }
         if (this.state.myAccount === this.state.events[i].args.provAddr) {
           this.addNotification("Work Validated!", "Your work was validated and you should receive payment soon", "info");
@@ -889,7 +892,7 @@ class App extends Component {
         <p>
           DataID is: {"" + this.state.dataID}
         </p>
-        <form onSubmit={this.downloadEvent}  name="data">
+        <form onSubmit={this.downloadEvent}  name="data" id="dataButton">
           <button>Download the data</button>  
         </form>
       </div>
@@ -899,7 +902,7 @@ class App extends Component {
       return(
       <div>
         <p>resultID is: {"" + this.state.resultID}</p>
-        <form onSubmit={this.downloadEvent}  name="result">
+        <form onSubmit={this.downloadEvent}  name="result" id="resultButton">
           <button>Download the result</button>  
         </form>
       </div>
