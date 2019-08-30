@@ -8,7 +8,7 @@ The modification is like the following.
                 ML/files -> ML/examples     
                 add ML/localWorker folder   //plan to add docker dependency to localWorker in order to remove the addtional install, have not applied this.
     b. files:  /bcai_deploy/contracts/bcai_2.0.sol -> bcai.sol
-    c. ignore files: add ML/localUsers/result.zip to gitignore
+    c. ignore files: add ML/localUsers/result.zip, /ML/localUser/curState.json, and /ML/localWorker/curState.json to gitignore
                     add ML/localUsers/node_modules and same with lcoalWorkers
                 add /bcai_deploy/client/build to gitignore, people are encouraged deploy new contracts. 
     d. Project version v3.0, contract v3.0.0, app.js v3.0.0
