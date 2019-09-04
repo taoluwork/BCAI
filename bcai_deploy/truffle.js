@@ -11,14 +11,14 @@ module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
   networks:{
-    development: {
+    dev: {
       host: "localhost",
       port: 8545,
       network_id: "*", // Match any network id
       //before_timeout: 200000,          //  <=== NEW
       //test_timeout: 300000             //  <=== NEW
       websockets: true,
-      gas: 100000000
+      gas: 6000000
       //added by Taurus see link: https://github.com/trufflesuite/truffle/issues/1254
     },
     ropsten: {
@@ -26,8 +26,8 @@ module.exports = {
         return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/abf67fa0cd9644cbaf3630dd5395104f");
       },
       network_id: '3',
-    }
-   
+    }, 
+    
   },
   contracts_build_directory: path.join(__dirname, "client/src/contracts")
 };
