@@ -17,20 +17,31 @@ module.exports = function(deployer) {
     // deployment steps, one after another to use the address
     deployer.deploy(BCAI)
     .then(()=> {
-        console.log("Deployed:")
+        console.log("Wait until deployed:")
         console.log(BCAI.address)
     })
     .then(()=>{
-        return deployer.deploy(reput, BCAI.address)
+        deployer.deploy(reput, BCAI.address)
         //NOTE: the "return" here is very important as a pitfall.
-        // if missing this return, deployment of reput is not guarenteed to finish
+        // if missing this return, function deploy(BCAI) will not wait until deploy(reput)
         // have a try to delete "return", which will result in wield error hard to debug
     })
     .then(()=>{
-        console.log("Rep:")
+        console.log("Wait until Rep:")
         console.log(reput.address)
     })
 
+
+
+    //*********************************************************** */
+    //an bad example of not using .then to guarentee the dependency of BCAI.address
+    deployer.deploy(BCAI)
+    console.log("Bcai now: ")
+    console.log(BCAI.address)
+    deployer.deploy(reput, BCAI.address)
+    console.log("Reputation now: ")
+    console.log(reput.address)
+    console.log("NOTE: we log after the deployment, but the address is not updated.")
 
     //if the BCAI is already deployed, we can deploy the reputation alone
     //together with the address to feed the constructor's argument

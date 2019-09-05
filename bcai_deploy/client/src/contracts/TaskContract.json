@@ -40117,10 +40117,16 @@
       "links": {},
       "address": "0xe8d6CB17D782379408f78473601b3D29C53332ba",
       "transactionHash": "0x8e7ff22cc8768652b557eebc1896b4d885ebeb3a1102ce297af46831e4dd342e"
+    },
+    "1567708629636": {
+      "events": {},
+      "links": {},
+      "address": "0x3A929fB0853429801a207b26339D42DB96887fd9",
+      "transactionHash": "0x29dc2118bce27a052a983a57d34bdfc2cc1a709bccbb47ff01f12f3526017b04"
     }
   },
   "schemaVersion": "3.0.0-beta.2",
-  "updatedAt": "2019-09-04T19:45:27.880Z",
+  "updatedAt": "2019-09-05T18:56:27.103Z",
   "devdoc": {
     "methods": {}
   },
