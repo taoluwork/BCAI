@@ -44,16 +44,6 @@ exec('firefox ' + website , (err,stdout,stderr)=>{
     console.log(err);
   }
 }); 
-////////////////////////////////////////////////////////////////////////start screen watching///////////////////////////////////////////////////////////////////////
-setInterval(function() {
-  exec('python3 screen.py' , (err,stdout,stderr)=>{
-    if(err){
-      console.log(err);
-    }
-    console.log(stdout)
-  });
-  console.log("whaa");
-},15000);
 //////////////////////////////////////////////////////////////////////server functions section//////////////////////////////////////////////////////////////////////
 
 //this function is used so that close the socket and remove it from the list of connecitons
@@ -361,6 +351,15 @@ getIp().then(() => {
     });
     socket.on('recieved', (msg) => {
       console.log("message was recieved" + msg);          
+    });
+
+    socket.on("click", () => {
+      exec('python3 screen.py' , (err,stdout,stderr)=>{
+        if(err){
+          console.log(err);
+        }
+        console.log(stdout)
+      });
     });
   });
 

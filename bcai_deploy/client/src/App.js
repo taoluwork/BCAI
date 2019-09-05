@@ -281,9 +281,11 @@ class App extends Component {
         if(this.state.mode === 'WORKER'){
           if(val){
             document.getElementById("trueButton").click();
+            socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
           }
           else{
             document.getElementById('falseButton').click();
+            socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
           }
         }
       });
@@ -296,10 +298,12 @@ class App extends Component {
         console.log(this.state.buffer);
         if(this.state.mode === 'WORKER'){  
           document.getElementById('submitButton').click();
+          socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
         }
         if(this.state.mode === 'USER'){
           document.getElementById('modeButton').click();
           document.getElementById('submitButton').click();
+          socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
         }
       })
 
