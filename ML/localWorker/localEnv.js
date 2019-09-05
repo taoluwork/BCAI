@@ -291,6 +291,10 @@ getIp().then(() => {
               }
               else{
                 update();
+                //this was written after the localEnv.js.pdf was written
+                if(mode === 2){
+                  socket.emit("taskComplete");
+                }
               }
             });
           });
@@ -342,11 +346,11 @@ getIp().then(() => {
       if(buffer !== undefined){
         socket.emit('transmitting' + msg, tag, buffer); 
         console.log("emit:transmitting to:" + msg + " with tag:" + tag );
+        socket.emit('fin'+ msg , tag);
       }
       else{
         console.log("NO FILE FOUND!!", "Please put the results within the field.", "warning");
       }
-      socket.emit('fin'+ msg , tag);
       console.log("emit:fin to:" + msg + " with tag:" + tag);
     });
     socket.on('recieved', (msg) => {
