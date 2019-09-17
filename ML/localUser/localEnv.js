@@ -88,8 +88,8 @@ function reconfig(){
 
 //this function updates the data that is sotored in curState.json
 //note: a socket.io socket can not be stored in JSON, so there is an array that tracks the connections without the socket
-//      if the server is restarted and is supposed to have connectins then the connections will attempt to reconnect themselves
-//      and the sockets will be redefiend in the array
+//      if the server is restarted and is supposed to have connections then the connections will attempt to reconnect themselves
+//      and the sockets will be redefined in the array
 function update(){
   reconfigFlag = true;
   let curState = {

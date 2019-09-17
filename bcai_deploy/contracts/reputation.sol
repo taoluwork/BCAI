@@ -45,6 +45,7 @@ contract Reputation {
     function Rate(address provID, uint32 rating) public returns (bool){
         ratingList[provID] = rating;
         providerCount += 1;
+        return true;
     }
 
     // an exapme of calling an existing contract (ex. BCAI)

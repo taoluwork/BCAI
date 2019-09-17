@@ -13,7 +13,7 @@ var Rep = artifacts.require("Reputation")
 const truffleAssert = require('truffle-assertions');
 //handle the BN is essential
 var BN = web3.utils.toBN;
-
+var totalGas = 0;
 
 
 contract("Rep", function(accounts) {
@@ -27,11 +27,21 @@ contract("Rep", function(accounts) {
         return Rep.deployed().then(function(myContract) {
             return myContract.Rate(accounts[1],5,{from: accounts[0]})  //time target price  
             .then(function(ret){
-                //console.log(ret);
-                myContract.localCount().call().then(ret => {
-                    console.log(ret);
-                })
+                console.log(ret);
+                checkGas(ret);
+                //myContract.localCount().call().then(ret => {
+                //    console.log(ret);
+                //})
             });
+        })
+    })
+    it("Test localCount", ()=>{
+        return Rep.deployed().then((myContract)=>{
+            return myContract.localCount().then(ret=>{
+                console.log("Return from the view function:")
+                console.log(ret);
+                checkGas(ret);
+            })
         })
     })
 /*
@@ -50,6 +60,7 @@ contract("Rep", function(accounts) {
             });
         })
     })*/
+
 })
 
 
@@ -68,3 +79,10 @@ contract("BCAI", function(accounts) {
     })
 })
 */
+
+//gas helper
+function checkGas(ret){
+    totalGas += ret.receipt.gasUsed;
+    console.log("Gas used here = ", ret.receipt.gasUsed)
+    console.log("Total Gas = ", totalGas);
+}

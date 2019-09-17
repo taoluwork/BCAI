@@ -79,8 +79,8 @@ else if(mode == 'worker'){
 //create web3 instance
 var Web3 = require('web3');
 //use websocket provider here, NOTE: http is deprecated.
-var web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
-
+//var web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
+var web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws/v3/759cf07e10b84410975b28c5b6818041'))
 //get contract instance
 var TaskContract = require('../client/src/contracts/TaskContract.json');
 var abi = TaskContract.abi;
@@ -99,7 +99,9 @@ web3.eth.getAccounts().then(function(accounts){     //get and use accoutns
     }
     else if(argv['a'] == undefined) {
         if(mode == 'user'){
-            myAccount = accounts[0];
+            //myAccount = accounts[0];
+            myAccount = "0xDd1b08A150842540Fdbb26c663cc9357F5DA7202";
+            //console.log(web3.eth.currentProvider);
             console.log("=================================================================")
             console.log('Using default account: [0]', myAccount);
             console.log('You can infer specific account by passing -a #');
@@ -198,7 +200,7 @@ function userFireMessage(){
     }
     else {        //submit a request
         myContract.methods.startRequest(time, target, money, web3.utils.hexToBytes(dataID))
-        .send({from: myAccount, gas: 80000000, value: money})
+        .send({from: myAccount, gas: 800000, value: money})
         .then(function(ret){                                                        //handle the receipt
             //console.log("-----------------------------------------------------------------")
             console.log("Using parameters: time = ",time,", target = ",target,", price = ",money);
