@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "bignumber.js": "^8.0.2",
+    "ethereum-react-components": "^1.14.0",
     "hex2ascii": "0.0.3",
     "minimist": "^1.2.0",
     "prop-types": "^15.7.2",
