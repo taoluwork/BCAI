@@ -45,7 +45,7 @@ exec('firefox ' + website , (err,stdout,stderr)=>{
   }
 }); 
 ////////////////////////////////////////////////////////////////////////start screen watching///////////////////////////////////////////////////////////////////////
-setInterval(function() {
+/*setInterval(function() {
   exec('python3 screen.py' , (err,stdout,stderr)=>{
     if(err){
       console.log(err);
@@ -53,7 +53,7 @@ setInterval(function() {
     console.log(stdout)
   });
   console.log("whaa");
-},15000);
+},15000);*/
 //////////////////////////////////////////////////////////////////////server functions section//////////////////////////////////////////////////////////////////////
 
 //this function is used so that close the socket and remove it from the list of connecitons
