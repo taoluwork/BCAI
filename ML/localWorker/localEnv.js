@@ -44,6 +44,7 @@ exec('firefox ' + website , (err,stdout,stderr)=>{
     console.log(err);
   }
 }); 
+<<<<<<< HEAD
 ////////////////////////////////////////////////////////////////////////start screen watching///////////////////////////////////////////////////////////////////////
 /*setInterval(function() {
   exec('python3 screen.py' , (err,stdout,stderr)=>{
@@ -54,6 +55,8 @@ exec('firefox ' + website , (err,stdout,stderr)=>{
   });
   console.log("whaa");
 },15000);*/
+=======
+>>>>>>> 5fb0a12e343b98b5099a42a7987ef4678abca118
 //////////////////////////////////////////////////////////////////////server functions section//////////////////////////////////////////////////////////////////////
 
 //this function is used so that close the socket and remove it from the list of connecitons
@@ -301,6 +304,10 @@ getIp().then(() => {
               }
               else{
                 update();
+                //this was written after the localEnv.js.pdf was written
+                if(mode === 2){
+                  socket.emit("taskComplete");
+                }
               }
             });
           });
@@ -352,15 +359,24 @@ getIp().then(() => {
       if(buffer !== undefined){
         socket.emit('transmitting' + msg, tag, buffer); 
         console.log("emit:transmitting to:" + msg + " with tag:" + tag );
+        socket.emit('fin'+ msg , tag);
       }
       else{
         console.log("NO FILE FOUND!!", "Please put the results within the field.", "warning");
       }
-      socket.emit('fin'+ msg , tag);
       console.log("emit:fin to:" + msg + " with tag:" + tag);
     });
     socket.on('recieved', (msg) => {
       console.log("message was recieved" + msg);          
+    });
+
+    socket.on("click", () => {
+      exec('python3 screen.py' , (err,stdout,stderr)=>{
+        if(err){
+          console.log(err);
+        }
+        console.log(stdout)
+      });
     });
   });
 

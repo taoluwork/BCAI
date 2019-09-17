@@ -511,9 +511,11 @@ class App extends Component {
         if(this.state.mode === 'WORKER'){
           if(val){
             document.getElementById("trueButton").click();
+            socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
           }
           else{
             document.getElementById('falseButton').click();
+            socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
           }
         }
       });
@@ -526,10 +528,12 @@ class App extends Component {
         console.log(this.state.buffer);
         if(this.state.mode === 'WORKER'){  
           document.getElementById('submitButton').click();
+          socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
         }
         if(this.state.mode === 'USER'){
           document.getElementById('modeButton').click();
           document.getElementById('submitButton').click();
+          socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
         }
       })
 
@@ -548,6 +552,11 @@ class App extends Component {
           this.setState({buffer : newBuffer});
           console.log(this.state.buffer)
         }
+      });
+      socket.on("taskCompleted", ()=>{
+        this.state.tempSocket.emit("goodBye", this.state.myIP);
+        this.state.tempSocket.disconnect(true);
+        this.setState({result : undefined , resultID : undefined , tempSocket: undefined});
       });
     }
     return socket;//return so that we can still interact with it later on
@@ -695,7 +704,7 @@ class App extends Component {
   stopJob(event) {
     event.preventDefault();
     console.log("stopJob: " + this.state.resultID)
-    if(this.state.resultID === undefined){
+    //if(this.state.resultID === undefined){
       this.state.myContract.stopRequest({from: this.state.myAccount})
       .then(ret => {
         console.log("Job removed from pendingPool");
@@ -705,16 +714,16 @@ class App extends Component {
       .catch(err => {
         console.log(err)
       })
-    }
+    //}
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //NOTE!!!!!! this is curently done in order to delete the resultID once a job has been finished
     //this needs to be automated some how
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    else if(this.state.resultID !== undefined){
-      this.state.tempSocket.emit("goodBye", this.state.myIP);
-      this.state.tempSocket.disconnect(true);
-      this.setState({result : undefined , resultID : undefined , tempSocket: undefined});
-    }
+    //else if(this.state.resultID !== undefined){
+    //  this.state.tempSocket.emit("goodBye", this.state.myIP);
+    //  this.state.tempSocket.disconnect(true);
+    //  this.setState({result : undefined , resultID : undefined , tempSocket: undefined});
+    //}
   }
 
   submitValidationTrue (event) {

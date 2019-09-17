@@ -3,8 +3,12 @@ import numpy as np
 import cv2
 import math
 import pyautogui
+import time
 
 def click():
+
+  time.sleep(10)#wait ten seconds to allow for the metamaks screen to laod correctly
+
   #take screenshot adapted from https://python-mss.readthedocs.io/examples.html
   with mss() as sct:
     sct.shot(mon=-1, output='screens/cap.png')
