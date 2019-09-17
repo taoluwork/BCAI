@@ -26,7 +26,169 @@ import "./App.css";
 //import { AsyncResource } from "async_hooks";
 //import { Accounts } from "web3-eth-accounts/types";
 //import { userInfo } from "os";
+import {MuiThemeProvider, AppBar, MenuItem, Paper, TextField, RaisedButton, Divider, Drawer, Button, Typography, Box, Toolbar, FormGroup, FormControl, FormControlLabel, InputLabel, Select, Slider, Tooltip } from '@material-ui/core';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Switch from '@material-ui/core/Switch';
+import MenuIcon from '@material-ui/icons/Menu';
+import IconButton from '@material-ui/core/IconButton';
+import { AccountItem, NavbarBalance } from 'ethereum-react-components';
+import { string } from "prop-types";
+
+
+
 const hex2ascii = require('hex2ascii')
+
+
+
+
+const styles = {
+  buttonStyle : {
+    color : "white",
+    textTransform: 'none',
+    fontSize: 16,
+    border: '1px solid',
+    marginLeft : 50,
+    lineHeight: 1.5,
+    backgroundColor: '#50cfda',
+    fontFamily : "sans-serif",
+  },
+
+  buttonStyle2: {
+    color : "white",
+    textTransform: 'none',
+    fontSize: 16,
+    border: '1px solid',
+    lineHeight: 1.5,
+    backgroundColor: '#50cfda',
+    fontFamily : "sans-serif",
+    marginTop: 10, 
+    marginLeft: 15, 
+    marginBottom: 10
+  },
+
+  buttonStyle3: {
+    color : "white",
+    textTransform: 'none',
+    fontSize: 16,
+    border: '1px solid',
+    lineHeight: 1.5,
+    backgroundColor: '#50cfda',
+    fontFamily : "sans-serif",
+    margin : 10
+  },
+
+  buttonStyle4: {
+    color : "white",
+    textTransform: 'none',
+    fontSize: 16,
+    border: '1px solid',
+    lineHeight: 1.5,
+    backgroundColor: '#50cfda',
+    fontFamily : "sans-serif",
+    marginTop : 20,
+    marginBottom : 20
+  },
+
+
+  AppBarStyle : {
+    flexGrow : 1,
+  },
+
+  TypoGraphyAppBarStyle: {
+    fontFamily : 'sans-serif',
+    fontSize : 20,
+    fontWeight : "fontWeightBold",
+    fontStyle: 'bold',
+    color: 'white',
+    padding: '6px 12px',
+    backgroundColor : '#50cfda',
+    paddingLeft : window.screen.width - 800,
+    paddingTop : 30,
+    paddingBottom : 30
+  },
+
+  TypographyStyle: {
+    fontFamily : 'sans-serif',
+    fontSize : 18,
+    fontStyle: 'bold',
+    marginBottom : 20,
+    color : '#0c6f78',
+  },
+
+  TypographyStyle2: {
+    fontFamily : 'sans-serif',
+    fontSize : 18,
+    fontStyle: 'bold',
+    color : '#0c6f78',
+    marginTop : 20,
+    marginLeft : 50,
+    marginBottom : 50,
+  },
+
+  TypographyStylePools: {
+    fontFamily : 'sans-serif',
+    fontSize : 18,
+    fontStyle: 'bold',
+    marginBottom: 12,
+    color : '#0c6f78'
+  },
+
+  IconStyle: {
+    marginRight : 50,
+  },
+
+  ToolbarStyle: {
+    color : "white",
+    backgroundColor : '#50cfda',
+    fontFamily : 'roboto',
+    fontSize : 30,
+  },
+
+  FormGroupStyle:{
+    paddingTop : 100,
+    paddingLeft : (parseInt(window.screen.width)/2)-100
+  },
+
+  SwitchStyle:{
+    color: '#50cfda',
+    display : 'flex',
+    justifyContent : 'center',
+  },
+
+  FormStyle:{
+    paddingTop: 100,
+    paddingBottom : 100
+  },
+
+  IdenticonStyle: {
+    marginTop : 100,
+    display : 'flex',
+    justifyContent : 'center'
+  },
+
+  inputStyle : {
+    display : 'none',
+  },
+
+  sliderStyle : {
+    width : 250,
+    color : '#0c6f78', 
+    marginLeft : 50
+  },
+
+  textFieldStyle : {
+    marginLeft : 50,
+    width : 250,
+    fontSize : 30,
+    
+  }
+}
+
+
 
 /*
 const FormSchema = t.struct({
@@ -35,6 +197,16 @@ const FormSchema = t.struct({
   price: t.Number,
   account: t.String
 })*/
+
+
+function valuetextSlider(value) {
+  return '${value}';
+}
+
+function createData(name, value){
+  return {name, value};
+}
+
 
 class App extends Component {
   state = {
@@ -45,6 +217,9 @@ class App extends Component {
     myContract: null,
     debug: false,
     count: 0,
+
+    open : false,
+    screen : "Main Menu",
 
     //user level variable
     mode: "USER",
@@ -63,13 +238,18 @@ class App extends Component {
     validatingCount: 0,
     providingCount: 0,
     providerList: null,
-
+    ether : 0,
+    fileName : "",
     tempSocket: null, //added by TL 0812, missing declaration in state.
+
+    defaultTime : 1,
+    defaultTarget : 1,
+    defaultPrice : 1,
   };
 
   constructor(props) {
     super(props)
-    this.state = { mode: "USER", };
+    this.state = { mode: "USER", screen: "Main Menu" };
     //the following bind enable calling the function directly using func() syntax
     //NOTE: adding bind for new added functions is necessary
     //If missed bind may result in error : "cannot access property of undefined"
@@ -78,6 +258,9 @@ class App extends Component {
     this.TimeChange   = this.TimeChange.bind(this);
     this.TargetChange = this.TargetChange.bind(this);
     this.PriceChange  = this.PriceChange.bind(this);
+    this.DefaultPriceChange = this.DefaultPriceChange.bind(this);
+    this.DefaultTargetChange = this.DefaultTargetChange.bind(this);
+    this.DefaultTimeChange = this.DefaultTimeChange.bind(this);
     this.submitRequest = this.submitRequest.bind(this);
     this.submitJob    = this.submitJob.bind(this);
     this.submitValidation = this.submitValidation.bind(this);
@@ -94,11 +277,19 @@ class App extends Component {
     this.buildSocket  = this.buildSocket.bind(this);
     this.DownloadInfo = this.DownloadInfo.bind(this);
     this.notificationDOMRef = React.createRef();
+    this.handleToggle = this.handleToggle.bind(this);
+    this.drawerClose = this.drawerClose.bind(this);
+    this.checkMenuItem = this.checkMenuItem.bind(this);
+    this.switchStatus = this.switchStatus.bind(this);
+
+
+
   }
 
   //initiate the page
   componentWillMount = async () => {
     try {
+
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
       // Use web3 to get the user's accounts.
@@ -111,8 +302,11 @@ class App extends Component {
       console.log("here is the instance " + instance);
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, myContract: instance, myAccount: accounts[0], events: [] , socket , data: undefined , result: undefined })
-      this.setState({Time: 1, Price : 1, Target : 1, count : 0})
+      var etherAmt = await web3.eth.getBalance(accounts[0])/1000000000000000000;
+      console.log("the amount of ether is ");
+      console.log(etherAmt);
+      this.setState({ web3, accounts, myContract: instance, myAccount: accounts[0], events: [] , socket , data: undefined , result: undefined, ether: etherAmt})
+      this.setState({defaultTime : 1, defaultPrice : 1, defaultTarget : 1, count : 0,})
       this.setState({RequestStartTime: 0})
       console.log("contract set up!");
       this.showPools();
@@ -163,32 +357,68 @@ class App extends Component {
     else
       this.setState({Time: undefined})
   }
-  TargetChange(event) {
+  TargetChange(event, value) {
     event.preventDefault();
-    if (event.target.value !== "")   //under extreme cases, user will input empty by mistake
-      this.setState({Target: event.target.value })
+    if (value !== "")   //under extreme cases, user will input empty by mistake
+    {
+      this.setState({Target: value })
+    }
     else
+    {
       this.setState({Target: undefined})
+    }
   }
-  PriceChange(event) {
+  PriceChange(event, value) {
     event.preventDefault();
-    if (event.target.value !== "")   //under extreme cases, user will input empty by mistake
-      this.setState({Price: event.target.value })
+    if (value !== "") {  //under extreme cases, user will input empty by mistake
+      this.setState({ Price: event.target.value })
+    }
     else
       this.setState({Price: undefined})
   }
+
+
+  DefaultTimeChange(event) {
+    event.preventDefault();
+    if (event.target.value !== "")   //under extreme cases, user will input empty by mistake
+      this.setState({defaultTime: event.target.value })
+    else
+      this.setState({defaultTime: undefined})
+  }
+  DefaultTargetChange(event, value) {
+    event.preventDefault();
+    if (value !== "")   //under extreme cases, user will input empty by mistake
+    {
+      this.setState({defaultTarget: value })
+    }
+    else
+    {
+      this.setState({defaultTarget: undefined})
+    }
+  }
+  DefaultPriceChange(event) {
+    event.preventDefault();
+    if (event.target.value !== "")   //under extreme cases, user will input empty by mistake
+      this.setState({defaultPrice: event.target.value })
+    else
+      this.setState({defaultPrice: undefined})
+  }
+
+
 
   //file readers: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
   captureFile(event) {    //using filereader to load file into buffer after selection
     event.preventDefault()
     console.log("capture file")
     const file = event.target.files[0]
+    this.setState({fileName : event.target.files[0].name});
     const reader = new window.FileReader()
     reader.readAsArrayBuffer(file)
     reader.onloadend = () => {
       this.setState({ buffer: Buffer(reader.result) })
       console.log("buffer", this.state.buffer);
     }
+    
   }
 
 
@@ -677,6 +907,8 @@ class App extends Component {
   //note: CheckEvents has been edited to keep track of only the current transaction's information and
   //      is used to identify the resultID and dataID if necessary for that person's specific role
   //TODO: add assigned address to any assignment notification.
+
+
   checkEvents = async () => {
     var myEvents = [];
     var list = document.getElementById("historyBar");
@@ -820,7 +1052,7 @@ class App extends Component {
       }
     }
     var list = document.getElementById("historyBar");
-    console.log(list.innerHTML)
+    //console.log(list.innerHTML)
     for (var j = 0; j < myEvents.length; j++){
       var el = document.createElement("li");
       el.appendChild(document.createTextNode(myEvents[j]));
@@ -859,9 +1091,9 @@ class App extends Component {
   showApplyButton() {
     if (this.state.mode === 'WORKER') {
       return (
-        <button onClick={this.applyAsProvider} style={{ margin: 10 }}>
+        <Button onClick={this.applyAsProvider} style={styles.buttonStyle3}>
           Submit Provider Application
-          </button>
+          </Button>
       );
     }
   }
@@ -870,6 +1102,9 @@ class App extends Component {
     if (this.state.mode === 'WORKER' && this.state.resultID !== undefined && this.state.dataID === undefined) {
       return (
         <div>
+          <Typography style = {styles.TypographyStyle}>
+            VALIDATIONS
+          </Typography>
           <h2> VALIDATIONS </h2>
           <p>
           <button id={'trueButton'} onClick={this.submitValidationTrue} style={{ marginBottom: 5 , marginRight : 10}} >
@@ -933,9 +1168,9 @@ class App extends Component {
     }
     if (this.state.mode === 'WORKER') {
       return (
-        <button onClick={this.applyAsProvider} style={{ margin: 10 }}>
-          Apply Provider
-          </button>
+        <Button onClick={this.applyAsProvider} style={styles.buttonStyle4}>
+          Apply to be Provider
+          </Button>
       );
     }
   }
@@ -943,12 +1178,32 @@ class App extends Component {
   showUploadModule() {
     if (this.state.mode === "USER" ){
       return (
-        <div><h2>{"UPLOAD TASK SCRIPT" }</h2>
+        <div>
+          <Typography style = {styles.TypographyStyle}>
+            UPLOAD TASK SCRIPT
+          </Typography>
         <form onSubmit={this.serverSubmit}>
-          <input type='file' id='fileInput' onChange={this.captureFile}></input>
-          <button onClick={this.submitRequest} style={{ margin: 10 }}>
-          Submit Task
-          </button>
+          <input
+            id = "contained-button-file"
+            type = "file"
+            style = {styles.inputStyle}
+            onChange = {this.captureFile}
+            accept = ".zip, .rar, .7zip"
+            />
+            <label htmlFor = "contained-button-file">
+            <Tooltip title = "only zip files are accepted">
+              <Button variant = "contained" input = "file" component = "span" style = {styles.buttonStyle4} id = "filebutton">
+                upload task
+              </Button>
+            </Tooltip>
+            </label>
+            <Typography style = {styles.TypographyStyle}>
+              {this.state.fileName}
+            </Typography>
+          <Button style = {styles.buttonStyle4} onClick = {this.submitRequest} >
+            Submit Task
+          </Button>
+          
           {/*<input type='submit' value="Upload to server"></input>*/}
         </form></div>
       )
@@ -956,22 +1211,29 @@ class App extends Component {
     if (this.state.mode === 'WORKER' && this.state.buffer === undefined && this.state.dataID !== undefined) {
       return(
         <div>
-          <h2>SUBMIT RESULT PACKAGE</h2>
-          <p>Please wait a submit button will appear once the script has been executed</p>
+          <Typography style = {styles.TypographyStyle}>
+            SUBMIT RESULT PACKAGE
+          </Typography>
+          <Typography style = {styles.TypographyStyle}>
+            Please wait a submit button will appear once the script has been executed
+          </Typography>
         </div>
       );
     }
     if (this.state.mode === 'WORKER' && this.state.buffer !== undefined ) {
       //there needs to be a resend function if the data is null(reupload button)
       return (
-        <div><h2>SUBMIT RESULT PACKAGE</h2>
+        <div>
+          <Typography style = {styles.TypographyStyle}>
+            SUBMIT RESULT PACKAGE
+          </Typography>
           <form onSubmit={this.serverSubmit}>
           
           {/*<input type='submit' value="Upload to server"></input>*/}
        
-        <button id={'submitButton'} onClick={this.submitJob} style={{ marginTop: 10, marginLeft: 15, marginBottom: 10 }}>
+        <Button id={'submitButton'} onClick={this.submitJob} style={styles.buttonStyle4}>
           Submit Result
-        </button>
+        </Button>
         </form></div>
       );
     }
@@ -988,16 +1250,16 @@ class App extends Component {
   showStopButtons(){
     if(this.state.mode === 'WORKER'){
       return(
-        <button onClick={this.stopProviding} style={{ margin: 10 }}>
+        <Button onClick={this.stopProviding} style={styles.buttonStyle4}>
           Stop Working
-          </button>
+          </Button>
       )
     }
     if(this.state.mode === 'USER'){
       return(
-        <button onClick={this.stopJob} style={{ margin: 10 }}>
+        <Button onClick={this.stopJob} style={styles.buttonStyle4}>
           Remove Job
-          </button>
+          </Button>
       )
     }
   }
@@ -1005,74 +1267,419 @@ class App extends Component {
   historyBar(){
     return(
       <div>
-        <h2>HISTORY</h2>
         <ul id={"historyBar"} style={{ height:"200px" , overflow:"auto", marginRight:"40%", marginLeft:"40%" , listStyleType:"none"}}>
         </ul>
       </div>
     )
   }
 
+  handleToggle = () => this.setState({ open: !this.state.open });
+
+  drawerClose(newScreen){
+    this.setState({
+      open:false,
+      screen: newScreen,
+    });
+  }
+
+
+  checkMenuItem() {
+    if(this.state.mode == "USER")
+    {
+      return(
+        <MenuItem onClick={() => this.drawerClose("Submit Task")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Submit Task</MenuItem>
+      );
+    }
+    else{
+      return(
+        <MenuItem onClick={() => this.drawerClose("Provider Task")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Provider Task</MenuItem>
+      );
+    }
+  }
+
+  switchStatus(){
+    if(this.state.mode == "USER")
+    {;
+      return "change to provider";
+    }
+    else{
+      return "change to user";
+    }
+  }
+
+
+
+
+
+
+  
+
+  
+
   /////////////////////////////////////////////////////////////////////////////////
   //components of react: https://reactjs.org/docs/forms.html  
   render() {
+    //console.log(this.state.screen);
 
+    var rows = [
+      createData('PROVIDER', this.state.providerCount),
+      createData('PENDING', this.state.pendingCount),
+      createData('PROVIDING', this.state.providingCount),
+      createData('VALIDATING', this.state.validatingCount),
+    ];
+    
+    
     this.state.mode === "USER" ? document.body.style = 'background:#F5F2D1;' : document.body.style = 'background:#E7F5D1;'
 
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
-    return (
-      <div className="App">
-        <ReactNotification ref={this.notificationDOMRef} />
-        <h1 style={{ marginBottom: 30 }}>Welcome to the BCAI Dapp</h1>
-        <button id={'modeButton'} onClick={this.changeMode} style={{ fontsize: 40, height:60, width: 120, marginBottom: 20 }}>{this.state.mode} MODE</button>
+    
+    if(this.state.screen == "Inbox")
+    {
+      return(
+        <div className = "App">
+           <MuiThemeProvider>
+          <div className = {styles.AppBarStyle}>
+              <AppBar  title = "Material-UI" >
+                <Toolbar style = {styles.ToolbarStyle}>
+                  <IconButton  edge = "start" color="inherit" style = {styles.IconStyle} aria-label="menu" marginRight = {200}>
+                    <MenuIcon onClick = {this.handleToggle}/>
+                  </IconButton>
+                  IChain Application
+                </Toolbar>
+              </AppBar>
+            </div>
+          </MuiThemeProvider>
+          <ReactNotification ref={this.notificationDOMRef} />
+          <MuiThemeProvider>
+            <div>
+              <Drawer
+                docked = {false}
+                width = {300}
+                open = {this.state.open}
+                onRequestChange = {(open) => this.setState({open})}
+              >
 
-        
+                <Paper style={{ height: 90, width: 300, background: '#22b9c6' }}>
+                  <Typography style = {{color : "white", display : 'flex', justifyContent : 'center', marginTop : 35, fontFamily : 'sans-serif', fontWeight : "fontWeightBold", }}>
+                    ICHAIN OPTIONS
+                  </Typography>
+                </Paper>
+                <MenuItem onClick={() => this.drawerClose("Main Menu")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Main Menu</MenuItem>
+                {this.checkMenuItem()}
+                <MenuItem onClick={() => this.drawerClose("Inbox")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Inbox</MenuItem>
+                <MenuItem onClick={() => this.drawerClose("Settings")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Settings</MenuItem>
+            </Drawer>
 
-        <form onSubmit={this.startRequestSubmit}>
-        <h2>{this.state.mode === 'USER' ? "SUBMIT YOUR TASK (in a zip file name data.zip)" : "APPLY TO BE PROVIDER"}</h2>
-          <p><label>
-            Time : (in seconds)
-          <input type="number" value={this.state.Time} onChange={this.TimeChange} />
-          </label></p>
-          <p><label>
-            Target : (0-100)
-          <input type="number" value={this.state.Target} onChange={this.TargetChange} />
-          </label></p>
-          <p><label>
-            Price : (in wei)
-          <input type="number" value={this.state.Price} onChange={this.PriceChange} />
-          </label></p>
-          <p>Use account:          <div> {this.state.myAccount}  </div> 
-            <br></br>
-            {this.showIDs()}
-            {this.showSubmitButton()}
-          </p>
-        </form>
-        {this.showUploadModule()}
-        {this.showStopButtons()}
-        {this.showValidationButtons()}
-        {this.showUserDivider()}
-        {this.historyBar()}
-        <h2 style={{ marginTop: 20 }}>CURRENT ACCOUNT
-        <button onClick={this.checkEvents} style={{marginLeft : 20, marginBottom: 10 }}> Check Status </button></h2>
-        
-
-        <div style={{ marginTop: 5 }}>
-          <h2 style={{ margin: 1 }}>CURRENT STATE OF CONTRACT
-          <button onClick={this.showPools} style={{marginLeft: 20}}>
-            Refresh
-          </button></h2>
-          <p>Provider Pool = {this.state.providerCount}</p>
-          <p>Pending Pool = {this.state.pendingCount}</p>
-          <p>Providing Pool = {this.state.providingCount}</p>
-          <p>Validating Pool = {this.state.validatingCount}</p>
-          
+            </div>
+            
+          </MuiThemeProvider>
         </div>
+      )
+    }
 
-      </div>
-    );
+    if(this.state.screen == "Submit Task" || this.state.screen == "Provider Task")
+    {
+      return(
+        <div className = "App">
+           <MuiThemeProvider>
+          <div className = {styles.AppBarStyle}>
+              <AppBar  title = "Material-UI" >
+                <Toolbar style = {styles.ToolbarStyle}>
+                  <IconButton  edge = "start" color="inherit" style = {styles.IconStyle} aria-label="menu" marginRight = {200}>
+                    <MenuIcon onClick = {this.handleToggle}/>
+                  </IconButton>
+                  IChain Application
+                  <div style = {{marginLeft : 1250}}>
+                    <NavbarBalance balance={Math.round(this.state.ether, 4)}/>
+                  </div>
+                </Toolbar>
+              </AppBar>
+            </div>
+          </MuiThemeProvider>
+          <ReactNotification ref={this.notificationDOMRef} />
+          <MuiThemeProvider>
+            <div>
+              <Drawer
+                docked = {false}
+                width = {300}
+                open = {this.state.open}
+                onRequestChange = {(open) => this.setState({open})}
+              >
+
+                <Paper style={{ height: 90, width: 300, background: '#22b9c6' }}>
+                  <Typography style = {{color : "white", display : 'flex', justifyContent : 'center', marginTop : 35, fontFamily : 'sans-serif', fontWeight : "fontWeightBold", }}>
+                    ICHAIN OPTIONS
+                  </Typography>
+                </Paper>
+                <MenuItem onClick={() => this.drawerClose("Main Menu")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Main Menu</MenuItem>
+                {this.checkMenuItem()}
+                <MenuItem onClick={() => this.drawerClose("Inbox")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Inbox</MenuItem>
+                <MenuItem onClick={() => this.drawerClose("Settings")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Settings</MenuItem>
+            </Drawer>
+            </div>
+          </MuiThemeProvider>
+
+          <form onSubmit={this.startRequestSubmit} style = {styles.FormStyle}>
+            <Typography style = {styles.TypographyStyle}>
+              {this.state.mode === 'USER' ? "SUBMIT YOUR TASK" : "APPLY TO BE PROVIDER"}
+            </Typography>
+              <Typography style = {styles.TypographyStyle}>
+              <TextField
+                type="number"
+                id="time"
+                label="Time (s)"
+                valueLabelDisplay = "auto"
+                defaultValue = {this.state.defaultTime}
+                onChange={(event, value) => this.TimeChange(event, value)}
+                style = {styles.textFieldStyle}
+              />
+              </Typography> 
+              <Typography style = {styles.TypographyStyle}>
+                Target
+              <Slider
+                defaultValue = {this.state.defaultTarget}
+                type = "number"
+                getAriaValueText = {valuetextSlider}
+                aria-labelledby="discrete-slider"
+                valueLabelDisplay = "auto"
+                step = {1}
+                min = {1}
+                max = {100}
+                onChange = {(event, value) => this.TargetChange(event, value)}
+                style = {styles.sliderStyle}
+                />
+              </Typography>
+              <Typography style = {styles.TypographyStyle}>
+                <TextField
+                type="number"
+                id="price"
+                label="Price (in Wei)"
+                valueLabelDisplay = "auto"
+                defaultValue = {this.state.defaultPrice}
+                onChange={(event, value) => this.PriceChange(event, value)}
+                style = {styles.textFieldStyle}
+              />
+              </Typography>
+              
+              <p>
+                <br></br>
+                {this.showIDs()}
+                {this.showSubmitButton()}
+              </p>
+          </form>
+          {this.showUploadModule()}
+          {this.showStopButtons()}
+          {this.showValidationButtons()}
+          {this.showUserDivider()}
+        </div>
+      )
+    }
+
+
+
+    if(this.state.screen == "Settings")
+    {
+      return(
+        <div className = "App">
+           <MuiThemeProvider>
+          <div style = {styles.AppBarStyle}>
+              <AppBar  title = "Material-UI" >
+                <Toolbar style = {styles.ToolbarStyle}>
+                  <IconButton  edge = "start" color="inherit" style = {styles.IconStyle} aria-label="menu" marginRight = {200}>
+                    <MenuIcon onClick = {this.handleToggle}/>
+                  </IconButton>
+                  IChain Application
+                </Toolbar>
+              </AppBar>
+            </div>
+          </MuiThemeProvider>
+          <MuiThemeProvider>
+            <div>
+              <FormGroup style = {styles.FormGroupStyle}>
+                <FormControlLabel
+                  control={
+                    <Switch style = {styles.SwitchStyle} checked = {this.state.mode == "USER"} onChange ={this.changeMode} value = "mode" color = "primary"/>
+
+                  }
+                  label = {this.switchStatus()}
+                 />
+              </FormGroup>
+              
+              <Drawer
+                docked = {false}
+                width = {300}
+                open = {this.state.open}
+                onRequestChange = {(open) => this.setState({open})}
+              >
+
+                <Paper style={{ height: 90, width: 300, background: '#22b9c6' }}>
+                  <Typography style = {{color : "white", display : 'flex', justifyContent : 'center', marginTop : 35, fontFamily : 'sans-serif', fontWeight : "fontWeightBold", }}>
+                    ICHAIN OPTIONS
+                  </Typography>
+                </Paper>
+                <MenuItem onClick={() => this.drawerClose("Main Menu")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Main Menu</MenuItem>
+                {this.checkMenuItem()}
+                <MenuItem onClick={() => this.drawerClose("Inbox")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Inbox</MenuItem>
+                <MenuItem onClick={() => this.drawerClose("Settings")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Settings</MenuItem>
+            </Drawer>
+
+            </div>
+            
+          </MuiThemeProvider>
+          <div style = {{marginTop : 50, marginBottom : 50}}>
+          </div>
+          <Typography style = {styles.TypographyStyle}>
+              {this.state.mode === 'USER' ? "DEFAULT USER SETTINGS" : "DEFAULT PROVIDER SETTINGS"}
+              </Typography>
+              <Typography style = {styles.TypographyStyle}>
+              <TextField
+                type="number"
+                id="time"
+                label="Time (s)"
+                valueLabelDisplay = "auto"
+                defaultValue = {this.state.defaultTime}
+                onChange={(event, value) => this.DefaultTimeChange(event, value)}
+                style = {styles.textFieldStyle}
+              />
+              </Typography> 
+              <Typography style = {styles.TypographyStyle}>
+                Target
+              <Slider
+                defaultValue = {this.state.defaultTarget}
+                type = "number"
+                getAriaValueText = {valuetextSlider}
+                aria-labelledby="discrete-slider"
+                valueLabelDisplay = "auto"
+                step = {1}
+                min = {1}
+                max = {100}
+                onChange = {(event, value) => this.DefaultTargetChange(event, value)}
+                style = {styles.sliderStyle}
+                />
+              </Typography>
+              <Typography style = {styles.TypographyStyle}>
+                <TextField
+                type="number"
+                id="price"
+                label="Price (in Wei)"
+                valueLabelDisplay = "auto"
+                defaultValue = {this.state.defaultPrice}
+                onChange={(event, value) => this.DefaultPriceChange(event, value)}
+                style = {styles.textFieldStyle}
+              />
+              </Typography>
+
+        </div>
+      )
+    }
+
+    if (this.state.screen == "Main Menu")
+    {
+      return (
+        <div className = "App">
+          <MuiThemeProvider>
+          <div>
+              <AppBar  title = "Material-UI" style = {styles.AppBarStyle}>
+                <Toolbar style = {styles.ToolbarStyle}>
+                  <IconButton  edge = "start" color="inherit" style = {styles.IconStyle} aria-label="menu" marginRight = {200}>
+                    <MenuIcon onClick = {this.handleToggle}/>
+                  </IconButton>
+                  IChain Application
+                </Toolbar>
+              </AppBar>
+            </div>
+
+          </MuiThemeProvider>
+          <MuiThemeProvider>
+            <div>
+              <Drawer
+                docked = {false}
+                width = {300}
+                open = {this.state.open}
+                onRequestChange = {(open) => this.setState({open})}
+              >
+                <Paper style={{ height: 90, width: 300, background: '#22b9c6' }}>
+                  <Typography style = {{color : "white", display : 'flex', justifyContent : 'center', marginTop : 35, fontFamily : 'sans-serif', fontWeight : "fontWeightBold", }}>
+                    ICHAIN OPTIONS
+                  </Typography>
+                </Paper>
+                <MenuItem onClick={() => this.drawerClose("Main Menu")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Main Menu</MenuItem>
+                {this.checkMenuItem()}
+                <MenuItem onClick={() => this.drawerClose("Inbox")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Inbox</MenuItem>
+                <MenuItem onClick={() => this.drawerClose("Settings")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Settings</MenuItem>
+            </Drawer>
+            </div>
+          </MuiThemeProvider>
+          <MuiThemeProvider>
+            <div style = {styles.IdenticonStyle}>
+            <AccountItem name="Current Account" address={this.state.myAccount} balance = {this.state.ether}/>  
+          </div>
+          </MuiThemeProvider>
+          <div style = {{marginTop : 50}}>
+            <Typography style = {styles.TypographyStyle}>
+              ACCOUNT HISTORY
+            </Typography>
+          {this.historyBar()}
+          </div>
+          <Typography style = {styles.TypographyStyle}>
+            CURRENT ACCOUNT
+            <Button style = {styles.buttonStyle} onClick = {this.checkEvents}>
+              check status
+            </Button>
+          </Typography>
+          <Typography style = {styles.TypographyStyle}>
+              CURRENT STATE OF CONTRACT
+              <Button style = {styles.buttonStyle} onClick = {this.showPools}>
+                refresh
+              </Button>
+            </Typography>
+          <Paper style = {{marginTop: 30, width : '50%', overflowX: 'auto', left: '25%', position: 'absolute'}}>
+            <Table style = {{minWidth: 650, backgroundColor : 'white'}}>
+              <TableHead>
+                <TableRow>
+                  <TableCell style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>POOL</TableCell>
+                  <TableCell align = "right" style = {{color :'#0c6f78', fontFamily : 'sans-serif'}}>COUNT</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map(row => (
+                  <TableRow key = {row.name}>
+                    <TableCell component = "th" scope = "row" style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>
+                      {row.name}
+                    </TableCell>
+                    <TableCell align = "right" style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>{row.value}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Paper>
+
+          <div style={{ marginTop: 100 }}>
+            
+            <Typography style = {styles.TypographyStylePools}>
+              Provider Pool = {this.state.providerCount}
+            </Typography>
+            <Typography style = {styles.TypographyStylePools}>
+              Pending Pool = {this.state.pendingCount}
+            </Typography>
+            <Typography style = {styles.TypographyStylePools}>
+              Providing Pool = {this.state.providingCount}
+            </Typography>
+            <Typography style = {styles.TypographyStylePools}>
+              Validating Pool = {this.state.validatingCount}
+            </Typography>
+            
+          </div>
+
+
+        </div>
+        
+        );
+      }
   }
 }
+
 
 export default App;
