@@ -12,6 +12,7 @@ else
         exit #exit script execution
     fi
 fi
+<<<<<<< HEAD
 if [ -d "BCAI" ] ;#if BCAI folder already exists, remove it
 then
     read -p $'\e[91mBCAI already exists, remove? \e[0m[Y/N] ' remove
@@ -27,6 +28,8 @@ then
     esac
     
 fi
+=======
+>>>>>>> 24f459fbedb296a462d0f7af54766657e92c5738
 #Install git
 if ! git --version > /dev/null 2>&1;  #not installed
 then
@@ -111,6 +114,7 @@ cd BCAI
 cd bcai_deploy
 cd client
 echo -e "\e[93m-----------------------Installing npm packages for client.----------------------\e[0m"
+<<<<<<< HEAD
 if npm install ; then #if installed
     echo -e "\e[92mnpm packages for client successfully installed."
 else  #problem installing
@@ -129,6 +133,13 @@ else  #problem installing
             exit
             ;;
     esac
+=======
+if sudo npm install ; then #if installed
+    echo -e "\e[92mnpm packages for client successfully installed."
+else  #problem installing
+    echo -e "\e[91mProblem installing npm packages for client. Aborting installation."
+    exit
+>>>>>>> 24f459fbedb296a462d0f7af54766657e92c5738
 fi
 #Install npm stuff for localuser
 cd ..
@@ -136,6 +147,7 @@ cd .. #back up to BCAI
 cd ML
 cd localUser
 echo -e "\e[93m---------------------Installing npm packages for localUser.---------------------\e[0m"
+<<<<<<< HEAD
 if npm install ; then #if installed
     echo -e "\e[92mnpm packages for localUser successfully installed."
 else  #problem installing
@@ -154,6 +166,13 @@ else  #problem installing
             exit
             ;;
     esac
+=======
+if sudo npm install ; then #if installed
+    echo -e "\e[92mnpm packages for localUser successfully installed."
+else  #problem installing
+    echo -e "\e[91mProblem installing npm packages for localUser. Aborting installation."
+    exit
+>>>>>>> 24f459fbedb296a462d0f7af54766657e92c5738
 fi
 #Install npm stuff for localworker
 cd ..
@@ -161,6 +180,7 @@ cd .. #back up to BCAI
 cd ML
 cd localWorker
 echo -e "\e[93m--------------------Installing npm packages for localWorker.--------------------\e[0m"
+<<<<<<< HEAD
 if npm install ; then #if installed
     echo -e "\e[92mnpm packages for localWorker successfully installed."
 else  #problem installing
@@ -179,6 +199,13 @@ else  #problem installing
             exit
             ;;
     esac
+=======
+if sudo npm install ; then #if installed
+    echo -e "\e[92mnpm packages for localWorker successfully installed."
+else  #problem installing
+    echo -e "\e[91mProblem installing npm packages for localWorker. Aborting installation."
+    exit
+>>>>>>> 24f459fbedb296a462d0f7af54766657e92c5738
 fi
 echo -e "\e[92mInstallation successful. Run start.bash to start the program.\e[0m"
 exit #finished!
