@@ -23,7 +23,7 @@
 
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;           //enable returning self-defined type, used in helper return provider and request
-                                            //do not disable, provider is returned for debuging reason.
+                                            //do not disable, provider is returned for debugging reason.
 
 contract TaskContract {
     //list
@@ -45,7 +45,7 @@ contract TaskContract {
         uint256 blockNumber;                //record the time of submission
         address payable provider;           //record the provider assigned to this request
         uint64  time;                       //maximum time requirements                 TODO: determine the unit and format
-        uint16  target;                     //target 0-100.00                           TODO: determine the unit and format
+        uint16  target;                     //target 0-100.00, the accuracy             TODO: determine the unit and format
         uint256 price;                      //the max amount he willing to pay          TODO: determine the unit and format
         bytes   dataID;                     //dataID used to fetch the off-chain data, interact with ipfs
         bytes   resultID;                   //dataID to fetch the off-chain result, via ipfs
@@ -142,7 +142,7 @@ contract TaskContract {
     }
 
     // Send a request from user to blockchain. Assumes price is including the cost for verification
-    // NOTE: use bytes memory as argument will increase the gas cost, one alternative will be uint type, may consifer in future.
+    // NOTE: use bytes memory as argument will increase the gas cost, one alternative will be uint type, may consider in future.
     function startRequest(uint64 time, uint16 target, uint64 price, bytes memory dataID) public payable returns (bool) {
         if(requestList[msg.sender].blockNumber == 0){   //never submitted before
             //register on List
@@ -197,7 +197,7 @@ contract TaskContract {
     //          0: successfully assigned
     //          1: searched all providers but find no match
     //          2: no available provider right now
-    //          3: failure during poping pool
+    //          3: failure during popping pool
     function assignProvider(address payable provAddr) private returns (byte){
         if(pendingPool.length == 0) return '2';     //no pending requests
         else {   //search throught the requestPool
@@ -236,7 +236,7 @@ contract TaskContract {
     // Returns: 0: successfully assigned
     //          1: searched all providers but find no match
     //          2: no available provider right now
-    //          3: failure during poping pool
+    //          3: failure during popping pool
     function assignRequest(address payable reqAddr) private returns (byte) {
         //provider availability is checked in pool not in list
         if (providerPool.length == 0)   return '2';
@@ -296,7 +296,7 @@ contract TaskContract {
         }
     }
 
-    //this will be seperated in the futurte when timeing out is possilbe for connections and the provider must
+    //this will be separated in the future when timeing out is possilbe for connections and the provider must
     //stay available untill the data has been passed to all who are involved in this transaction
     /*function releaseProvieder() public {
         providerList[msg.sender].available = true;
@@ -315,7 +315,7 @@ contract TaskContract {
         for (uint64 i = 1; i <= providerPool.length; i++) {
             address payable provID = providerPool[i - 1]; //get provider ID
             //TODO: check whether selected validator capable with parameters (time, accuracy,....)
-            if(provID != requestList[reqAddr].provider){   //validator and computer cannot be same
+            if(provID != requestList[reqAddr].provider){   //validator and provider computer cannot be same
                 emit PairingInfoLong(reqAddr, provID, 'Validation Assigned to Provider', requestList[reqAddr].resultID);
                 validatorsFound++;
                 //remove the providers availablity and pop from pool
@@ -336,7 +336,7 @@ contract TaskContract {
             if(validatorsFound < numValidatorsNeeded){
                 continue;
             }
-            else{       //enough validator
+            else{       //enough validators
                 emit SystemInfo(reqAddr, 'Enough Validators');
                 return true;
             }
@@ -373,7 +373,7 @@ contract TaskContract {
         // balanceList[requestList[reqID].addr] -= partialPayment;
     }
 
-    //TODO: what if result is invalid, we got 3 false signature, will stuck here.
+    //TODO: what if result is invalid, we got 3 false signature, will get stuck here.
     function checkValidation(address payable reqAddr) private returns (bool) {
         // Add up successful validations
         bool flag = false;
