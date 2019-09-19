@@ -12,6 +12,21 @@ else
         exit #exit script execution
     fi
 fi
+if [ -d "BCAI" ] ;#if BCAI folder already exists, remove it
+then
+    read -p $'\e[91mBCAI already exists, remove? \e[0m[Y/N] ' remove
+    case "$remove" in
+        [yY][eE][sS]|[yY]) 
+            rm -rf "BCAI"
+            echo -e "\e[92mSuccessfully removed previous BCAI."
+            ;;
+        *)
+            echo -e "\e[91mChose not to remove, aborting installation."
+            exit
+            ;;
+    esac
+    
+fi
 #Install git
 if ! git --version > /dev/null 2>&1;  #not installed
 then
@@ -96,11 +111,24 @@ cd BCAI
 cd bcai_deploy
 cd client
 echo -e "\e[93m-----------------------Installing npm packages for client.----------------------\e[0m"
-if sudo npm install ; then #if installed
+if npm install ; then #if installed
     echo -e "\e[92mnpm packages for client successfully installed."
 else  #problem installing
-    echo -e "\e[91mProblem installing npm packages for client. Aborting installation."
-    exit
+    read -p $'\e[91mnpm installation failed without sudo. Try again with sudo? [Y/N]\e[0m ' tryagain
+    case "$tryagain" in #try again with sudo this time
+        [yY][eE][sS]|[yY]) 
+            if sudo npm install ; then #if installed
+                echo -e "\e[92mnpm packages for client successfully installed."
+            else 
+                "\e[91mProblem installing npm packages for client. Aborting installation."
+                exit
+            fi
+            ;;
+        *)
+            echo -e "\e[91mChose not to try with sudo, aborting installation."
+            exit
+            ;;
+    esac
 fi
 #Install npm stuff for localuser
 cd ..
@@ -108,11 +136,24 @@ cd .. #back up to BCAI
 cd ML
 cd localUser
 echo -e "\e[93m---------------------Installing npm packages for localUser.---------------------\e[0m"
-if sudo npm install ; then #if installed
+if npm install ; then #if installed
     echo -e "\e[92mnpm packages for localUser successfully installed."
 else  #problem installing
-    echo -e "\e[91mProblem installing npm packages for localUser. Aborting installation."
-    exit
+    read -p $'\e[91mnpm installation failed without sudo. Try again with sudo? [Y/N]\e[0m ' tryagain
+    case "$tryagain" in #try again with sudo this time
+        [yY][eE][sS]|[yY]) 
+            if sudo npm install ; then #if installed
+                echo -e "\e[92mnpm packages for localUser successfully installed."
+            else 
+                "\e[91mProblem installing npm packages for localUser. Aborting installation."
+                exit
+            fi
+            ;;
+        *)
+            echo -e "\e[91mChose not to try with sudo, aborting installation."
+            exit
+            ;;
+    esac
 fi
 #Install npm stuff for localworker
 cd ..
@@ -120,11 +161,24 @@ cd .. #back up to BCAI
 cd ML
 cd localWorker
 echo -e "\e[93m--------------------Installing npm packages for localWorker.--------------------\e[0m"
-if sudo npm install ; then #if installed
+if npm install ; then #if installed
     echo -e "\e[92mnpm packages for localWorker successfully installed."
 else  #problem installing
-    echo -e "\e[91mProblem installing npm packages for localWorker. Aborting installation."
-    exit
+    read -p $'\e[91mnpm installation failed without sudo. Try again with sudo? [Y/N]\e[0m ' tryagain
+    case "$tryagain" in #try again with sudo this time
+        [yY][eE][sS]|[yY]) 
+            if sudo npm install ; then #if installed
+                echo -e "\e[92mnpm packages for localWorker successfully installed."
+            else 
+                "\e[91mProblem installing npm packages for localWorker. Aborting installation."
+                exit
+            fi
+            ;;
+        *)
+            echo -e "\e[91mChose not to try with sudo, aborting installation."
+            exit
+            ;;
+    esac
 fi
 echo -e "\e[92mInstallation successful. Run start.bash to start the program.\e[0m"
 exit #finished!
