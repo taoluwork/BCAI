@@ -17,6 +17,7 @@ import getWeb3 from "./utils/getWeb3";
 import truffleContract from "truffle-contract";
 //import t from 'tcomb-form';
 import ReactNotification from "react-notifications-component";
+import {store} from 'react-notifications-component';
 import "react-notifications-component/dist/theme.css";
 import io from 'socket.io-client';
 //import openSocket from 'socket.io-client';
@@ -37,7 +38,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import { AccountItem, NavbarBalance } from 'ethereum-react-components';
 import { string } from "prop-types";
-
 
 
 const hex2ascii = require('hex2ascii')
@@ -277,6 +277,7 @@ class App extends Component {
     this.buildSocket  = this.buildSocket.bind(this);
     this.DownloadInfo = this.DownloadInfo.bind(this);
     this.notificationDOMRef = React.createRef();
+    this.notificationInboxDOMRef = React.createRef();
     this.handleToggle = this.handleToggle.bind(this);
     this.drawerClose = this.drawerClose.bind(this);
     this.checkMenuItem = this.checkMenuItem.bind(this);
@@ -666,8 +667,9 @@ class App extends Component {
     console.log("minTarget = ", this.state.Target);
     console.log("maxPrice = ",  this.state.Price);
     console.log("dataID = ",    this.state.dataID);
-  }
 
+    
+  }
 
   //submitJob will check whether you are assigned a task first.
   //Only if you are assigned, it will send the TX
@@ -677,8 +679,10 @@ class App extends Component {
     event.preventDefault();
     let reqAddr = await this.matchReq(this.state.myAccount)
     console.log("RequestAddr = ", reqAddr)
+
     if (reqAddr === undefined){
       this.addNotification("Result Submission Failed", "You are not assigned a task", "warning")
+
     }
     else {
       let resultHash = await this.serverSubmit(event)
@@ -690,6 +694,7 @@ class App extends Component {
             var StartTime = ret.receipt.blockNumber;  //record the block# when submitted, all following events will be tracked from now on
             this.setState({RequestStartTime : StartTime})
             this.addNotification("Result Submission Succeed", "Work submitted to contract", "success")
+
 
             //disconnect the socket
             this.state.tempSocket.emit("goodBye", this.state.myIP);
@@ -963,6 +968,7 @@ class App extends Component {
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Request Assigned") {
         if (this.state.events[i] && this.state.myAccount === this.state.events[i].args.reqAddr) {
           this.addNotification("Provider Found", "Your task is being completed by: " + this.state.events[i].args.provAddr, "success")
+
           myEvents.push("Provider Found at: " + this.state.events[i].args.provAddr);
         }
         if (this.state.events[i] && this.state.myAccount === this.state.events[i].args.provAddr) {
@@ -1021,6 +1027,7 @@ class App extends Component {
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Enough Validators") {
         if (this.state.myAccount === this.state.events[i].args.reqAddr) {
           this.addNotification("All Validators Found", "Your task is being validated. Please hold.", "success")
+
           myEvents.push("All validators have been found");
         }
         if (this.state.myAccount === this.state.events[i].args.provAddr) {
@@ -1034,10 +1041,12 @@ class App extends Component {
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Validator Signed") {
         if (this.state.myAccount === this.state.events[i].args.reqAddr) {
           this.addNotification("Validator signed", "Validator " + this.state.events[i].args.provAddr + " has signed", "info")
+
           myEvents.push("Validator " + this.state.events[i].args.provAddr + " has signed");
         }
         if (this.state.myAccount === this.state.events[i].args.provAddr) {
           this.addNotification("You Have signed your validation", "You have validated the request for: " + this.state.events[i].args.reqAddr, "info");
+
           myEvents.push("You have signed  a validaton for " + this.state.events[i].args.reqAddr );
         }
       }
@@ -1047,12 +1056,14 @@ class App extends Component {
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Validation Complete") {
         if (this.state.myAccount === this.state.events[i].args.reqAddr) {
           this.addLongNotification("Job Done", "Please download your resultant file from the server at: " + hex2ascii(this.state.events[i].args.extra), "success")
+
           this.setState({resultID : hex2ascii(this.state.events[i].args.extra)});
           myEvents.push("Your job has been finished");
           document.getElementById("resultButton").click();
         }
         if (this.state.myAccount === this.state.events[i].args.provAddr) {
           this.addNotification("Work Validated!", "Your work was validated and you should receive payment soon", "info");
+
           myEvents.push("Your work has been validated");
         }
         console.log(this.state.events[i].blockNumber);
@@ -1074,25 +1085,28 @@ class App extends Component {
       title: title,
       message: message,
       type: type,
-      insert: "top",
-      container: "top-right",
+      container: "bottom-right",
       animationIn: ["animated", "fadeIn"],
-      animationOut: ["animated", "fadeOut"],
-      dismiss: { duration: 5000 },
+      animationOut: ['animated', 'fadeOut'],
+        dismiss: {
+          duration: 2000
+        },
       dismissable: { click: true }
     });
   }
+
 
   addLongNotification(title, message, type) {
     this.notificationDOMRef.current.addNotification({
       title: title,
       message: message,
       type: type,
-      insert: "top",
-      container: "top-right",
+      container: "bottom-right",
       animationIn: ["animated", "fadeIn"],
-      animationOut: ["animated", "fadeOut"],
-      dismiss: { duration: 20000 },
+      animationOut: ['animated', 'fadeOut'],
+      dismiss: {
+          duration: 2000
+        },
       dismissable: { click: true }
     });
   }
@@ -1344,49 +1358,6 @@ class App extends Component {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     
-    if(this.state.screen == "Inbox")
-    {
-      return(
-        <div className = "App">
-           <MuiThemeProvider>
-          <div className = {styles.AppBarStyle}>
-              <AppBar  title = "Material-UI" >
-                <Toolbar style = {styles.ToolbarStyle}>
-                  <IconButton  edge = "start" color="inherit" style = {styles.IconStyle} aria-label="menu" marginRight = {200}>
-                    <MenuIcon onClick = {this.handleToggle}/>
-                  </IconButton>
-                  IChain Application
-                </Toolbar>
-              </AppBar>
-            </div>
-          </MuiThemeProvider>
-          <ReactNotification ref={this.notificationDOMRef} />
-          <MuiThemeProvider>
-            <div>
-              <Drawer
-                docked = {false}
-                width = {300}
-                open = {this.state.open}
-                onRequestChange = {(open) => this.setState({open})}
-              >
-
-                <Paper style={{ height: 90, width: 300, background: '#22b9c6' }}>
-                  <Typography style = {{color : "white", display : 'flex', justifyContent : 'center', marginTop : 35, fontFamily : 'sans-serif', fontWeight : "fontWeightBold", }}>
-                    ICHAIN OPTIONS
-                  </Typography>
-                </Paper>
-                <MenuItem onClick={() => this.drawerClose("Main Menu")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Main Menu</MenuItem>
-                {this.checkMenuItem()}
-                <MenuItem onClick={() => this.drawerClose("Inbox")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Inbox</MenuItem>
-                <MenuItem onClick={() => this.drawerClose("Settings")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Settings</MenuItem>
-            </Drawer>
-
-            </div>
-            
-          </MuiThemeProvider>
-        </div>
-      )
-    }
 
     if(this.state.screen == "Submit Task" || this.state.screen == "Provider Task")
     {
@@ -1399,7 +1370,7 @@ class App extends Component {
                   <IconButton  edge = "start" color="inherit" style = {styles.IconStyle} aria-label="menu" marginRight = {200}>
                     <MenuIcon onClick = {this.handleToggle}/>
                   </IconButton>
-                  IChain Application
+                  iChain Application
                   <div style = {{marginLeft : 1250}}>
                     <NavbarBalance balance={Math.round(this.state.ether, 4)}/>
                   </div>
@@ -1424,7 +1395,6 @@ class App extends Component {
                 </Paper>
                 <MenuItem onClick={() => this.drawerClose("Main Menu")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Main Menu</MenuItem>
                 {this.checkMenuItem()}
-                <MenuItem onClick={() => this.drawerClose("Inbox")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Inbox</MenuItem>
                 <MenuItem onClick={() => this.drawerClose("Settings")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Settings</MenuItem>
             </Drawer>
             </div>
@@ -1499,11 +1469,12 @@ class App extends Component {
                   <IconButton  edge = "start" color="inherit" style = {styles.IconStyle} aria-label="menu" marginRight = {200}>
                     <MenuIcon onClick = {this.handleToggle}/>
                   </IconButton>
-                  IChain Application
+                  iChain Application
                 </Toolbar>
               </AppBar>
             </div>
           </MuiThemeProvider>
+          <ReactNotification ref={this.notificationDOMRef} />
           <MuiThemeProvider>
             <div>
               <FormGroup style = {styles.FormGroupStyle}>
@@ -1525,12 +1496,11 @@ class App extends Component {
 
                 <Paper style={{ height: 90, width: 300, background: '#22b9c6' }}>
                   <Typography style = {{color : "white", display : 'flex', justifyContent : 'center', marginTop : 35, fontFamily : 'sans-serif', fontWeight : "fontWeightBold", }}>
-                    ICHAIN OPTIONS
+                    iCHAIN OPTIONS
                   </Typography>
                 </Paper>
                 <MenuItem onClick={() => this.drawerClose("Main Menu")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Main Menu</MenuItem>
                 {this.checkMenuItem()}
-                <MenuItem onClick={() => this.drawerClose("Inbox")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Inbox</MenuItem>
                 <MenuItem onClick={() => this.drawerClose("Settings")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Settings</MenuItem>
             </Drawer>
 
@@ -1595,12 +1565,14 @@ class App extends Component {
                   <IconButton  edge = "start" color="inherit" style = {styles.IconStyle} aria-label="menu" marginRight = {200}>
                     <MenuIcon onClick = {this.handleToggle}/>
                   </IconButton>
-                  IChain Application
+                  iChain Application
                 </Toolbar>
               </AppBar>
             </div>
 
           </MuiThemeProvider>
+          <ReactNotification ref={this.notificationDOMRef} />
+
           <MuiThemeProvider>
             <div>
               <Drawer
@@ -1616,7 +1588,6 @@ class App extends Component {
                 </Paper>
                 <MenuItem onClick={() => this.drawerClose("Main Menu")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Main Menu</MenuItem>
                 {this.checkMenuItem()}
-                <MenuItem onClick={() => this.drawerClose("Inbox")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Inbox</MenuItem>
                 <MenuItem onClick={() => this.drawerClose("Settings")} style = {{color : '#0c6f78', fontFamily : 'sans-serif'}}>Settings</MenuItem>
             </Drawer>
             </div>
