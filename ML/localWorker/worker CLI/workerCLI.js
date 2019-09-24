@@ -26,7 +26,8 @@ var ip         = undefined;
 var ip4        = undefined;
 var ip6        = undefined;
 var mode       = undefined;
-var flag       = true;
+var requestAddr= undefined;
+
 
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
@@ -59,6 +60,7 @@ serverIo.on('connection', function(socket){
 
     socket.on('goodbye', ()=>{
         buffer = undefined;
+        requestAddr = undefined;
     });
     //this is sent by another computer to recieve the current file
     //(ex. the provider will send request to the user for the data)
@@ -123,6 +125,12 @@ function execute(){
           return;
         }
         console.log(stdout);
+        if(mode === 0 ){
+            completeRequest(requestAddr, ip);
+        }
+        if(mode === 1 ){
+            submitValidation(requestAddr, true);
+        }
       });
 }
 //function to request from another ip address
@@ -611,12 +619,12 @@ function updateProvider(){
         });
 }
 
-function completeRequest(reqAddress, result){
+function completeRequest(reqAddress, resultId){
     taskCounter+=1;
     console.log("Completed task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n");
     console.log("\nWe are sending transaction to the blockchain... \n");
         var ABIcompleteRequest; //prepare abi for a function call
-        ABIcompleteRequest = myContract.methods.completeRequest(reqAddress, result).encodeABI();
+        ABIcompleteRequest = myContract.methods.completeRequest(reqAddress, resultId).encodeABI();
         const rawTransaction = {
             "from": userAddress,
             "to": addr,
@@ -728,6 +736,7 @@ checkEvents = async () => {
          // console.log("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + pastEvents[i].args.reqAddr + " The server id is:" + hex2ascii(pastEvents[i].args.extra));
             mode = 0;
             request(hex2ascii(pastEvents[i].args.extra));
+            requestAddr = pastEvents[i].args.reqAddr;
         }
       }
 
@@ -766,8 +775,9 @@ checkEvents = async () => {
       if (pastEvents[i].args && hex2ascii(pastEvents[i].args.info) === "Validator Signed") {
         if (userAddress === pastEvents[i].args.provAddr) {
           //console.log("You Have signed your validation", "You have validated the request for: " + pastEvents[i].args.reqAddr);
-            mode = undefined;
-            buffer = undefined;
+            mode        = undefined;
+            buffer      = undefined;
+            requestAddr = undefined;
         }
       }
 
