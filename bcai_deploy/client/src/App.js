@@ -299,7 +299,7 @@ class App extends Component {
       const Contract = truffleContract(TaskContract);
       Contract.setProvider(web3.currentProvider);
       const instance = await Contract.deployed();
-      const socket = await this.buildSocket('http://localhost:3001');
+      const socket = undefined //await this.buildSocket('http://localhost:3001');
       console.log("here is the instance " + instance);
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
@@ -377,6 +377,15 @@ class App extends Component {
     else
       this.setState({Price: undefined})
   }
+  ipChange(event,value){
+    event.preventDefault();
+    if (value !== "") {  //under extreme cases, user will input empty by mistake
+      this.setState({ myIP: event.target.value })
+    }
+    else
+      this.setState({myIP: undefined})
+  
+  }
 
 
   DefaultTimeChange(event) {
@@ -427,141 +436,39 @@ class App extends Component {
   buildSocket = async(loc) => {
     var socket ;
     //this is entered if the location that the server is not within the current computer
-    if(loc.indexOf('localhost') === -1){
+    //REMOVED: If unnecessary now
+    //if(loc.indexOf('localhost') === -1){
       
       //create the connection
       socket = io.connect("http://" + loc + "/");
-      
-      //once the connection is created call to setup the connection correctly and ask for the data
-      socket.on("connect", () => {
-        socket.emit('setUp', this.state.myIP);
-        socket.emit('request', this.state.myIP);
-      });
 
-      //this is called when a server send data in responce to this current computer's request
-      socket.on('transmitting' + this.state.myIP, (tag , dat)=>{
-        console.log("Got:transmitting and tag:" + tag + " and data:" + dat + " was received.")
-        if(dat !== undefined){                     
-            socket.emit('recieved', this.state.myIP); 
-            console.log("emit:recieved msg:" + this.state.myIP);
-            if(tag === "data"){
-                this.setState({data: dat});
-            }
-            if(tag === "result"){
-                this.setState({result: dat});
-            }
-        }
-        //if the data is not recieved it will be asked for again
-        else{ 
-            socket.emit('request', this.state.myIP);
-            console.log('emit:request msg:' + this.state.myIP); 
-        }
-      });
-
-      //this is recieved after the server has send the data
-      //if the data is not received that it will request for the data agian
-      //if the data is recieved then it will close the connection
-      socket.on('fin', (msg) => {
-        console.log("Got:fin and msg:" + msg);
-        if((msg === "data" && this.state.data === undefined) || (msg === "result" && this.state.result === undefined)){ 
-          socket.emit('request', this.state.myIP); 
-          console.log('emit:request msg:' + this.state.myIP);
+      //ADDED: Request listener
+      //After server sets up connection, send data once a request is made
+      socket.on('request', ()=> {
+        console.log("Got:request from:" + socket);
+        if(this.statebuffer !== undefined){
+            socket.emit('transmitting', this.state.buffer);
+            console.log("emit:transmitting" );
         }
         else{
-            console.log("Finished and the socket will close now")
-            socket.disconnect(true);        }
+        console.log("NO FILE FOUND!! Something seriously wrong has happened. The environment does not have the result saved for some reason.");
+        } 
       });
-    }
 
-    //if you are attmepting to connect to a server that is on the current computer
-    //this is necessary for the browser to send the data to other computers and to
-    //ececute the code
-    else{
-      socket = io(loc);
-
-      //this is sent so that the browser is able to learn what its public ip is
-      //this is not easily gotten so the local server deals with it
-      socket.on('whoAmI', (msg) =>{
-        if(this.state.ip === undefined){
-          console.log("whoAmI just fired : " + msg)
-          console.log(typeof msg);
-          this.setState({myIP : msg});
-          if(this.state.buffer !== undefined){
-            socket.emit('setupMode', this.state.mode);
-            socket.emit("setupBuffer", this.state.buffer);
-          }
+      //ADDED: Replacement for transmitting listener
+      //this is called when a server send data in response to this current computer's request
+      socket.on('transmitting', ( data )=>{
+        console.log("Got data: " + data)
+        if(data !== undefined){                     
+            socket.disconnect(true);
+            //writeFile(data);
+            socket.emit('goodbye'); //tell host that they are done, host can clear buffer
         }
         else{
-          socket.emit("reset");
+            socket.emit('request');
         }
-      });
-
-      //this is triggered when the local server does not correctly receive data
-      socket.on('resendData', () => {
-        socket.emit('data', this.state.data);
-      });
-
-      //this is triggered when the local server does not correctly receive data
-      socket.on('resendResult', () => {
-        socket.emit('result', this.state.result);
-      });
-
-      //this is triggered when the current mode is validator and the result has
-      //been found by the local server
-      socket.on('uploadVal', (val) => {
-        if(this.state.mode === 'WORKER'){
-          if(val){
-            document.getElementById("trueButton").click();
-            socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
-          }
-          else{
-            document.getElementById('falseButton').click();
-            socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
-          }
-        }
-      });
-
-      //this is triggered when the current mode is proider and the code has been trained
-      //and needs to be uploaded
-      socket.on('uploadResult', (data) => {
-        console.log('recieved uploadResult')
-        this.setState({buffer : data});
-        console.log(this.state.buffer);
-        if(this.state.mode === 'WORKER'){  
-          document.getElementById('submitButton').click();
-          socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
-        }
-        if(this.state.mode === 'USER'){
-          document.getElementById('modeButton').click();
-          document.getElementById('submitButton').click();
-          socket.emit("click"); //if this is clicked too early then we either need to force this emit to happen latter or like 10 times to assume that the metamask button will load in time
-        }
-      })
-
-      //if the browser has been disconnected this will trigger to make sure that the 
-      //browser has the state data
-      socket.on( "browserReconnect" , (newMode, newBuffer) => {
-        //the integer version of mode selection is defined in localEnv.js 
-        //(copied here for ease of understanding)
-        //0-provider
-        //1-validator
-        //2-user
-        if( (newMode === 0 || newMode === 1) && this.state.mode !== "WORKER" ){
-          document.getElementById('modeButton').click();
-        }
-        if( (newBuffer !== undefined || newBuffer !== null) && this.state.buffer === undefined){
-          this.setState({buffer : newBuffer});
-          console.log(this.state.buffer)
-        }
-      });
-      socket.on("taskCompleted", ()=>{
-        this.state.tempSocket.emit("goodBye", this.state.myIP);
-        this.state.tempSocket.disconnect(true);
-        this.setState({result : undefined , resultID : undefined , tempSocket: undefined});
-      });
-    }
-    return socket;//return so that we can still interact with it later on
-  }
+    });
+     }
 
   //It will create a socket and depending on the current mode it will send it with that
   //specific tag
@@ -582,8 +489,8 @@ class App extends Component {
             }
     }
     var tempSocket = await this.buildSocket(tag);
-    this.state.socket.emit("setupMode", m);
-    tempSocket.emit("request", this.state.myIP);
+    // this.state.socket.emit("setupMode", m);
+    // tempSocket.emit("request", this.state.myIP);
     console.log(this.state);
     this.setState({tempSocket : tempSocket});
     return tempSocket;
@@ -603,7 +510,7 @@ class App extends Component {
       this.setState({resultID : this.state.myIP});
     }
     //this.state.socket.emit("setupMode", this.state.mode);
-    this.state.socket.emit('setupBuffer', this.state.buffer);
+    //this.state.socket.emit('setupBuffer', this.state.buffer);
     console.log(this.state.buffer);
     console.log(typeof this.state.buffer);
     return this.state.myIP;
@@ -697,7 +604,7 @@ class App extends Component {
 
 
             //disconnect the socket
-            this.state.tempSocket.emit("goodBye", this.state.myIP);
+            //this.state.tempSocket.emit("goodBye", this.state.myIP);
             this.state.tempSocket.disconnect(true);
             this.setState({data : undefined , dataID : undefined , tempSocket: undefined});
           })
@@ -713,7 +620,7 @@ class App extends Component {
       this.state.myContract.stopRequest({from: this.state.myAccount})
       .then(ret => {
         console.log("Job removed from pendingPool");
-        this.state.socket.emit("dumpBuffer");
+       // this.state.socket.emit("dumpBuffer");
         this.setState({dataID : undefined , data : undefined , resultID : undefined , result : undefined}); //////this is done to remove the ids and files which is no longer valid
       })
       .catch(err => {
@@ -735,14 +642,14 @@ class App extends Component {
     event.preventDefault();
     this.setState({ValidationResult: true});
     this.submitValidation(event);
-    this.state.socket.emit("dumpBuffer");
+    //this.state.socket.emit("dumpBuffer");
   }
 
   submitValidationFalse (event){
     event.preventDefault();
     this.setState({ValidationResult: false});
     this.submitValidation(event);
-    this.state.socket.emit("dumpBuffer");
+   // this.state.socket.emit("dumpBuffer");
   }
 
   submitValidation = async (event) => {
@@ -761,7 +668,7 @@ class App extends Component {
           this.addNotification("Validation Submission Succeeded", "Validation submitted to contract", "success")
 
           //disconnect the temp socket
-          this.state.tempSocket.emit("goodBye", this.state.myIP);
+          //this.state.tempSocket.emit("goodBye", this.state.myIP);
           this.state.tempSocket.disconnect(true);
           this.setState({result : undefined , resultID : undefined , tempSocket: undefined});
         })
@@ -952,7 +859,7 @@ class App extends Component {
       //Request Stopped
       if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Request Stopped") {
         myEvents = [];
-        list.innerHTML = "";
+        //list.innerHTML = "";
       }
 
       //Request Added
@@ -960,7 +867,7 @@ class App extends Component {
         pastEvents.slice(0,1);
         this.setState({events : pastEvents});
         myEvents = [];
-        list.innerHTML = ""
+        //list.innerHTML = ""
         myEvents.push("Task submitted");
       }
 
@@ -1441,7 +1348,17 @@ class App extends Component {
                 style = {styles.textFieldStyle}
               />
               </Typography>
-              
+              <Typography style = {styles.TypographyStyle}>
+                <TextField
+                type="string"
+                id="ip"
+                label="Your IP address"
+                valueLabelDisplay = "auto"
+                defaultValue = {this.state.myIP}
+                onChange={(event, value) => this.ipChange(event, value)}
+                style = {styles.textFieldStyle}
+              />
+              </Typography>
               <p>
                 <br></br>
                 {this.showIDs()}
