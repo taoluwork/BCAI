@@ -69,7 +69,17 @@ serverIo.on('connection', function(socket){
     socket.on('request', () =>{
         console.log("Got:request from:" + socket);
         if(buffer !== undefined){
-            socket.emit('transmitting', buffer);
+            var chunksize = 524288000; //500MB
+            var iterations = Math.ceil(buffer.length / chunksize);
+            for(var i = 0 ; i < iterations; i++){
+              if(i != iterations - 1) {
+                socket.emit('transmitting', buffer.slice(i*chunksize,(i+1)*chunksize-1));
+              }
+              else{
+                socket.emit('transmitting', buffer.slice(i*chunksize,this.state.buffer.length));
+              }
+            }
+            socket.emit('transmitFin');
             console.log("emit:transmitting" );
         }
         else{
@@ -81,17 +91,24 @@ serverIo.on('connection', function(socket){
         socket.emit('request');
     }
     
-    //this is called when a server send data in responce to this current computer's request
     socket.on('transmitting', ( data )=>{
         console.log("Got data: " + data)
         if(data !== undefined){                     
-            socket.disconnect(true);
-            writeFile(data);
+            //socket.disconnect(true);
+            //writeFile(data);
+            //socket.emit('goodbye'); //tell host that they are done, host can clear buffer
+          this.state.buffer.append(data)
         }
         else{
             socket.emit('request');
         }
-    });
+      });
+      socket.on('transmitFin', ()=>{
+        socket.disconnect(true);
+        writeFile(data);
+        socket.emit('goodbye'); //tell host that they are done, host can clear buffer
+        
+      });
     
 });
 

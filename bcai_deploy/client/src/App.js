@@ -446,8 +446,19 @@ class App extends Component {
       //After server sets up connection, send data once a request is made
       socket.on('request', ()=> {
         console.log("Got:request from:" + socket);
-        if(this.statebuffer !== undefined){
-            socket.emit('transmitting', this.state.buffer);
+        if(this.state.buffer !== undefined){
+            var chunksize = 524288000; //500MB
+            var iterations = Math.ceil(this.state.buffer.length / chunksize);
+            for(var i = 0 ; i < iterations; i++){
+              if(i != iterations - 1) {
+                socket.emit('transmitting', this.state.buffer.slice(i*chunksize,(i+1)*chunksize-1));
+              }
+              else{
+                socket.emit('transmitting', this.state.buffer.slice(i*chunksize,this.state.buffer.length));
+              }
+            }
+            socket.emit('transmitFin');
+            //socket.emit('transmitting', this.state.buffer);
             console.log("emit:transmitting" );
         }
         else{
@@ -460,14 +471,21 @@ class App extends Component {
       socket.on('transmitting', ( data )=>{
         console.log("Got data: " + data)
         if(data !== undefined){                     
-            socket.disconnect(true);
+            //socket.disconnect(true);
             //writeFile(data);
-            socket.emit('goodbye'); //tell host that they are done, host can clear buffer
+            //socket.emit('goodbye'); //tell host that they are done, host can clear buffer
+          this.state.buffer.append(data)
         }
         else{
             socket.emit('request');
         }
-    });
+      });
+      socket.on('transmitFin', ()=>{
+        socket.disconnect(true);
+            //writeFile(data);
+        socket.emit('goodbye'); //tell host that they are done, host can clear buffer
+        
+      });
      }
 
   //It will create a socket and depending on the current mode it will send it with that
