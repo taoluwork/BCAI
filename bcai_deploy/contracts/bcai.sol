@@ -65,16 +65,18 @@ contract TaskContract {
         uint16  maxTarget;                  //max target he can provide
         uint256 minPrice;                   //lowest price he can accept
         bool    available;                  //if ready to be assigned
+        bytes   ip;
     }
 
     //should try best to reduce type of events in order to remove unnecessary confusion. -> reuse events with same format
     //no need seperate events for each type, just put whatever info passed in bytes info
     event IPFSInfo          (address payable reqAddr, bytes info, bytes extra);
     event SystemInfo        (address payable reqAddr, bytes info);          //systemInfo is only informative, not trigger anything.
+    event SystemInfoLong        (address payable reqAddr, bytes info, bytes ip); 
     event PairingInfo       (address payable reqAddr, address payable provAddr, bytes info);
     //NOTE: [by TaoLu] extra here are actually dataID, which can also be accessed via reqAddr.
     //      extra may not be necessary but it makes easier of app to handle info. This retains the tradeoff of gas cost and easyness.
-    event PairingInfoLong   (address payable reqAddr, address payable provAddr, bytes info, bytes extra);
+    event PairingInfoLong   (address payable reqAddr, address payable provAddr, bytes info, bytes extra, bytes ip);
 
 
     //Pools stores the address of req or prov, thus indicate the stages.
@@ -88,7 +90,7 @@ contract TaskContract {
     // Function called to become a provider. Add address on List, and Pool if not instantly assigned.
     // TIPS on gas cost: don't create local copy and write back, modify the storage directly.
     //      gas cost 165K without event / 167K with event / 92K overwrite
-    function startProviding(uint64 maxTime, uint16 maxTarget, uint64 minPrice) public returns (bool) {
+    function startProviding(uint64 maxTime, uint16 maxTarget, uint64 minPrice, bytes memory ip) public returns (bool) {
         if(providerList[msg.sender].blockNumber == 0){                  //if this is new
             // register a new provider object in the List and map
             providerList[msg.sender].provID         = providerCount;    //cost 50k per item edit
@@ -97,9 +99,11 @@ contract TaskContract {
             providerList[msg.sender].maxTarget      = maxTarget;
             providerList[msg.sender].minPrice       = minPrice;
             providerList[msg.sender].available      = true;             //turn on the flag at LAST in case error
+            providerList[msg.sender].ip             = ip;
+
             // ready for the next
             providerPool.push(msg.sender);
-            emit SystemInfo (msg.sender, "Provider Added");
+            emit SystemInfoLong(msg.sender, "Provider Added", providerList[msg.sender].ip );
             providerCount++;
             if(validatingPool.length != 0){                             //need to update how validation works before we can prioritize it here
                 findValidation(msg.sender);
@@ -220,7 +224,7 @@ contract TaskContract {
                         balanceList[reqAddr] += requestList[reqAddr].price;
                         providingPool.push(reqAddr);
                         //status move from pending to providing
-                        emit PairingInfoLong(reqAddr, provAddr, "Request Assigned", requestList[reqAddr].dataID);
+                        emit PairingInfoLong(reqAddr, provAddr, "Request Assigned", requestList[reqAddr].dataID , providerList[provAddr].ip);
                         return '0';
                 }
             }
@@ -260,7 +264,7 @@ contract TaskContract {
                         balanceList[reqAddr] += requestList[reqAddr].price;
                         providingPool.push(reqAddr);
                         // Let provider listen for this event to see he was selected
-                        emit PairingInfoLong(reqAddr, provAddr, "Request Assigned", requestList[reqAddr].dataID);
+                        emit PairingInfoLong(reqAddr, provAddr, "Request Assigned", requestList[reqAddr].dataID, providerList[provAddr].ip);
                         return '0';
                     }
                 }
@@ -317,7 +321,7 @@ contract TaskContract {
             address payable provID = providerPool[i - 1]; //get provider ID
             //TODO: check whether selected validator capable with parameters (time, accuracy,....)
             if(provID != requestList[reqAddr].provider){   //validator and computer cannot be same
-                emit PairingInfoLong(reqAddr, provID, 'Validation Assigned to Provider', requestList[reqAddr].resultID);
+                emit PairingInfoLong(reqAddr, provID, 'Validation Assigned to Provider', requestList[reqAddr].resultID, providerList[provID].ip);
                 validatorsFound++;
                 //remove the providers availablity and pop from pool
                 requestList[reqAddr].validators.push(provID);
@@ -417,7 +421,7 @@ contract TaskContract {
             if(requestList[reqAddr].numValidations > requestList[reqAddr].validators.length){ //check to see if the task has enough validators
                 //since the provAddr is a new provider, we don't need to check if he is already a validator, should be impossible unless bug exists
                 if(provAddr != requestList[reqAddr].provider){ //check to make sure he is not the privider
-                    emit PairingInfoLong(reqAddr, provAddr, 'Validation Assigned to Provider',requestList[reqAddr].resultID);
+                    emit PairingInfoLong(reqAddr, provAddr, 'Validation Assigned to Provider',requestList[reqAddr].resultID, providerList[provAddr].ip);
                     requestList[reqAddr].validators.push(provAddr);
                     requestList[reqAddr].signatures.push(false);    //extend length to match length of validator list
                     providerList[provAddr].available = false;

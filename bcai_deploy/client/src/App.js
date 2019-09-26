@@ -877,6 +877,8 @@ class App extends Component {
           this.addNotification("Provider Found", "Your task is being completed by: " + this.state.events[i].args.provAddr, "success")
 
           myEvents.push("Provider Found at: " + this.state.events[i].args.provAddr);
+          var SocketA = await this.buildSocket(hex2ascii(this.state.events[i].args.ip));
+          this.setState({Socket : SocketA});
         }
         if (this.state.events[i] && this.state.myAccount === this.state.events[i].args.provAddr) {
           this.addLongNotification("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + this.state.events[i].args.reqAddr + " The server id is:" + hex2ascii(this.state.events[i].args.extra) , "info");

@@ -356,7 +356,7 @@ function startProviding(){
                     var maxTime = newSettings[0];
                     var maxTarget = newSettings[1];
                     var minPrice = newSettings[2];
-                    ABIstartProviding = myContract.methods.startProviding(maxTime, maxTarget, minPrice).encodeABI();
+                    ABIstartProviding = myContract.methods.startProviding(maxTime, maxTarget, minPrice, ip).encodeABI();
                     //console.log(ABIstartProviding);
                     const rawTransaction = {
                         "from": userAddress,
@@ -435,7 +435,7 @@ function startProviding(){
             var maxTime = newSettings[0];
             var maxTarget = newSettings[1];
             var minPrice = newSettings[2];
-            ABIstartProviding = myContract.methods.startProviding(maxTime, maxTarget, minPrice).encodeABI();
+            ABIstartProviding = myContract.methods.startProviding(maxTime, maxTarget, minPrice , ip).encodeABI();
             //console.log(ABIstartProviding);
             const rawTransaction = {
                 "from": userAddress,
