@@ -985,7 +985,7 @@ class App extends Component {
     for (var j = 0; j < myEvents.length; j++){
       var el = document.createElement("li");
       el.appendChild(document.createTextNode(myEvents[j]));
-      list.appendChild(el);
+      //list.appendChild(el);
     }
   }
 
