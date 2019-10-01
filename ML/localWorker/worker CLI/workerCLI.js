@@ -123,6 +123,32 @@ function execute(){
           return;
         }
         console.log(stdout);
+        fs.open('image.zip', 'r', (err, fd)=>{
+            if(err){console.log(err);return;}
+            function readChunk(){
+                chunkSize = 10*1024*1024;
+                var holdBuff = Buffer.alloc(chunkSize);
+                fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
+                    if(err){console.log(err);return;}
+                    if(nread === 0){
+                        fs.close(fd, function(err){
+                            if(err){console.log(err);return;}
+                        });
+                        return;
+                    }
+                    if(nread < chunkSize){
+                        buffer.push(holdBuff.slice(0, nread));
+                    }
+                    else{
+                        buffer.push(holdBuff);
+                        //console.log(holdBuff)
+                        readChunk();
+
+                    }
+                })
+            }     
+            readChunk();                   
+        });
         if(mode === 0 ){
             completeRequest(requestAddr, ip);
         }
@@ -717,8 +743,8 @@ checkEvents = async () => {
     //console.log("All events:", pastEvents)
 
     for(var i = 0 ; i < pastEvents.length; i++){
-      if((pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Validator Signed" && userAddress === pastEvents[i].resultValues.provAddr) || 
-        (pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Validation Complete" && userAddress === pastEvents[i].resultValues.provAddr) ){
+      if((pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr) || 
+        (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr) ){
         pastEvents.splice(0,i+1);
 
        // console.log("Validator signed/validation complete");
@@ -729,50 +755,50 @@ checkEvents = async () => {
     for (var i = 0; i < pastEvents.length; i++) {
 
         // Request Assigned
-      if (pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Request Assigned") {
-        if (pastEvents[i] && userAddress === pastEvents[i].resultValues.provAddr) {
-         // console.log("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + pastEvents[i].resultValues.reqAddr + " The server id is:" + hex2ascii(pastEvents[i].resultValues.extra));
+      if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
+        if (pastEvents[i] && userAddress === pastEvents[i].returnValues.provAddr) {
+         // console.log("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + pastEvents[i].returnValues.reqAddr + " The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
             mode = 0;
-            request(hex2ascii(pastEvents[i].resultValues.extra));
-            requestAddr = pastEvents[i].resultValues.reqAddr;
+            request(hex2ascii(pastEvents[i].returnValues.extra));
+            requestAddr = pastEvents[i].returnValues.reqAddr;
         }
       }
 
       // Request Computation Complete
-      if (pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Request Computation Completed") {
-        if (pastEvents[i] && userAddress === pastEvents[i].resultValues.provAddr) {
+      if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
+        if (pastEvents[i] && userAddress === pastEvents[i].returnValues.provAddr) {
          // console.log("Awaiting validation", "You have completed a task an are waiting for validation");
         }
       }
 
       // Validation Assigned to Provider
-      if (pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Validation Assigned to Provider") {
-        if (pastEvents[i] && userAddress === pastEvents[i].resultValues.provAddr) {
-            // console.log("You are a validator", "You need to validate the task for: " + pastEvents[i].reqAddr + " as true or false. The server id is:" + hex2ascii(pastEvents[i].resultValues.extra));
+      if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Assigned to Provider") {
+        if (pastEvents[i] && userAddress === pastEvents[i].returnValues.provAddr) {
+            // console.log("You are a validator", "You need to validate the task for: " + pastEvents[i].reqAddr + " as true or false. The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
             mode = 1;
-            request(hex2ascii(pastEvents[i].resultValues.extra));
+            request(hex2ascii(pastEvents[i].returnValues.extra));
         }
       }
 
       // Not Enough validators
-      if (pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Not Enough Validators") {
-        if (userAddress === pastEvents[i].resultValues.provAddr) {
-          //console.log("Not Enough Validators", "There were not enough validators to verfiy your resulting work. Please wait." + pastEvents[i].resultValues.reqAddr);
+      if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Not Enough Validators") {
+        if (userAddress === pastEvents[i].returnValues.provAddr) {
+          //console.log("Not Enough Validators", "There were not enough validators to verfiy your resulting work. Please wait." + pastEvents[i].returnValues.reqAddr);
         }
       }
 
       // Enough Validators
-      if (pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Enough Validators") {
-        if (userAddress === pastEvents[i].resultValues.provAddr) {
+      if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Enough Validators") {
+        if (userAddress === pastEvents[i].returnValues.provAddr) {
          // console.log("All Validators Found", "Your work is being validated. Please hold.");
         }
       }
 
 
       // Validator Signed
-      if (pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Validator Signed") {
-        if (userAddress === pastEvents[i].resultValues.provAddr) {
-          //console.log("You Have signed your validation", "You have validated the request for: " + pastEvents[i].resultValues.reqAddr);
+      if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed") {
+        if (userAddress === pastEvents[i].returnValues.provAddr) {
+          //console.log("You Have signed your validation", "You have validated the request for: " + pastEvents[i].returnValues.reqAddr);
             mode        = undefined;
             buffer      = undefined;
             requestAddr = undefined;
@@ -781,8 +807,8 @@ checkEvents = async () => {
 
 
       // Validation Complete
-      if (pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Validation Complete") {
-        if (userAddress === pastEvents[i].resultValues.provAddr) {
+      if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete") {
+        if (userAddress === pastEvents[i].returnValues.provAddr) {
           console.log("Work Validated!", "Your work was validated and you should receive payment soon");
           mode = undefined;
         }

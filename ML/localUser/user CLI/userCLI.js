@@ -731,8 +731,8 @@ checkEvents = async () => {
     //console.log("All events:", pastEvents)
 
     for(var i = 0 ; i < pastEvents.length; i++){
-      if((pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Validator Signed" && userAddress === pastEvents[i].resultValues.provAddr) || 
-        (pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Validation Complete" && userAddress === pastEvents[i].resultValues.provAddr) ){
+      if((pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr) || 
+        (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr) ){
         pastEvents.splice(0,i+1);
 
        // console.log("Validator signed/validation complete");
@@ -743,10 +743,10 @@ checkEvents = async () => {
     for (var i = 0; i < pastEvents.length; i++) {
 
       // Request Computation Complete
-      if (pastEvents[i].resultValues && hex2ascii(pastEvents[i].resultValues.info) === "Request Computation Completed") {
-        if (pastEvents[i] && userAddress === pastEvents[i].resultValues.reqAddr) {
+      if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
+        if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
          // console.log("Awaiting validation", "You have completed a task an are waiting for validation");
-         request(hex2ascii(pastEvents[i].resultValues.extra));
+         request(hex2ascii(pastEvents[i].returnValues.extra));
          prov = 0;
          askUser();
         }
