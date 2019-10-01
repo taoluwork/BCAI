@@ -292,6 +292,7 @@ function choiceMade(choice){
     else if (choice == questions.choices[1] || choice == questions1.choices[4])
     {
         showPools();
+        checkEvents();
     }
     else
     {
@@ -409,7 +410,7 @@ function startProviding(){
                                 //console.log("================================================   <- updated! #", result.number);
                                 //console.log(result);
                                 //showPools();
-                                checkEvents();
+                                //checkEvents();
                             })
                         }
                         catch(error){
@@ -487,7 +488,7 @@ function startProviding(){
                         //console.log("================================================   <- updated! #", result.number);
                         //console.log(result);
                         //showPools();
-                        checkEvents();
+                        //checkEvents();
                     })
                 }
                 catch(error){
