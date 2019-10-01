@@ -68,7 +68,7 @@ serverIo.on('connection', function(socket){
     //data is received
     socket.on('request', () =>{
         chunkSize= 8 * Math.pow(10,6)
-        iterations = 
+        iterations = Math.ceil(buffer.length / chunksize);
         console.log("Got:request from:" + socket);
         if(buffer !== undefined){
             //socket.emit('transmitting', buffer );
@@ -99,7 +99,8 @@ serverIo.on('connection', function(socket){
         //console.log("Got data: " + data)
         if(data !== undefined){                     
             //socket.disconnect(true);
-            bufferHol.append([data, iter]);
+            console.log(iter)
+            bufferHol.push([data, iter]);
         }
         else{
             socket.emit('request');
@@ -112,7 +113,7 @@ serverIo.on('connection', function(socket){
             var counter = 0
             while(flag){
                 if(bufferHol[counter][1] == i){
-                    buffer.append(bufferHol[counter][0]);
+                    buffer.push(bufferHol[counter][0]);
                     flag = false;
                 }
                 counter += 1;
@@ -198,24 +199,24 @@ function request(reqIp){
     clientSocket.emit('request');
 
     //this is called when a server send data in responce to this current computer's request
-    socket.on('transmitting', ( data, iter )=>{
+    clientSocket.on('transmitting', ( data, iter )=>{
         //console.log("Got data: " + data)
         if(data !== undefined){                     
             //socket.disconnect(true);
-            bufferHol.append([data, iter]);
+            bufferHol.push([data, iter]);
         }
         else{
-            socket.emit('request');
+            clientSocket.emit('request');
         }
       });
-    socket.on('transmitFin' , ()=>{
-        socket.emit('goodbye'); //tell host that they are done, host can clear buffer
+    clientSocket.on('transmitFin' , ()=>{
+        clientSocket.emit('goodbye'); //tell host that they are done, host can clear buffer
         for(var i = 0 ; i < bufferHol.length; i++){
             var flag = true;
             var counter = 0
             while(flag){
                 if(bufferHol[counter][1] == i){
-                    buffer.append(bufferHol[counter][0]);
+                    buffer.push(bufferHol[counter][0]);
                     flag = false;
                 }
                 counter += 1;
