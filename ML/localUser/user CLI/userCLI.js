@@ -12,6 +12,7 @@ var http = require('http').createServer(app);
 var serverIo = require('socket.io')(http);
 var clientIo = require('socket.io-client');
 var publicIp = require("public-ip");
+var hex2ascii= require("hex2ascii")
 
 
 //position 38 or 37
@@ -360,7 +361,7 @@ function startTask(){
                         readChunk();                   
                     });
                     //console.log(buffer);
-                    ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, ip).encodeABI();
+                    ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
                     //console.log(ABIstartRequest);
                     const rawTransaction = {
                         "from": userAddress,
@@ -471,7 +472,7 @@ function startTask(){
                 readChunk();                   
             });
             //console.log(buffer)
-            ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, ip).encodeABI();
+            ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice,  web3.utils.asciiToHex(ip)).encodeABI();
             //console.log(ABIstartRequest);
             const rawTransaction = {
                 "from": userAddress,
