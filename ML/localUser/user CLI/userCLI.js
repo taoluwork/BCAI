@@ -22,6 +22,7 @@ var NetworkID = 3;
 var serverPort = 3001;
 var ClientPort = 3002;
 var buffer     = [];
+var bufferHol   = [];
 var ip         = undefined;
 var ip4        = undefined;
 var ip6        = undefined;
@@ -67,9 +68,24 @@ serverIo.on('connection', function(socket){
     //there are different calls the two connections to ensure that the
     //data is received
     socket.on('request', () =>{
+        chunkSize= 8 * Math.pow(10,6)
+        iterations = 
         console.log("Got:request from:" + socket);
         if(buffer !== undefined){
-            socket.emit('transmitting', buffer );
+            //socket.emit('transmitting', buffer );
+            var chunksize = 5242880; //5MB
+            var iterations = Math.ceil(buffer.length / chunksize);
+            for(var i = 0 ; i < iterations; i++){
+              if(i != iterations - 1) {
+                socket.emit('transmitting', buffer.slice(i*chunksize,(i+1)*chunksize-1) , i);
+              }
+              else{
+                socket.emit('transmitting', buffer.slice(i*chunksize,buffer.length), i);
+              }
+            }
+            socket.emit('transmitFin');
+            //socket.emit('transmitting', this.state.buffer);
+            //console.log("emit:transmitting" );
         }
         else{
         console.log("NO FILE FOUND!! Something seriously wrong has happened. The environment does not have the result saved for some reason.");
@@ -80,17 +96,30 @@ serverIo.on('connection', function(socket){
         socket.emit('request');
     }
     
-    socket.on('transmitting', ( data )=>{
-        console.log("Got data: " + data)
+    socket.on('transmitting', ( data, iter )=>{
+        //console.log("Got data: " + data)
         if(data !== undefined){                     
             //socket.disconnect(true);
-            writeFile(data);
-            socket.emit('goodbye'); //tell host that they are done, host can clear buffer
+            bufferHol.append([data, iter]);
         }
         else{
             socket.emit('request');
         }
       });
+    socket.on('transmitFin' , ()=>{
+        socket.emit('goodbye'); //tell host that they are done, host can clear buffer
+        for(var i = 0 ; i < bufferHol.length; i++){
+            var flag = true;
+            var counter = 0
+            while(flag){
+                if(bufferHol[counter][1] == i){
+                    buffer.append(bufferHol[counter][0]);
+                    flag = false;
+                }
+                counter += 1;
+            }
+        }
+    });
     
 });
 
@@ -125,14 +154,28 @@ function request(reqIp){
     clientSocket.emit('request');
 
     //this is called when a server send data in responce to this current computer's request
-    clientSocket.on('transmitting', ( data )=>{
-        console.log("Got data: " + data)
+    socket.on('transmitting', ( data, iter )=>{
+        //console.log("Got data: " + data)
         if(data !== undefined){                     
-            clientSocket.disconnect(true);
-            writeFile(data);
+            //socket.disconnect(true);
+            bufferHol.append([data, iter]);
         }
         else{
             socket.emit('request');
+        }
+      });
+    socket.on('transmitFin' , ()=>{
+        socket.emit('goodbye'); //tell host that they are done, host can clear buffer
+        for(var i = 0 ; i < bufferHol.length; i++){
+            var flag = true;
+            var counter = 0
+            while(flag){
+                if(bufferHol[counter][1] == i){
+                    buffer.append(bufferHol[counter][0]);
+                    flag = false;
+                }
+                counter += 1;
+            }
         }
     });
 }
