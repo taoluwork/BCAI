@@ -12,7 +12,7 @@ var http = require('http').createServer(app);
 var serverIo = require('socket.io')(http);
 var clientIo = require('socket.io-client');
 var publicIp = require("public-ip");
-
+const hex2ascii = require("hex2ascii");
 
 //position 38 or 37
 var validationCounter = 0;
@@ -150,7 +150,7 @@ function execute(){
             readChunk();                   
         });
         if(mode === 0 ){
-            completeRequest(requestAddr, ip);
+            completeRequest(requestAddr, web3.utils.asciiToHex(ip));
         }
         if(mode === 1 ){
             submitValidation(requestAddr, true);
@@ -756,8 +756,9 @@ checkEvents = async () => {
 
         // Request Assigned
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
-        if (pastEvents[i] && userAddress === pastEvents[i].returnValues.provAddr) {
-         // console.log("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + pastEvents[i].returnValues.reqAddr + " The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
+          console.log()
+        if (pastEvents[i] && userAddress.toLowerCase() === pastEvents[i].returnValues.provAddr.toLowerCase()) {
+            console.log("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + pastEvents[i].returnValues.reqAddr + " The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
             mode = 0;
             request(hex2ascii(pastEvents[i].returnValues.extra));
             requestAddr = pastEvents[i].returnValues.reqAddr;
@@ -773,6 +774,7 @@ checkEvents = async () => {
 
       // Validation Assigned to Provider
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Assigned to Provider") {
+          console.log
         if (pastEvents[i] && userAddress === pastEvents[i].returnValues.provAddr) {
             // console.log("You are a validator", "You need to validate the task for: " + pastEvents[i].reqAddr + " as true or false. The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
             mode = 1;
