@@ -23,6 +23,7 @@ if file == 'none':
         print('requesting files from: ' + ip)
         res = r.get('http://' + ip + '/files')
         open('image.zip', 'wb').write(res.content)
+        res = r.get('http://' + ip + '/exit')
         #unzip file (!!!!assume that image.zip is created by cli!!!!)
         os.system("unzip image.zip")
         #this will load the image back into docker
