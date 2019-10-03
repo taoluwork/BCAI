@@ -666,7 +666,7 @@ checkEvents = async () => {
             mode = 0;
             requestAddr = pastEvents[i].returnValues.reqAddr
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
-            request
+            offer()
         }
       }
 
