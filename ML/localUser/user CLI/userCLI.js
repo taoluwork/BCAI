@@ -7,10 +7,6 @@ const chalk = require('chalk');
 var path = require('path');
 const {exec} = require('child_process');
 const Folder = './';
-var app = require('express')();
-var http = require('http').createServer(app);
-var serverIo = require('socket.io')(http, {maxHttpBufferSize:(Math.pow(10,10))});
-var clientIo = require('socket.io-client');
 var publicIp = require("public-ip");
 var hex2ascii= require("hex2ascii")
 
@@ -21,8 +17,6 @@ var taskCounter = 0;
 var NetworkID = 3;
 var serverPort = 3001;
 var ClientPort = 3002;
-var buffer     = [];
-var bufferHol   = [];
 var ip         = undefined;
 var ip4        = undefined;
 var ip6        = undefined;
@@ -55,132 +49,6 @@ getIp().then(() => {
     }
     console.log(ip);
 });
-
-///////////////////////////////////////////////////////////////////server///////////////////////////////////////////////////////////////////////////////////
-serverIo.on('connection', function(socket){
-
-    socket.on('goodbye', ()=>{
-        buffer = undefined;
-        requestAddr = undefined;
-    });
-    //this is sent by another computer to recieve the current file
-    //(ex. the provider will send request to the user for the data)
-    //there are different calls the two connections to ensure that the
-    //data is received
-    socket.on('request', () =>{
-        chunkSize= 8 * Math.pow(10,6)
-        iterations = Math.ceil(buffer.length / chunksize);
-        console.log("Got:request from:" + socket);
-        if(buffer !== undefined){
-            //socket.emit('transmitting', buffer );
-            var chunksize = 5242880; //5MB
-            var iterations = Math.ceil(buffer.length / chunksize);
-            for(var i = 0 ; i < iterations; i++){
-              if(i != iterations - 1) {
-                socket.emit('transmitting', buffer.slice(i*chunksize,(i+1)*chunksize-1) , i);
-              }
-              else{
-                socket.emit('transmitting', buffer.slice(i*chunksize,buffer.length), i);
-              }
-            }
-            socket.emit('transmitFin');
-            //socket.emit('transmitting', this.state.buffer);
-            //console.log("emit:transmitting" );
-        }
-        else{
-        console.log("NO FILE FOUND!! Something seriously wrong has happened. The environment does not have the result saved for some reason.");
-        }
-    });
-
-    if(buffer === undefined){
-        socket.emit('request');
-    }
-    
-    socket.on('transmitting', ( data, iter )=>{
-        //console.log("Got data: " + data)
-        if(data !== undefined){                     
-            //socket.disconnect(true);
-            bufferHol.append([data, iter]);
-        }
-        else{
-            socket.emit('request');
-        }
-      });
-    socket.on('transmitFin' , ()=>{
-        socket.emit('goodbye'); //tell host that they are done, host can clear buffer
-        for(var i = 0 ; i < bufferHol.length; i++){
-            var flag = true;
-            var counter = 0
-            while(flag){
-                if(bufferHol[counter][1] == i){
-                    buffer.append(bufferHol[counter][0]);
-                    flag = false;
-                }
-                counter += 1;
-            }
-        }
-    });
-    
-});
-
-//creates the server
-http.listen(serverPort , function(){
-    console.log('listening on: ' + serverPort);
-});
-
-
-//function to write a file
-//this is a helper function for request
-function writeFile(data){
-    fs.writeFile("image.zip", data, (err) => {
-        if(err){
-            //writeFile(data) ///might cause an infinite loop, probably should just wait
-            console.log('corrupted file')
-            return;
-        }
-        else {
-        }
-    });
-}
-
-//function to request from another ip address
-//(the ip will be either the dataId or requestId)
-//it needs to create a client socketIo instance
-function request(reqIp){
-    //create a client connection
-    var clientSocket = clientIo.connect("http://" + reqIp + "/");
-    
-    //emit the request
-    clientSocket.emit('request');
-
-    //this is called when a server send data in responce to this current computer's request
-    clientSocket.on('transmitting', ( data, iter )=>{
-        //console.log("Got data: " + data)
-        if(data !== undefined){                     
-            //socket.disconnect(true);
-            bufferHol.append([data, iter]);
-        }
-        else{
-            clientSocket.emit('request');
-        }
-      });
-    clientSocket.on('transmitFin' , ()=>{
-        clientSocket.emit('goodbye'); //tell host that they are done, host can clear buffer
-        for(var i = 0 ; i < bufferHol.length; i++){
-            var flag = true;
-            var counter = 0
-            while(flag){
-                if(bufferHol[counter][1] == i){
-                    buffer.append(bufferHol[counter][0]);
-                    flag = false;
-                }
-                counter += 1;
-            }
-        }
-    });
-}
-
-
 
 var UTCFileArray = [];
 var UTCfile;
@@ -263,7 +131,29 @@ function askUser(){
         inquirer.prompt([questions1]).then(answers => {choiceMade(answers.whatToDo1)});
 }
 
+function receiveResult(){
 
+    exec('python3 execute.py ' + '0 ' + requestIP + ' none', (err,stdout,stderr)=>{
+        if(err){
+          console.log(err);
+          return;
+        }
+        console.log(stdout);
+        
+      });
+}
+
+function offer(){
+    
+    exec('python3 execute.py ' + '0 ' + requestIP + ' image.zip', (err,stdout,stderr)=>{
+        if(err){
+          console.log(err);
+          return;
+        }
+        console.log(stdout);
+        
+      });
+}
 
 
 //Takes choice made by prompt and controls where to go
@@ -790,11 +680,21 @@ checkEvents = async () => {
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
         if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
          // console.log("Awaiting validation", "You have completed a task an are waiting for validation");
-         request(hex2ascii(pastEvents[i].returnValues.extra));
+         offer();
+         requestIP = hex2ascii(pastEvents[i].returnValues.extra);
          prov = 0;
          askUser();
         }
       }
+
+        // Request Assigned
+        if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Request Assigned") {
+            if (this.state.events[i] && this.state.myAccount === this.state.events[i].args.reqAddr) {
+                requestIP = hex2ascii(pastEvents[i].returnValues.extra);
+                console.log("Request has been assigned.");
+                receiveResult();
+            }
+        }
 
     }
 }
