@@ -22,6 +22,8 @@ var ip4        = undefined;
 var ip6        = undefined;
 var mode       = undefined;
 var requestAddr= undefined;
+var filePath = undefined;
+var requestIP = undefined;
 
 
 
@@ -134,6 +136,7 @@ function askUser(){
 function receiveResult(){
 
     exec('python3 execute.py ' + '0 ' + requestIP + ' none', (err,stdout,stderr)=>{
+
         if(err){
           console.log(err);
           return;
@@ -144,7 +147,6 @@ function receiveResult(){
 }
 
 function offer(){
-    
     exec('python3 execute.py ' + '0 ' + requestIP + ' image.zip', (err,stdout,stderr)=>{
         if(err){
           console.log(err);
@@ -266,33 +268,8 @@ function startTask(){
                     var maxTime = newSettings[0];
                     var maxTarget = newSettings[1];
                     var minPrice = newSettings[2];
-                    var filePath = newSettings[3];
-                    fs.open(filePath, 'r', (err, fd)=>{
-                        if(err){console.log(err);return;}
-                        function readChunk(){
-                            chunkSize = 10*1024*1024;
-                            var holdBuff = Buffer.alloc(chunkSize);
-                            fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
-                                if(err){console.log(err);return;}
-                                if(nread === 0){
-                                    fs.close(fd, function(err){
-                                        if(err){console.log(err);return;}
-                                    });
-                                    return;
-                                }
-                                if(nread < chunkSize){
-                                    buffer.push(holdBuff.slice(0, nread));
-                                }
-                                else{
-                                    buffer.push(holdBuff);
-                                    //console.log(holdBuff)
-                                    readChunk();
-
-                                }
-                            })
-                        }     
-                        readChunk();                   
-                    });
+                    filePath = newSettings[3];
+                    
                     //console.log(buffer);
                     ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
                     //console.log(ABIstartRequest);
@@ -323,7 +300,7 @@ function startTask(){
                                 //console.log("================================================   <- updated! #", result.number);
                                 //console.log(result);
                                 //showPools();
-                                checkEvents();
+                                //checkEvents();
                             })
                         }
                         catch(error){
@@ -377,33 +354,8 @@ function startTask(){
             var maxTime = newSettings[0];
             var maxTarget = newSettings[1];
             var minPrice = newSettings[2];
-            var filePath = newSettings[3];
-            fs.open(filePath, 'r', (err, fd)=>{
-                if(err){console.log(err);return;}
-                function readChunk(){
-                    chunkSize = 10*1024*1024;
-                    var holdBuff = Buffer.alloc(chunkSize);
-                    fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
-                        if(err){console.log(err);return;}
-                        if(nread === 0){
-                            fs.close(fd, function(err){
-                                if(err){console.log(err);return;}
-                            });
-                            return;
-                        }
-                        if(nread < chunkSize){
-                            buffer.push(holdBuff.slice(0, nread));
-                        }
-                        else{
-                            buffer.push(holdBuff);
-                            //console.log(holdBuff)
-                            readChunk();
-
-                        }
-                    })
-                }     
-                readChunk();                   
-            });
+            filePath = newSettings[3];
+            
             //console.log(buffer)
             ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice,  web3.utils.asciiToHex(ip)).encodeABI();
             //console.log(ABIstartRequest);
@@ -433,7 +385,7 @@ function startTask(){
                         //console.log("================================================   <- updated! #", result.number);
                         //console.log(result);
                         //showPools();
-                        checkEvents();
+                        //checkEvents();
                     })
                 }
                 catch(error){
@@ -625,6 +577,7 @@ function updateTask(){
 
 function showPools(){
     //Lists pool all pools
+    checkEvents();
     return myContract.methods.getProviderPool().call().then(function(provPool){
 		console.log("\n\n=======================================================");
 		console.log("Active provider pool: Total = ", provPool.length);
@@ -656,7 +609,6 @@ function showPools(){
 		console.log("Error: show pool error! ", err);
     })
     
-
 }
 
 checkEvents = async () => {
@@ -675,25 +627,24 @@ checkEvents = async () => {
 
     // For pairing info events
     for (var i = 0; i < pastEvents.length; i++) {
-
+      console.log(hex2ascii(pastEvents[i].returnValues.info))
       // Request Computation Complete
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
         if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
          // console.log("Awaiting validation", "You have completed a task an are waiting for validation");
-         offer();
+
          requestIP = hex2ascii(pastEvents[i].returnValues.extra);
+         receiveResult();
          prov = 0;
          askUser();
         }
       }
 
         // Request Assigned
-        if (this.state.events[i].args && hex2ascii(this.state.events[i].args.info) === "Request Assigned") {
-            if (this.state.events[i] && this.state.myAccount === this.state.events[i].args.reqAddr) {
-                requestIP = hex2ascii(pastEvents[i].returnValues.extra);
-                console.log("Request has been assigned.");
-                receiveResult();
-            }
+        if (pastEvents[i].returnValues  && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
+            requestIP = hex2ascii(pastEvents[i].returnValues.extra);
+            console.log("Request has been assigned.");
+            offer();
         }
 
     }

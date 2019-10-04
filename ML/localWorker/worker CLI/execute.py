@@ -6,12 +6,12 @@ import time
 import json
 from signal import signal, SIGINT
 
-print(sys.argv)
 # 0-> provider
 # 1-> validator
 mode = sys.argv[1]
 ip   = sys.argv[2]
 file = sys.argv[3]
+print('FILE PROCESS BEGINNING')
 
 
 if file == 'none':
