@@ -44,7 +44,7 @@ getIp().then(() => {
       ip = "[" + ip6 + "]:" + serverPort;
     }
     else{
-      ip = ip4 + ":3001";
+      ip = ip4 + ":5000";
     }
     console.log(ip);
 });
@@ -666,7 +666,7 @@ checkEvents = async () => {
             mode = 0;
             requestAddr = pastEvents[i].returnValues.reqAddr
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
-            offer()
+            execute()
         }
       }
 
@@ -685,7 +685,7 @@ checkEvents = async () => {
             mode = 1;
             requestAddr = pastEvents[i].returnValues.reqAddr
             requestIP = hex2ascii(pastEvents[i].returnValues.extra)
-            execute();
+            offer();
         }
       }
 
