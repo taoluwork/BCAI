@@ -15,8 +15,8 @@ var hex2ascii= require("hex2ascii")
 var validationCounter = 0;
 var taskCounter = 0;
 var NetworkID = 3;
-var serverPort = 3001;
-var ClientPort = 3002;
+var serverPort = 5000;
+var ClientPort = 5000;
 var ip         = undefined;
 var ip4        = undefined;
 var ip6        = undefined;
@@ -47,7 +47,7 @@ getIp().then(() => {
       ip = "[" + ip6 + "]:" + serverPort;
     }
     else{
-      ip = ip4 + ":3001";
+      ip = ip4 + ":5000";
     }
     console.log(ip);
 });
