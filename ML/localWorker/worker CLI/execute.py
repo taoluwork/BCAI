@@ -11,7 +11,8 @@ from signal import signal, SIGINT
 mode = sys.argv[1]
 ip   = sys.argv[2]
 file = sys.argv[3]
-print('FILE PROCESS BEGINNING')
+myIp = sys.argv[4]
+#print('FILE PROCESS BEGINNING')
 
 
 if file == 'none':
@@ -20,7 +21,7 @@ if file == 'none':
         ip = sys.argv[1]
         file = sys.argv[2]
     if file == 'none' and ip != 'none':
-        print('requesting files from: ' + ip)
+        #print('requesting files from: ' + ip)
         res = r.get('http://' + ip + '/files')
         open('image.zip', 'wb').write(res.content)
         res = r.get('http://' + ip + '/exit')
@@ -54,7 +55,7 @@ else:
     @app.route('/files')
     def fileRead():
         file = f.read()
-        print(type(file))
+        #print(type(file))
         data = file 
         return data
     
@@ -64,5 +65,5 @@ else:
         return "BYE"
 
     if __name__ == '__main__':
-        app.run(host='127.0.0.1')
+        app.run(host=myIp)
         
