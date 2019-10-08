@@ -48,5 +48,5 @@ else:
         return "BYE"
 
     if __name__ == '__main__':
-        app.run(host='127.0.0.1')
+        app.run(host='130.39.223.54')
         
