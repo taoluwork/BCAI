@@ -1,12 +1,46 @@
 <head>
     <link rel="stylesheet" href="ui.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpatr.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="ui_api.js"></script>
+    <script src="https://stackpatr.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="ui.js"></script>
 </head>
 <body>
-    <button class="test" onClick="test()">Press</button>
+    <button class="test" id="testbutton" onClick="showHistory()">Show Pools</button>
+    <table class="ActiveProviderPoolTable table-bordered" id="ActiveProviderPoolTable">
+        <tr>
+            <th>Active Provider Pool: </th>
+        </tr>
+        <tr>
+            <td>"0x40657BF5292750477fd7BC048078c7D39055E6a9"</td>
+        </tr>
+    </table>
+
+    <table class="PendingPoolTable table-bordered" id="PendingPoolTable">
+        <tr>
+            <th>Pending Pool: </th>
+        </tr>
+        <tr>
+            <td>"0x40657BF5292750477fd7BC048078c7D39055E6a9"</td>
+        </tr>
+    </table>
+    <table class="ProvidingPoolTable table-bordered" id="ProvidingPoolTable">
+        <tr>
+            <th>Providing Pool: </th>
+        </tr>
+        <tr>
+            <td>"0x40657BF5292750477fd7BC048078c7D39055E6a9"</td>
+        </tr>
+    </table>
+    <table class="ValidatingPoolTable table-bordered" id="ValidatingPoolTable">
+        <tr>
+            <th>Active Provider Pool: </th>
+        </tr>
+        <tr>
+            <td>"0x40657BF5292750477fd7BC048078c7D39055E6a9"</td>
+        </tr>
+    </table>
 </body>
+
