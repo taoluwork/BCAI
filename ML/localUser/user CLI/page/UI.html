@@ -24,13 +24,21 @@
             <h2 class="text-left">
                 Addresses:
                 <div class="btn-group" role="group" id="AddressBar">
-                    <button type="button" class="btn btn-secondary">addressPlaceHolder1</button>
-                    <button type="button" class="btn btn-secondary">addressPlaceHolder2</button>
                 </div>    
             </h2>
         </div>
         
-        
+        <div class="container-fluid" id="actionSelect">
+            <h2 class="text-left">
+                Select An Action:
+                <div class="btn-group" role="group" id="actionSelectBar">
+                    <button type="button" class="btn btn-secondary" id="startActionSel">Start Request</button>
+                    <button type="button" class="btn btn-secondary" id="updateActionSel">Update Request</button>
+                    <button type="button" class="btn btn-secondary" id="stopActionSel">Stop Request</button>
+                    <button type="button" class="btn btn-secondary" id="noneActionSel">none</button>
+                </div>    
+            </h2>
+        </div>
         <div id="actionContainer" class="container-fluid">
             <form id="startTaskForm">
                 <div class="form-group" id="startTaskInputs">
@@ -52,29 +60,48 @@
                 </div>
                 <button type="submit" class="btn btn-primary" id="updateTaskSubmit">Submit</button>
             </form>
+            <form id="stopTaskForm">
+                <div class="form-group" id="StopTaskInputs">
+                    <h3>Stop Task</h3>
+                <button type="submit" class="btn btn-primary" id="stopTaskSubmit">Stop Task</button>
+            </form>
         </div>
 
 
+        <div class="container-fluid" id="poolSelect">
+            <h2 class="text-left">
+                Select A Pool:
+                <div class="btn-group" role="group" id="poolSelectBar">
+                        <button type="button" class="btn btn-secondary" id="pendingPoolSel">Pending Pool</button>
+                        <button type="button" class="btn btn-secondary" id="providerPoolSel">Provider Pool</button>
+                        <button type="button" class="btn btn-secondary" id="providingPoolSel">Providing Pool</button>
+                        <button type="button" class="btn btn-secondary" id="validatingPoolSel">Validation Pool</button>
+                        <button type="button" class="btn btn-secondary" id="historyPoolSel">History</button>
+                        <button type="button" class="btn btn-secondary" id="nonePoolSel">none</button>
+                </div>    
+            </h2>
+        </div>
         <div id="poolContainer" class="container-fluid">
             <table class="table table-hover">
                 <thead>
-                    <tr>
-                        <th colspan="4" class="text-center">Pools</th>
+                    <tr id="pendingPoolHeader">
+                        <th colspan="2" class="text-center"> Pending Pool </th>
+                    </tr>
+                    <tr id="providerPoolHeader">
+                        <th colspan="2" class="text-center"> Provider Pool </th>
+                    </tr>
+                    <tr id="providingPoolHeader">
+                        <th colspan="2" class="text-center" > Providing Pool </th>
+                    </tr>
+                    <tr id="validatingPoolHeader">
+                        <th colspan="2" class="text-center" > Validating Pool </th>
                     </tr>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Action</th>
                         <th scope="col">Request Address</th>
-                        <th scope="col">Providor Address</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>actionPlaceHolder</td>
-                        <td>addressPlaceHolder</td>
-                        <td>addressPlaceHolder</td>
-                    </tr>      
+                <tbody id="poolBody">   
                 </tbody>
             </table>
         </div>
@@ -84,32 +111,24 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th colspan="4" class="text-center">History</th>
+                        <th colspan="3" class="text-center">History</th>
                     </tr>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Action</th>
                         <th scope="col">Request Address</th>
-                        <th scope="col">Providor Address</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>actionPlaceHolder</td>
-                        <td>addressPlaceHolder</td>
-                        <td>addressPlaceHolder</td>
-                    </tr>      
+                <tbody id="historyBody">    
                 </tbody>
             </table>
         </div>
-
-
-        <script type="text/javascript" src="ui.js"></script>
+        
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="ui.js"></script>
     
     </body>
 </html>
