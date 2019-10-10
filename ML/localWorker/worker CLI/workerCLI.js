@@ -22,8 +22,8 @@ var ip4        = undefined;
 var ip6        = undefined;
 var mode       = undefined;
 var requestAddr= undefined;
-var requestIP= undefined;
-var executing = false;
+var requestIP= undefined
+
 
 
 
