@@ -32,38 +32,38 @@
             <h2 class="text-left">
                 Select An Action:
                 <div class="btn-group" role="group" id="actionSelectBar">
-                    <button type="button" class="btn btn-secondary" id="startActionSel">Start Request</button>
-                    <button type="button" class="btn btn-secondary" id="updateActionSel">Update Request</button>
-                    <button type="button" class="btn btn-secondary" id="stopActionSel">Stop Request</button>
+                    <button type="button" class="btn btn-secondary" id="startActionSel">Start Providing</button>
+                    <button type="button" class="btn btn-secondary" id="updateActionSel">Update Provider</button>
+                    <button type="button" class="btn btn-secondary" id="stopActionSel">Stop Providing</button>
                     <button type="button" class="btn btn-secondary" id="noneActionSel">none</button>
                 </div>    
             </h2>
         </div>
         <div id="actionContainer" class="container-fluid">
-            <form id="startTaskForm">
-                <div class="form-group" id="startTaskInputs">
-                    <h3>Start Task</h3>
-                    <input type="text" class="form-control" id="startTaskTime"     placeholder="Enter Time">
-                    <input type="text" class="form-control" id="startTaskAccuracy" placeholder="Enter Accuracy">
-                    <input type="text" class="form-control" id="startTaskCost"     placeholder="Enter Cost">
-                    <input type="text" class="form-control" id="startTaskFilePath" placeholder="Enter File Path">
+            <form id="startProvidingForm">
+                <div class="form-group" id="startProvidingInputs">
+                    <h3>Start Providing</h3>
+                    <input type="text" class="form-control" id="startProvidingTime"     placeholder="Enter Time">
+                    <input type="text" class="form-control" id="startProvidingAccuracy" placeholder="Enter Accuracy">
+                    <input type="text" class="form-control" id="startProvidingCost"     placeholder="Enter Cost">
+                    <input type="text" class="form-control" id="startProvidingFilePath" placeholder="Enter File Path">
                 </div>
-                <button type="submit" class="btn btn-primary" id="startTaskSubmit">Submit</button>
+                <button type="submit" class="btn btn-primary" id="startProvidingSubmit">Submit</button>
             </form>
-            <form id="updateTaskForm">
-                <div class="form-group" id="UpdateTaskInputs">
-                        <h3>Update Task</h3>
-                    <input type="text" class="form-control" id="updateTaskTime"     placeholder="Enter Time">
-                    <input type="text" class="form-control" id="updateTaskAccuracy" placeholder="Enter Accuracy">
-                    <input type="text" class="form-control" id="updateTaskCost"     placeholder="Enter Cost">
-                    <input type="text" class="form-control" id="updateTaskFilePath" placeholder="Enter File Path">
+            <form id="updateProviderForm">
+                <div class="form-group" id="updateProviderInputs">
+                        <h3>Update Provider</h3>
+                    <input type="text" class="form-control" id="updateProviderTime"     placeholder="Enter Time">
+                    <input type="text" class="form-control" id="updateProviderAccuracy" placeholder="Enter Accuracy">
+                    <input type="text" class="form-control" id="updateProviderCost"     placeholder="Enter Cost">
+                    <input type="text" class="form-control" id="updateProviderFilePath" placeholder="Enter File Path">
                 </div>
-                <button type="submit" class="btn btn-primary" id="updateTaskSubmit">Submit</button>
+                <button type="submit" class="btn btn-primary" id="updateProviderSubmit">Submit</button>
             </form>
-            <form id="stopTaskForm">
-                <div class="form-group" id="StopTaskInputs">
-                    <h3>Stop Task</h3>
-                <button type="submit" class="btn btn-primary" id="stopTaskSubmit">Stop Task</button>
+            <form id="stopProvidingForm">
+                <div class="form-group" id="stopProvidingInputs">
+                    <h3>Stop Providing</h3>
+                <button type="submit" class="btn btn-primary" id="stopProvidingSubmit">Stop Task</button>
             </form>
         </div>
 
