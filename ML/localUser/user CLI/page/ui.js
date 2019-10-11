@@ -66,18 +66,18 @@ historyContainer.style.display   = "none";
 
 startTaskSubmit.addEventListener("click", (event)=>{ 
     event.preventDefault();
-    console.log(startTaskTime.value)
-    console.log(startTaskAcc.value)
-    console.log(startTaskCost.value)
-    console.log(startTaskFile.value)
+    // console.log(startTaskTime.value)
+    // console.log(startTaskAcc.value)
+    // console.log(startTaskCost.value)
+    // console.log(startTaskFile.value)
     startTask(startTaskTime.value , startTaskAcc.value , startTaskCost.value, startTaskFile.value )
 });
 updateTaskSubmit.addEventListener("click", ()=>{ 
     event.preventDefault();
-    console.log(updateTaskTime.value)
-    console.log(updateTaskAcc.value)
-    console.log(updateTaskCost.value)
-    console.log(updateTaskFile.value)
+    // console.log(updateTaskTime.value)
+    // console.log(updateTaskAcc.value)
+    // console.log(updateTaskCost.value)
+    // console.log(updateTaskFile.value)
     updateTask(updateTaskTime.value , updateTaskAcc.value , updateTaskCost.value, updateTaskFile.value )    
 });
 stopTaskSubmit.addEventListener("click", ()=>{ 
@@ -258,7 +258,7 @@ function getAddresses(){
         type: "GET",
         url: baseurl + '/accounts',
         success: function (result) {
-            console.log(result);
+            // console.log(result);
             addresses = []
             var addr = result.Addresses;
             for(var i=0 ; i < addr.length; i++){
@@ -273,7 +273,7 @@ function getPools(){
         type: "GET",
         url: baseurl + '/pools',
         success: function (result) {
-            console.log(result);
+            // console.log(result);
             var provPool    = result.ActiveProviderAddresses;
             var valiPool    = result.ValidatingAddresses;
             var pendPool    = result.PendingAddresses;
@@ -310,7 +310,7 @@ function getHistory(){
         },
         data: JSON.stringify(data), //this is the sent json data
         success: function (result) {
-            console.log(result);
+            // console.log(result);
             var hist = result.History;
             historyPool = []
             for(var i= 0 ; i < hist.length; i++){
@@ -336,7 +336,7 @@ function startTask(startTime, startAccuracy, startCost, startFile){
         },
         data: JSON.stringify(data), //this is the sent json data
         success: function (result) {
-            console.log(result);
+            // console.log(result);
         }
     });
 }
@@ -357,7 +357,7 @@ function updateTask(updateTime, updateAccuracy, updateCost, updateFile){
         },
         data: JSON.stringify(data), //this is the sent json data
         success: function (result) {
-            console.log(result);
+            // console.log(result);
         }
     });
 }
