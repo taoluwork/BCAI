@@ -1,5 +1,7 @@
 {
-  "Action" : "Began Executing",
-  "Request Address" : "0x40657BF5292750477fd7BC048078c7D39055E6a9",
-  "Provider Address" : "0x40657BF5292750477fd7BC048078c7D39055E6a9"
+  "History":[
+    {"Action" : "Began Executing",
+    "RequestAddr" : "0x40657BF5292750477fd7BC048078c7D39055E6a9",
+    "ProviderAddr" : "0x40657BF5292750477fd7BC048078c7D39055E6a9"}
+  ]
 }

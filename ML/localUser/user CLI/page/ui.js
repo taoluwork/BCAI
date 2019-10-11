@@ -1,13 +1,14 @@
 //load packages
 //variables
-var addresses = ["asdf"];
-var pendingPool = ["a"];
-var providerPool = ["b"];
-var providingPool = ["c"];
-var validatorPool = ["d"];
-var historyPool = [["actionA", "B"]];
+var addresses = [];
+var pendingPool = [];
+var providerPool = [];
+var providingPool = [];
+var validatorPool = [];
+var historyPool = [];
 var currentPoolType = "none";
 var baseurl = "http://localhost:3000";
+var address = "";
 
 //get elements
 var addressBar        = document.getElementById("AddressBar");
@@ -63,18 +64,25 @@ var historyContainer     = document.getElementById("historyContainer");
 poolContainer.style.display      = "none";
 historyContainer.style.display   = "none";
 
-//listeners
-startTaskSubmit.addEventListener("click", ()=>{ 
+startTaskSubmit.addEventListener("click", (event)=>{ 
     event.preventDefault();
-     
+    console.log(startTaskTime.value)
+    console.log(startTaskAcc.value)
+    console.log(startTaskCost.value)
+    console.log(startTaskFile.value)
+    startTask(startTaskTime.value , startTaskAcc.value , startTaskCost.value, startTaskFile.value )
 });
 updateTaskSubmit.addEventListener("click", ()=>{ 
     event.preventDefault();
-    
+    console.log(updateTaskTime.value)
+    console.log(updateTaskAcc.value)
+    console.log(updateTaskCost.value)
+    console.log(updateTaskFile.value)
+    updateTask(updateTaskTime.value , updateTaskAcc.value , updateTaskCost.value, updateTaskFile.value )    
 });
 stopTaskSubmit.addEventListener("click", ()=>{ 
     event.preventDefault();
-     
+    stopTask()
 });
 
 startActionSel.addEventListener("click", ()=>{
@@ -163,18 +171,23 @@ function loadAddr(){
         addressBar.removeChild(childElem);
         childElem = addressBar.lastElementChild;
     }
-    if(addresses.length == 0){
-        var btn = document.createElement("TEXT");
-        btn.innerHTML = "No addresses loaded";
-        btn.className = "btn btn-secondary";
-        addressBar.appendChild(btn);
-    }
+    // if(addresses.length == 0){
+    //     var btn = document.createElement("TEXT");
+    //     btn.innerHTML = "No addresses loaded";
+    //     btn.className = "btn btn-secondary";
+    //     addressBar.appendChild(btn);
+    // }
     for(var i = 0 ; i < addresses.length; i++){
         //<button type="button" class="btn btn-secondary">addressPlaceHolder1</button>
         var btn = document.createElement("BUTTON");
         btn.innerHTML = addresses[i];
         btn.className = "btn btn-secondary";
+        btn.id = "addressNumb"+i;
         addressBar.appendChild(btn);
+        document.getElementById("addressNumb"+i).addEventListener("click",(event)=>{
+            address = event.srcElement.innerHTML
+
+        });
     }
 }
 
@@ -228,13 +241,13 @@ function loadHistory(){
 }
 
 setInterval(function update(){
-    //call api functions
     getAddresses();
-    getPools();
-    getHistory();
-    //reload info
     loadAddr();
-    loadHistory();
+    if(address != ""){
+        getPools();
+        getHistory();
+        loadHistory();
+    }
 },5000);
 
 
@@ -246,7 +259,11 @@ function getAddresses(){
         url: baseurl + '/accounts',
         success: function (result) {
             console.log(result);
-            
+            addresses = []
+            var addr = result.Addresses;
+            for(var i=0 ; i < addr.length; i++){
+                addresses.push(addr[i].Address);
+            }
         }
     });
 }
@@ -257,6 +274,26 @@ function getPools(){
         url: baseurl + '/pools',
         success: function (result) {
             console.log(result);
+            var provPool    = result.ActiveProviderAddresses;
+            var valiPool    = result.ValidatingAddresses;
+            var pendPool    = result.PendingAddresses;
+            var provingPool = result.ProvidingAddresses;
+            providerPool = [];
+            providingPool = [];
+            validatorPool = [];
+            pendingPool = [];
+            for(var i = 0 ; i < provPool.length; i++){
+                providerPool.push(provPool[i].Address)
+            }
+            for(var i = 0 ; i < valiPool.length; i++){
+                validatorPool.push(valiPool[i].Address)
+            }
+            for(var i = 0 ; i < pendPool.length; i++){
+                pendingPool.push(pendPool[i].Address)
+            }
+            for(var i = 0 ; i < provingPool.length; i++){
+                providingPool.push(provingPool[i].Address)
+            }
         }
     });
 }
@@ -274,14 +311,20 @@ function getHistory(){
         data: JSON.stringify(data), //this is the sent json data
         success: function (result) {
             console.log(result);
+            var hist = result.History;
+            historyPool = []
+            for(var i= 0 ; i < hist.length; i++){
+                historyPool.push([hist[i].Action, hist[i].RequestAddr])
+            }
         }
     });
 }
-function startTask(){
+function startTask(startTime, startAccuracy, startCost, startFile){
     var data = {
-        time: time,
-        accuracy: accuracy,
-        cost: cost,
+        time: startTime,
+        accuracy: startAccuracy,
+        cost: startCost,
+        file: startFile,
         Account: address
     };
     $.ajaxSetup({async: false});  
@@ -297,11 +340,13 @@ function startTask(){
         }
     });
 }
-function updateTask(){
+function updateTask(updateTime, updateAccuracy, updateCost, updateFile){
     var data = {
-        time: time,
-        accuracy: accuracy,
-        cost: cost
+        time: updateTime,
+        accuracy: updateAccuracy,
+        cost: updateCost,
+        file: updateFile,
+        Account: address
       };
     $.ajaxSetup({async: false});  
     $.ajax({     

@@ -2,5 +2,6 @@
   "time": 100,
   "Accuracy" : 100,
   "cost" : 1000,
+  "file" : "image.zip",
   "Account" : "0x40657BF5292750477fd7BC048078c7D39055E6a9"
 }
