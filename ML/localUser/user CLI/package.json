@@ -11,6 +11,7 @@
     "@material-ui/styles": "^4.3.3",
     "bignumber.js": "^8.0.2",
     "chalk": "^2.4.2",
+    "express": "^4.17.1",
     "figlet": "^1.2.4",
     "hex2ascii": "0.0.3",
     "inquirer": "^7.0.0",

@@ -9,6 +9,7 @@ const {exec} = require('child_process');
 const Folder = './';
 var publicIp = require("public-ip");
 var hex2ascii= require("hex2ascii")
+var express = require('express');
 
 
 //position 38 or 37
@@ -771,7 +772,7 @@ function updateTask(){
 
 function showPools(){
     //Lists pool all pools
-    checkEvents();
+    //checkEvents();
     return myContract.methods.getProviderPool().call().then(function(provPool){
 		console.log("\n\n=======================================================");
 		console.log("Active provider pool: Total = ", provPool.length);
@@ -845,3 +846,73 @@ checkEvents = async () => {
 }
 
 
+//Implementing Express for API
+
+var app = express();
+
+//json of all available accounts for the user
+app.use(express.json()); //Use to read json of incoming request
+
+//Allows CORS stuff
+app.use(function (req, res, next) {
+    //set headers to allow cross origin requestt
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
+
+app.get('/accounts', function(req, res) {
+    var accountJSON = {"Addresses" : []}
+    var counter = 0
+    userAddresses.forEach(function(address){
+        accountJSON["Addresses"].push({"Address": address});
+        counter+=1;
+    })
+    res.header("Content-Type", 'application/json');
+    res.send(accountJSON);
+})
+
+app.get('/pools', function(req, res) {
+    var poolJSON = {"ActiveProviders": 0, "ActiveProviderAddresses" : [], "Pending" : 0, "PendingAddresses" : [], "Providing" : 0, "ProvidingAddresses" : [], "Validating" : 0, "ValidatingAddresses": []};
+    myContract.methods.getProviderPool().call().then(function(provPool){
+        poolJSON["ActiveProviders"] = provPool.length;
+        for(var i = 0; i<provPool.length; i++){
+            poolJSON["ActiveProviderAddresses"].push({"Address": provPool[i]})
+        }
+    })
+    .then(function(){
+		myContract.methods.getPendingPool().call().then(function(reqPool){
+		    poolJSON["Pending"] = reqPool.length;
+            for(var i = 0; i<reqPool.length; i++){
+                poolJSON["PendingAddresses"].push({"Address": provPool[i]})
+            }
+		})
+    })
+    .then(function(){
+	    myContract.methods.getProvidingPool().call().then(function(providingPool){
+            poolJSON["Providing"] = providingPool.length;
+            for(var i = 0; i<providingPool.length; i++){
+                poolJSON["ProvidingAddresses"].push({"Address": providingPool[i]})
+            }		
+        })
+    })
+    .then(function(){
+		myContract.methods.getValidatingPool().call().then(function(valiPool){
+            poolJSON["Validating"] = valiPool.length;
+            for(var i = 0; i<valiPool.length; i++){
+                poolJSON["ValidatingAddresses"].push({"Address": valiPool[i]})
+            }        
+        })
+    })
+    .catch(function(err){
+		console.log("Error: show pool error! ", err);
+    })
+    res.header("Content-Type", 'application/json');
+    res.send(poolJSON)
+})
+
+
+
+app.listen(3000);

@@ -105,7 +105,7 @@ stopActionSel.addEventListener("click", ()=>{
     updateTaskForm.style.display = "none";
     stopTaskForm.style.display   = "block";
 });
-noneActionSel.addEventListener("click", ()=>{
+noneActionSel.addEventListener("click", ()=>{r
     event.preventDefault();
     startTaskForm.style.display  = "none";
     updateTaskForm.style.display = "none";
@@ -192,13 +192,11 @@ function loadAddr(){
 }
 
 function loadPool(pool){
-
     var childElem = poolBody.lastElementChild;
     while(childElem){
         poolBody.removeChild(childElem);
         childElem = poolBody.lastElementChild;
     }
-
     for(var i = 0 ; i < pool.length; i++){
 
         var row      = document.createElement("TR");
