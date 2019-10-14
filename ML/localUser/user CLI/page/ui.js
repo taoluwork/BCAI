@@ -105,7 +105,7 @@ stopActionSel.addEventListener("click", ()=>{
     updateTaskForm.style.display = "none";
     stopTaskForm.style.display   = "block";
 });
-noneActionSel.addEventListener("click", ()=>{r
+noneActionSel.addEventListener("click", ()=>{
     event.preventDefault();
     startTaskForm.style.display  = "none";
     updateTaskForm.style.display = "none";
