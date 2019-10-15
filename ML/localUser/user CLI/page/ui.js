@@ -50,15 +50,6 @@ var validatingPoolSel    = document.getElementById("validatingPoolSel");
 var historyPoolSel       = document.getElementById("historyPoolSel");
 var nonePoolSel          = document.getElementById("nonePoolSel");
 
-var pendingpoolHeader    = document.getElementById("pendingPoolHeader");
-var providerpoolHeader   = document.getElementById("providerPoolHeader");
-var providingpoolHeader  = document.getElementById("providingPoolHeader");
-var validatingPoolHeader = document.getElementById("validatingPoolHeader");
-pendingpoolHeader.style.display    = "none";
-providerpoolHeader.style.display   = "none";
-providingpoolHeader.style.display  = "none";
-validatingPoolHeader.style.display = "none";
-
 var poolContainer        = document.getElementById("poolContainer");
 var historyContainer     = document.getElementById("historyContainer");
 poolContainer.style.display      = "none";
@@ -117,40 +108,24 @@ pendingPoolSel.addEventListener("click", ()=>{
     loadPool(pendingPool);
     poolContainer.style.display      = "block";
     historyContainer.style.display   = "none";
-    pendingpoolHeader.style.display    = "block";
-    providerpoolHeader.style.display   = "none";
-    providingpoolHeader.style.display  = "none";
-    validatingPoolHeader.style.display = "none";
 });
 providerPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
     loadPool(providerPool);
     poolContainer.style.display      = "block";
     historyContainer.style.display   = "none";
-    pendingpoolHeader.style.display    = "none";
-    providerpoolHeader.style.display   = "block";
-    providingpoolHeader.style.display  = "none";
-    validatingPoolHeader.style.display = "none";
 });
 providingPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
     loadPool(providingPool);
     poolContainer.style.display      = "block";
     historyContainer.style.display   = "none";
-    pendingpoolHeader.style.display    = "none";
-    providerpoolHeader.style.display   = "none";
-    providingpoolHeader.style.display  = "block";
-    validatingPoolHeader.style.display = "none";
 });
 validatingPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
     loadPool(validatorPool);
     poolContainer.style.display      = "block";
     historyContainer.style.display   = "none";
-    pendingpoolHeader.style.display    = "none";
-    providerpoolHeader.style.display   = "none";
-    providingpoolHeader.style.display  = "none";
-    validatingPoolHeader.style.display = "block";
 }); 
 historyPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
@@ -187,6 +162,7 @@ function loadAddr(){
         addressBar.appendChild(btn);
         document.getElementById("addressNumb"+i).addEventListener("click",(event)=>{
             address = event.srcElement.innerHTML
+            document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
             console.log(event.srcElement.innerHTML +"=="+ address)
         });
     }
@@ -199,7 +175,7 @@ function loadPool(pool){
         poolBody.removeChild(childElem);
         childElem = poolBody.lastElementChild;
     }
-    
+
     for(var i = 0 ; i < pool.length; i++){
 
         var row      = document.createElement("TR");
