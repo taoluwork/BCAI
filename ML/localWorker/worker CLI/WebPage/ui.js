@@ -90,26 +90,40 @@ startActionSel.addEventListener("click", ()=>{
     startProvidingForm.style.display  = "block";
     updateProviderForm.style.display = "none";
     stopProvidingForm.style.display   = "none";
-
+    $("#startActionSel").addClass("selected");
+    $("#updateActionSel").removeClass("selected");
+    $("#stopActionSel").removeClass("selected");
+    $("#noneActionSel").removeClass("selected");
 });
 updateActionSel.addEventListener("click", ()=>{
     event.preventDefault();
     startProvidingForm.style.display  = "none";
     updateProviderForm.style.display = "block";
     stopProvidingForm.style.display   = "none";
-
+    $("#startActionSel").removeClass("selected");
+    $("#updateActionSel").addClass("selected");
+    $("#stopActionSel").removeClass("selected");
+    $("#noneActionSel").removeClass("selected");
 });
 stopActionSel.addEventListener("click", ()=>{
     event.preventDefault();
     startProvidingForm.style.display  = "none";
     updateProviderForm.style.display = "none";
     stopProvidingForm.style.display   = "block";
+    $("#startActionSel").removeClass("selected");
+    $("#updateActionSel").removeClass("selected");
+    $("#stopActionSel").addClass("selected");
+    $("#noneActionSel").removeClass("selected");
 });
 noneActionSel.addEventListener("click", ()=>{
     event.preventDefault();
     startProvidingForm.style.display  = "none";
     updateProviderForm.style.display = "none";
     stopProvidingForm.style.display   = "none";
+    $("#startActionSel").removeClass("selected");
+    $("#updateActionSel").removeClass("selected");
+    $("#stopActionSel").removeClass("selected");
+    $("#noneActionSel").addClass("selected");
 });
 
 pendingPoolSel.addEventListener("click", ()=>{
@@ -121,6 +135,12 @@ pendingPoolSel.addEventListener("click", ()=>{
     providerpoolHeader.style.display   = "none";
     providingpoolHeader.style.display  = "none";
     validatingPoolHeader.style.display = "none";
+    $("#pendingPoolSel").addClass("selected");
+    $("#providerPoolSel").removeClass("selected");
+    $("#providingPoolSel").removeClass("selected");
+    $("#validatingPoolSel").removeClass("selected");
+    $("#historyPoolSel").removeClass("selected");
+    $("#nonePoolSel").removeClass("selected");
 });
 providerPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
@@ -131,6 +151,12 @@ providerPoolSel.addEventListener("click", ()=>{
     providerpoolHeader.style.display   = "block";
     providingpoolHeader.style.display  = "none";
     validatingPoolHeader.style.display = "none";
+    $("#pendingPoolSel").removeClass("selected");
+    $("#providerPoolSel").addClass("selected");
+    $("#providingPoolSel").removeClass("selected");
+    $("#validatingPoolSel").removeClass("selected");
+    $("#historyPoolSel").removeClass("selected");
+    $("#nonePoolSel").removeClass("selected");
 });
 providingPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
@@ -141,6 +167,12 @@ providingPoolSel.addEventListener("click", ()=>{
     providerpoolHeader.style.display   = "none";
     providingpoolHeader.style.display  = "block";
     validatingPoolHeader.style.display = "none";
+    $("#pendingPoolSel").removeClass("selected");
+    $("#providerPoolSel").removeClass("selected");
+    $("#providingPoolSel").addClass("selected");
+    $("#validatingPoolSel").removeClass("selected");
+    $("#historyPoolSel").removeClass("selected");
+    $("#nonePoolSel").removeClass("selected");
 });
 validatingPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
@@ -151,17 +183,35 @@ validatingPoolSel.addEventListener("click", ()=>{
     providerpoolHeader.style.display   = "none";
     providingpoolHeader.style.display  = "none";
     validatingPoolHeader.style.display = "block";
+    $("#pendingPoolSel").removeClass("selected");
+    $("#providerPoolSel").removeClass("selected");
+    $("#providingPoolSel").removeClass("selected");
+    $("#validatingPoolSel").addClass("selected");
+    $("#historyPoolSel").removeClass("selected");
+    $("#nonePoolSel").removeClass("selected");
 }); 
 historyPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
     loadHistory();
     poolContainer.style.display      = "none";
     historyContainer.style.display   = "block";
+    $("#pendingPoolSel").removeClass("selected");
+    $("#providerPoolSel").removeClass("selected");
+    $("#providingPoolSel").removeClass("selected");
+    $("#validatingPoolSel").removeClass("selected");
+    $("#historyPoolSel").addClass("selected");
+    $("#nonePoolSel").removeClass("selected");
 });
 nonePoolSel.addEventListener("click", ()=>{
     event.preventDefault();
     poolContainer.style.display      = "none";
     historyContainer.style.display   = "none";
+    $("#pendingPoolSel").removeClass("selected");
+    $("#providerPoolSel").removeClass("selected");
+    $("#providingPoolSel").removeClass("selected");
+    $("#validatingPoolSel").removeClass("selected");
+    $("#historyPoolSel").removeClass("selected");
+    $("#nonePoolSel").addClass("selected");
 });
 
 //loadInfo
@@ -179,14 +229,25 @@ function loadAddr(){
     // }
     for(var i = 0 ; i < addresses.length; i++){
         //<button type="button" class="btn btn-secondary">addressPlaceHolder1</button>
+        if(i == 0 && !address) { //Set first address by default if null
+            address = addresses[i];
+        }
         var btn = document.createElement("BUTTON");
         btn.innerHTML = addresses[i];
-        btn.className = "btn btn-secondary";
+        btn.className = address == addresses[i] ? "btn btn-secondary selected" : "btn btn-secondary"; //Add selected class if this is selected address
         btn.id = "addressNumb"+i;
         addressBar.appendChild(btn);
         document.getElementById("addressNumb"+i).addEventListener("click",(event)=>{
             address = event.srcElement.innerHTML
-
+            var thisaddress = event.srcElement.id.replace("addressNumb", "");
+            for(var j = 0; j < addresses.length; j++) {
+                if(j == thisaddress) { //Set this button to selected
+                    $("#addressNumb"+j).addClass("selected");
+                }
+                else { //set all others to not selected
+                    $("#addressNumb"+j).removeClass("selected");
+                }
+            }
         });
     }
 }
