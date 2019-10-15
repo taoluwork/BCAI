@@ -16,31 +16,31 @@
         
         
         <div class="container-fluid" id="headerContainer">
-            <h1 class="display-1">iChain</h1>
+            <h1 class="display-1 text-center">iChain</h1>
         </div>
 
 
-        <div class="container-fluid" id="addressContainer">
-            <h2 class="text-left">
-                Addresses:
-                <div class="btn-group" role="group" id="AddressBar">
-                </div>    
-            </h2>
-        </div>
+        <div class="container-fluid text-center w-75 addresscontainer" id="addressContainer">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Addresses
+                </button>
+                    <div class="dropdown-menu text-center" id="AddressBar">
+                    </div>    
+            </div>
         
-        <div class="container-fluid" id="actionSelect">
-            <h2 class="text-left">
+        <div class="container-fluid text-center " id="actionSelect">
+            <h2 class="text-center">
                 Select An Action:
-                <div class="btn-group" role="group" id="actionSelectBar">
+            </h2>
+                <div class="btn-group text-center " role="group" id="actionSelectBar">
                     <button type="button" class="btn btn-secondary" id="startActionSel">Start Providing</button>
                     <button type="button" class="btn btn-secondary" id="updateActionSel">Update Provider</button>
                     <button type="button" class="btn btn-secondary" id="stopActionSel">Stop Providing</button>
-                    <button type="button" class="btn btn-secondary" id="noneActionSel">none</button>
+                    <button type="button" class="btn btn-secondary selected" id="noneActionSel">none</button>
                 </div>    
-            </h2>
         </div>
-        <div id="actionContainer" class="container-fluid">
-            <form id="startProvidingForm">
+        <div id="actionContainer" class="container-fluid text-center actioncontainer">
+            <form id="startProvidingForm" class="container-fluid text-center  w-50">
                 <div class="form-group" id="startProvidingInputs">
                     <h3>Start Providing</h3>
                     <input type="text" class="form-control" id="startProvidingTime"     placeholder="Enter Time">
@@ -50,7 +50,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary" id="startProvidingSubmit">Submit</button>
             </form>
-            <form id="updateProviderForm">
+            <form id="updateProviderForm" class="container-fluid text-center  w-50">
                 <div class="form-group" id="updateProviderInputs">
                         <h3>Update Provider</h3>
                     <input type="text" class="form-control" id="updateProviderTime"     placeholder="Enter Time">
@@ -58,44 +58,33 @@
                     <input type="text" class="form-control" id="updateProviderCost"     placeholder="Enter Cost">
                     <input type="text" class="form-control" id="updateProviderFilePath" placeholder="Enter File Path">
                 </div>
-                <button type="submit" class="btn btn-primary" id="updateProviderSubmit">Submit</button>
+                <button type="submit" class="btn btn-secondary" id="updateProviderSubmit">Submit</button>
             </form>
-            <form id="stopProvidingForm">
-                <div class="form-group" id="stopProvidingInputs">
+            <form id="stopProvidingForm" class="container-fluid text-center">
+                <div class="form-group text-center" id="stopProvidingInputs">
                     <h3>Stop Providing</h3>
-                <button type="submit" class="btn btn-primary" id="stopProvidingSubmit">Stop Task</button>
+                    <button type="submit" class="btn btn-secondary text-center" id="stopProvidingSubmit">Stop Task</button>
+                </div>
             </form>
         </div>
 
 
-        <div class="container-fluid" id="poolSelect">
-            <h2 class="text-left">
+        <div class="container-fluid text-center  w-75" id="poolSelect">
+            <h2 class="text-center">
                 Select A Pool:
+            </h2>
                 <div class="btn-group" role="group" id="poolSelectBar">
                         <button type="button" class="btn btn-secondary" id="pendingPoolSel">Pending Pool</button>
                         <button type="button" class="btn btn-secondary" id="providerPoolSel">Provider Pool</button>
                         <button type="button" class="btn btn-secondary" id="providingPoolSel">Providing Pool</button>
                         <button type="button" class="btn btn-secondary" id="validatingPoolSel">Validation Pool</button>
                         <button type="button" class="btn btn-secondary" id="historyPoolSel">History</button>
-                        <button type="button" class="btn btn-secondary" id="nonePoolSel">none</button>
+                        <button type="button" class="btn btn-secondary selected" id="nonePoolSel">none</button>
                 </div>    
-            </h2>
         </div>
-        <div id="poolContainer" class="container-fluid">
+        <div id="poolContainer" class="container-fluid text-center  w-75">
             <table class="table table-hover">
                 <thead>
-                    <tr id="pendingPoolHeader">
-                        <th colspan="2" class="text-center"> Pending Pool </th>
-                    </tr>
-                    <tr id="providerPoolHeader">
-                        <th colspan="2" class="text-center"> Provider Pool </th>
-                    </tr>
-                    <tr id="providingPoolHeader">
-                        <th colspan="2" class="text-center" > Providing Pool </th>
-                    </tr>
-                    <tr id="validatingPoolHeader">
-                        <th colspan="2" class="text-center" > Validating Pool </th>
-                    </tr>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Request Address</th>
@@ -107,12 +96,9 @@
         </div>
 
 
-        <div id="historyContainer" class="container-fluid">
+        <div id="historyContainer" class="container-fluid text-center  w-75">
             <table class="table table-hover">
                 <thead>
-                    <tr>
-                        <th colspan="3" class="text-center">History</th>
-                    </tr>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Action</th>
