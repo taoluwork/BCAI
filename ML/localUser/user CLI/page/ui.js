@@ -181,22 +181,25 @@ function loadAddr(){
         //<button type="button" class="btn btn-secondary">addressPlaceHolder1</button>
         var btn = document.createElement("BUTTON");
         btn.innerHTML = addresses[i];
-        btn.className = "btn btn-secondary";
+        btn.className = "dropdown-item btn-secondary";
+        btn.type="button";
         btn.id = "addressNumb"+i;
         addressBar.appendChild(btn);
         document.getElementById("addressNumb"+i).addEventListener("click",(event)=>{
             address = event.srcElement.innerHTML
-
+            console.log(event.srcElement.innerHTML +"=="+ address)
         });
     }
 }
 
 function loadPool(pool){
+
     var childElem = poolBody.lastElementChild;
     while(childElem){
         poolBody.removeChild(childElem);
         childElem = poolBody.lastElementChild;
     }
+    
     for(var i = 0 ; i < pool.length; i++){
 
         var row      = document.createElement("TR");
