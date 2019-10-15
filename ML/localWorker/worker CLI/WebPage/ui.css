@@ -3,28 +3,38 @@
 }
 
 .selected {
-    background-color: #f0f0f0!important;
-    color: #6c757d!important;
+    background-color: #F0F0F0!important;
+    color: #303030!important;
 }
 
 /*Dark Mode Css*/
 
 body {
     background-color: #303030;
-    color: #f5f5f5;
+    color: #F0F0F0;
 }
 
 .form-control {
     background-color: #495057!important;
-    color: #f5f5f5!important;
+    color: #F0F0F0!important;
 }
 
 .table {
-    color: #f5f5f5;
+    color: #F0F0F0;
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #f5f5f5!important;
+    color: #F0F0F0!important;
     opacity: .75!important;
   }
   
+.dropdown-menu {
+    background-color: #495057!important;
+    color: #F0F0F0!important;
+    width: 24.95%;
+}
+
+.btn {
+    background-color: #495057;
+    color: #F0F0F0;
+}

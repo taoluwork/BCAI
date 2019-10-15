@@ -189,6 +189,10 @@ nonePoolSel.addEventListener("click", ()=>{
     $("#nonePoolSel").addClass("selected");
 });
 
+window.onload = function() { // run loadAddr when page loads
+    getAddresses();
+    loadAddr();
+};
 //loadInfo
 function loadAddr(){
     var childElem = addressBar.lastElementChild;
@@ -206,10 +210,11 @@ function loadAddr(){
         //<button type="button" class="btn btn-secondary">addressPlaceHolder1</button>
         if(i == 0 && !address) { //Set first address by default if null
             address = addresses[i];
+            document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
         }
         var btn = document.createElement("BUTTON");
         btn.innerHTML = addresses[i];
-        btn.className = address == addresses[i] ? "dropdown-item btn-secondary selected" : "btn btn-secondary"; //Add selected class if this is selected address
+        btn.className = address == addresses[i] ? "dropdown-item btn selected" : "dropdown-item btn"; //Add selected class if this is selected address
         btn.type="button";
         btn.id = "addressNumb"+i;
         addressBar.appendChild(btn);
