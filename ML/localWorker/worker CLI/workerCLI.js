@@ -857,42 +857,51 @@ app.get('/accounts', function(req, res) {
 
 app.get('/pools', function(req, res) {
     var poolJSON = {"ActiveProviders": 0, "ActiveProviderAddresses" : [], "Pending" : 0, "PendingAddresses" : [], "Providing" : 0, "ProvidingAddresses" : [], "Validating" : 0, "ValidatingAddresses": []};
-    myContract.methods.getProviderPool().call().then(function(provPool){
+    return myContract.methods.getProviderPool().call().then(function(provPool){
         poolJSON["ActiveProviders"] = provPool.length;
         console.log(provPool.length);
         for(var i = 0; i<provPool.length; i++){
             poolJSON["ActiveProviderAddresses"].push({"Address": provPool[i]})
         }
+        return provPool;
     })
     .then(function(){
-		myContract.methods.getPendingPool().call().then(function(reqPool){
+		return myContract.methods.getPendingPool().call().then(function(reqPool){
 		    poolJSON["Pending"] = reqPool.length;
             for(var i = 0; i<reqPool.length; i++){
-                poolJSON["PendingAddresses"].push({"Address": provPool[i]})
+                poolJSON["PendingAddresses"].push({"Address": reqPool[i]})
             }
+            return reqPool;
 		})
     })
     .then(function(){
-	    myContract.methods.getProvidingPool().call().then(function(providingPool){
+	    return myContract.methods.getProvidingPool().call().then(function(providingPool){
             poolJSON["Providing"] = providingPool.length;
             for(var i = 0; i<providingPool.length; i++){
                 poolJSON["ProvidingAddresses"].push({"Address": providingPool[i]})
-            }		
+            }
+            return providingPool;
+		
         })
     })
     .then(function(){
-		myContract.methods.getValidatingPool().call().then(function(valiPool){
+		return myContract.methods.getValidatingPool().call().then(function(valiPool){
             poolJSON["Validating"] = valiPool.length;
             for(var i = 0; i<valiPool.length; i++){
                 poolJSON["ValidatingAddresses"].push({"Address": valiPool[i]})
-            }        
+            }
+            return valiPool;
+        
         })
+    })
+    .then(() =>{
+        res.header("Content-Type", 'application/json');
+        res.send(poolJSON)
     })
     .catch(function(err){
 		console.log("Error: show pool error! ", err);
     })
-    res.header("Content-Type", 'application/json');
-    res.send(poolJSON)
+    
 })
 
 
