@@ -50,15 +50,6 @@ var validatingPoolSel    = document.getElementById("validatingPoolSel");
 var historyPoolSel       = document.getElementById("historyPoolSel");
 var nonePoolSel          = document.getElementById("nonePoolSel");
 
-var pendingpoolHeader    = document.getElementById("pendingPoolHeader");
-var providerpoolHeader   = document.getElementById("providerPoolHeader");
-var providingpoolHeader  = document.getElementById("providingPoolHeader");
-var validatingPoolHeader = document.getElementById("validatingPoolHeader");
-pendingpoolHeader.style.display    = "none";
-providerpoolHeader.style.display   = "none";
-providingpoolHeader.style.display  = "none";
-validatingPoolHeader.style.display = "none";
-
 var poolContainer        = document.getElementById("poolContainer");
 var historyContainer     = document.getElementById("historyContainer");
 poolContainer.style.display      = "none";
@@ -66,18 +57,18 @@ historyContainer.style.display   = "none";
 
 //listeners
 startProvidingSubmit.addEventListener("click", ()=>{ 
-    console.log(startProvidingTime.value)
-    console.log(startProvidingAcc.value)
-    console.log(startProvidingCost.value)
-    console.log(startProvidingFile.value)
+    // console.log(startProvidingTime.value)
+    // console.log(startProvidingAcc.value)
+    // console.log(startProvidingCost.value)
+    // console.log(startProvidingFile.value)
     startProviding(startProvidingTime.value , startProvidingAcc.value , startProvidingCost.value )     
 });
 updateProviderSubmit.addEventListener("click", ()=>{ 
     event.preventDefault();
-    console.log(updateProvidingTime.value)
-    console.log(updateProvidingAcc.value)
-    console.log(updateProvidingCost.value)
-    console.log(updateProvidingFile.value)
+    // console.log(updateProvidingTime.value)
+    // console.log(updateProvidingAcc.value)
+    // console.log(updateProvidingCost.value)
+    // console.log(updateProvidingFile.value)
     updateProviding(updateProvidingTime.value , updateProvidingAcc.value , updateProvidingCost.value )    
 });
 stopProvidingSubmit.addEventListener("click", ()=>{ 
@@ -131,10 +122,6 @@ pendingPoolSel.addEventListener("click", ()=>{
     loadPool(pendingPool);
     poolContainer.style.display      = "block";
     historyContainer.style.display   = "none";
-    pendingpoolHeader.style.display    = "block";
-    providerpoolHeader.style.display   = "none";
-    providingpoolHeader.style.display  = "none";
-    validatingPoolHeader.style.display = "none";
     $("#pendingPoolSel").addClass("selected");
     $("#providerPoolSel").removeClass("selected");
     $("#providingPoolSel").removeClass("selected");
@@ -147,10 +134,6 @@ providerPoolSel.addEventListener("click", ()=>{
     loadPool(providerPool);
     poolContainer.style.display      = "block";
     historyContainer.style.display   = "none";
-    pendingpoolHeader.style.display    = "none";
-    providerpoolHeader.style.display   = "block";
-    providingpoolHeader.style.display  = "none";
-    validatingPoolHeader.style.display = "none";
     $("#pendingPoolSel").removeClass("selected");
     $("#providerPoolSel").addClass("selected");
     $("#providingPoolSel").removeClass("selected");
@@ -163,10 +146,6 @@ providingPoolSel.addEventListener("click", ()=>{
     loadPool(providingPool);
     poolContainer.style.display      = "block";
     historyContainer.style.display   = "none";
-    pendingpoolHeader.style.display    = "none";
-    providerpoolHeader.style.display   = "none";
-    providingpoolHeader.style.display  = "block";
-    validatingPoolHeader.style.display = "none";
     $("#pendingPoolSel").removeClass("selected");
     $("#providerPoolSel").removeClass("selected");
     $("#providingPoolSel").addClass("selected");
@@ -179,10 +158,6 @@ validatingPoolSel.addEventListener("click", ()=>{
     loadPool(validatorPool);
     poolContainer.style.display      = "block";
     historyContainer.style.display   = "none";
-    pendingpoolHeader.style.display    = "none";
-    providerpoolHeader.style.display   = "none";
-    providingpoolHeader.style.display  = "none";
-    validatingPoolHeader.style.display = "block";
     $("#pendingPoolSel").removeClass("selected");
     $("#providerPoolSel").removeClass("selected");
     $("#providingPoolSel").removeClass("selected");
@@ -235,10 +210,13 @@ function loadAddr(){
         var btn = document.createElement("BUTTON");
         btn.innerHTML = addresses[i];
         btn.className = address == addresses[i] ? "btn btn-secondary selected" : "btn btn-secondary"; //Add selected class if this is selected address
+        btn.type="button";
         btn.id = "addressNumb"+i;
         addressBar.appendChild(btn);
         document.getElementById("addressNumb"+i).addEventListener("click",(event)=>{
             address = event.srcElement.innerHTML
+            document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
+            console.log(event.srcElement.innerHTML +"=="+ address)
             var thisaddress = event.srcElement.id.replace("addressNumb", "");
             for(var j = 0; j < addresses.length; j++) {
                 if(j == thisaddress) { //Set this button to selected

@@ -1,0 +1,29 @@
+.test {
+    color: #FF0000;
+}
+
+.selected {
+    background-color: #f0f0f0!important;
+    color: #6c757d!important;
+}
+
+/*Dark Mode Css*/
+
+body {
+    background-color: #303030;
+    color: #f5f5f5;
+}
+
+.form-control {
+    background-color: #495057!important;
+    color: #f5f5f5!important;
+}
+
+.table {
+    color: #f5f5f5;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #f5f5f5!important;
+  }
+  

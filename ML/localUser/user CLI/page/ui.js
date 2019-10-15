@@ -217,6 +217,7 @@ function loadAddr(){
             address = event.srcElement.innerHTML
             document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
             console.log(event.srcElement.innerHTML +"=="+ address)
+            var thisaddress = event.srcElement.id.replace("addressNumb", "");
             for(var j = 0; j < addresses.length; j++) {
                 if(j == thisaddress) { //Set this button to selected
                     $("#addressNumb"+j).addClass("selected");

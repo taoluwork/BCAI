@@ -24,7 +24,6 @@ body {
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #f5f5f5;
-    opacity: 1; /* Firefox */
+    color: #f5f5f5!important;
   }
   
