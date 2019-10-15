@@ -209,7 +209,7 @@ function loadAddr(){
         }
         var btn = document.createElement("BUTTON");
         btn.innerHTML = addresses[i];
-        btn.className = address == addresses[i] ? "btn btn-secondary selected" : "btn btn-secondary"; //Add selected class if this is selected address
+        btn.className = address == addresses[i] ? "dropdown-item btn-secondary selected" : "btn btn-secondary"; //Add selected class if this is selected address
         btn.type="button";
         btn.id = "addressNumb"+i;
         addressBar.appendChild(btn);
