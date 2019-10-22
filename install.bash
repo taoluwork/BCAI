@@ -180,5 +180,5 @@ else  #problem installing
             ;;
     esac
 fi
-echo -e "\e[92mInstallation successful. Run start.bash to start the program.\e[0m"
+echo -e "\e[92mInstallation successful. Run startUser.bash or startWorker.bash without sudo to start the program.\e[0m"
 exit #finished!

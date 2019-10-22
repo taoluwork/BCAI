@@ -202,8 +202,11 @@ nonePoolSel.addEventListener("click", ()=>{
 });
 
 
-window.onload = function() { // run loadAddr when page loads
-    getAddresses();
+//Runs when page loads
+window.onload = function() { 
+    this.updateProviderSubmit.disabled = true;
+    this.stopProvidingSubmit.disabled = true;
+    getAddresses(); // run loadAddr when page loads
     loadAddr();
 };
 //loadInfo
@@ -397,6 +400,9 @@ function startProviding(startTime, startAccuracy, startCost) {
         data: JSON.stringify(data), //this is the sent json data
         success: function (result) {
             console.log(result);
+            startProvidingSubmit.disabled = true; //enable/disable appropriate buttons
+            updateProviderSubmit.disabled = false;
+            stopProvidingSubmit.disabled = false;
         }
     });
 }
@@ -436,6 +442,9 @@ function stopProviding() {
         data: JSON.stringify(data), //this is the sent json data
         success: function (result) {
             console.log(result);
+            startProvidingSubmit.disabled = false; //enable/disable appropriate buttons
+            updateProviderSubmit.disabled = true;
+            stopProvidingSubmit.disabled = true;
         }
     });
 }

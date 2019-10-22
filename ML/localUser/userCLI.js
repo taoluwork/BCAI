@@ -78,7 +78,7 @@ fs.readdir(Folder, (err, files) => {
 
 var ws = new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws/v3/aa544d081b53485fb0fa8df2c9a8437e')
 web3 = new Web3(ws);
-var TaskContract = require('../../../bcai_deploy/client/src/contracts/TaskContract.json');
+var TaskContract = require('../../bcai_deploy/client/src/contracts/TaskContract.json');
 var abi = TaskContract.abi;
 var addr = TaskContract.networks[NetworkID].address;        //align to const ID defination on top
 const myContract = new web3.eth.Contract(abi, addr);

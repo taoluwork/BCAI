@@ -202,8 +202,11 @@ nonePoolSel.addEventListener("click", ()=>{
     $("#nonePoolSel").addClass("selected");
 });
 
-window.onload = function() { // run loadAddr when page loads
-    getAddresses();
+//Runs when page loads
+window.onload = function() { 
+    this.updateTaskSubmit.disabled = true;
+    this.stopTaskSubmit.disabled = true;
+    getAddresses(); // run loadAddr when page loads
     loadAddr();
 };
 //loadInfo
@@ -397,6 +400,9 @@ function startTask(startTime, startAccuracy, startCost, startFile){
         data: JSON.stringify(data), //this is the sent json data
         success: function (result) {
             // console.log(result);
+            startTaskSubmit.disabled = true; //enable/disable appropriate buttons
+            updateTaskSubmit.disabled = false;
+            stopTaskSubmit.disabled = false;
         }
     });
 }
@@ -436,6 +442,9 @@ function stopTask(){
         data: JSON.stringify(data), //this is the sent json data
         success: function (result) {
             console.log(result);
+            startTaskSubmit.disabled = false; //enable/disable appropriate buttons
+            updateTaskSubmit.disabled = true;
+            stopTaskSubmit.disabled = true;
         }
     });
 }
