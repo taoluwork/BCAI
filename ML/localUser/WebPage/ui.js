@@ -421,16 +421,9 @@ function updateTask(updateTime, updateAccuracy, updateCost, updateFile){
     });
 }
 function stopTask(){
-    var data = {
-        Account: address
-    };
     $.ajaxSetup({async: false});  
     $.ajax({     
-        type: "POST",
+        type: "GET",
         url: baseurl + '/stopTask',
-        headers: {
-            'Content-Type':'application/json'
-        },
-        data: JSON.stringify(data), //this is the sent json data
     });
 }
