@@ -1,0 +1,40 @@
+{
+  "name": "bcai_web",
+  "version": "2.0.1",
+  "description": "Developing version of BCAI project.",
+  "main": "./client/src/App.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.3.3",
+    "@material-ui/styles": "^4.3.3",
+    "bignumber.js": "^8.0.2",
+    "chalk": "^2.4.2",
+    "express": "^4.17.1",
+    "figlet": "^1.2.4",
+    "hex2ascii": "0.0.3",
+    "inquirer": "^7.0.0",
+    "minimist": "^1.2.0",
+    "prompts": "^2.2.1",
+    "prop-types": "^15.7.2",
+    "public-ip": "^3.2.0",
+    "react-notifications-component": "^1.1.1",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "tcomb-form": "^0.9.21",
+    "truffle-assertions": "^0.8.0",
+    "truffle-hdwallet-provider": "^1.0.10",
+    "web3": "^1.0.0-beta.51"
+  },
+  "devDependencies": {
+    "ganache-cli": "^6.3.0",
+    "truffle": "^5.0.4"
+  },
+  "scripts": {
+    "test": "truffle test ./test/artTest.js",
+    "migrate": "truffle migrate --reset"
+  },
+  "author": "Taurus tlu4@lsu.edu",
+  "license": "MIT"
+}

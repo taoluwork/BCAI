@@ -1,0 +1,55 @@
+:root { /*default background and text colors*/
+    --bg: #303030;
+    --text: #F0F0F0;
+}
+
+.test {
+    color: #FF0000;
+}
+
+.selected {
+    background-color: var(--text)!important;
+    color: var(--bg)!important;
+}
+
+.addresscontainer {
+    margin-bottom: 1%;
+}
+
+.actioncontainer {
+    margin-bottom: 1%;
+}
+
+.btn-group {
+    margin-bottom: 1%;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+.form-control {
+    background-color: #495057!important;
+    color: var(--text)!important;
+}
+
+.table {
+    color: var(--text);
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--text)!important;
+    opacity: .75!important;
+  }
+  
+.dropdown-menu {
+    background-color: #495057!important;
+    color: var(--text)!important;
+    width: 24.95%;
+}
+
+.btn {
+    background-color: #495057;
+    color: var(--text);
+}
