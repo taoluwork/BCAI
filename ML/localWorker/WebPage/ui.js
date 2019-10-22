@@ -63,7 +63,7 @@ historyContainer.style.display   = "none";
 submitPassword.addEventListener("click", (event)=>{
     event.preventDefault();
     passHold = passwordVal.value;
-    console.log(passHold);
+    console.log(passHold); //MAKE SURE TO REMOVE EVENTUALLY
     passwordContainer.style.display = "none";
 });
 
@@ -384,7 +384,8 @@ function startProviding(startTime, startAccuracy, startCost) {
         time: startTime,
         accuracy: startAccuracy,
         cost: startCost,
-        Account: address
+        Account: address,
+        password: passHold
     };
     $.ajaxSetup({ async: false });
     $.ajax({
