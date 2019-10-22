@@ -421,9 +421,20 @@ function updateTask(updateTime, updateAccuracy, updateCost, updateFile){
     });
 }
 function stopTask(){
+    var data = {
+        Account: address,
+        password: passHold
+    };
     $.ajaxSetup({async: false});  
     $.ajax({     
-        type: "GET",
+        type: "POST",
         url: baseurl + '/stopTask',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data), //this is the sent json data
+        success: function (result) {
+            console.log(result);
+        }
     });
 }

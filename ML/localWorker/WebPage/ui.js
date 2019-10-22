@@ -15,6 +15,11 @@ var addressBar        = document.getElementById("AddressBar");
 var poolBody          = document.getElementById("poolBody");
 var historyBody       = document.getElementById("historyBody");
 
+var passwordContainer = document.getElementById("passwordContainer");
+passwordContainer.style.display = "none";
+var passwordVal       = document.getElementById("passwordVal");
+var submitPassword    = document.getElementById("submitPassword");
+
 var startProvidingForm     = document.getElementById("startProvidingForm");
 var updateProviderForm    = document.getElementById("updateProviderForm");
 var stopProvidingForm      = document.getElementById("stopProvidingForm");
@@ -54,6 +59,13 @@ var poolContainer        = document.getElementById("poolContainer");
 var historyContainer     = document.getElementById("historyContainer");
 poolContainer.style.display      = "none";
 historyContainer.style.display   = "none";
+
+submitPassword.addEventListener("click", (event)=>{
+    event.preventDefault();
+    passHold = passwordVal.value;
+    console.log(passHold);
+    passwordContainer.style.display = "none";
+});
 
 //listeners
 startProvidingSubmit.addEventListener("click", ()=>{ 
@@ -220,6 +232,8 @@ function loadAddr(){
         btn.id = "addressNumb"+i;
         addressBar.appendChild(btn);
         document.getElementById("addressNumb"+i).addEventListener("click",(event)=>{
+            passwordContainer.style.display = "block";
+            passHold = "";
             address = event.srcElement.innerHTML
             document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
             console.log(event.srcElement.innerHTML +"=="+ address)
@@ -407,9 +421,20 @@ function updateProvider(updateTime, updateAccuracy, updateCost) {
 }
 
 function stopProviding() {
+    var data = {
+        Account: address,
+        password: passHold
+    };
     $.ajaxSetup({ async: false });
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: baseurl + '/stopProviding',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data), //this is the sent json data
+        success: function (result) {
+            console.log(result);
+        }
     });
 }
