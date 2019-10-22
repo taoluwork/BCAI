@@ -9,11 +9,17 @@ var historyPool = [];
 var currentPoolType = "none";
 var baseurl = "http://localhost:3000";
 var address = "";
+var passHold= "";
 
 //get elements
 var addressBar        = document.getElementById("AddressBar");
 var poolBody          = document.getElementById("poolBody");
 var historyBody       = document.getElementById("historyBody");
+
+var passwordContainer = document.getElementById("passwordContainer");
+passwordContainer.style.display = "none";
+var passwordVal       = document.getElementById("passwordVal");
+var submitPassword    = document.getElementById("submitPassword");
 
 var startTaskForm     = document.getElementById("startTaskForm");
 var updateTaskForm    = document.getElementById("updateTaskForm");
@@ -54,6 +60,13 @@ var poolContainer        = document.getElementById("poolContainer");
 var historyContainer     = document.getElementById("historyContainer");
 poolContainer.style.display      = "none";
 historyContainer.style.display   = "none";
+
+submitPassword.addEventListener("click", (event)=>{
+    event.preventDefault();
+    passHold = passwordVal.value;
+    console.log(passHold);
+    passwordContainer.style.display = "none";
+});
 
 startTaskSubmit.addEventListener("click", (event)=>{ 
     event.preventDefault();
@@ -219,6 +232,8 @@ function loadAddr(){
         btn.id = "addressNumb"+i;
         addressBar.appendChild(btn);
         document.getElementById("addressNumb"+i).addEventListener("click",(event)=>{
+            passwordContainer.style.display = "block";
+            passHold = "";
             address = event.srcElement.innerHTML
             document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
             console.log(event.srcElement.innerHTML +"=="+ address)
