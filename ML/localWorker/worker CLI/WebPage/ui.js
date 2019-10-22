@@ -406,10 +406,17 @@ function updateProvider(updateTime, updateAccuracy, updateCost) {
     });
 }
 
-function stopProviding() {
-    $.ajaxSetup({ async: false });
-    $.ajax({
-        type: "GET",
+function stopProviding(){
+    var data = {
+        Account: address
+    };
+    $.ajaxSetup({async: false});  
+    $.ajax({     
+        type: "POST",
         url: baseurl + '/stopProviding',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        data: JSON.stringify(data), //this is the sent json data
     });
 }
