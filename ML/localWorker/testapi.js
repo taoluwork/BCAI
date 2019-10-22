@@ -1,8 +1,8 @@
 var express = require('express');
 var app = express();
-const pools = require('../../SampleJSONS/poolsReturn.json')
-const history = require('../../SampleJSONS/historyReturn.json')
-const addressList = require('../../SampleJSONS/accountsReturn.json')
+const pools = require('../SampleJSONS/poolsReturn.json')
+const history = require('../SampleJSONS/historyReturn.json')
+const addressList = require('../SampleJSONS/accountsReturn.json')
 
 app.use(express.json()); //Use to read json of incoming request
 
