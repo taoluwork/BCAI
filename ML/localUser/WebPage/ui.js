@@ -64,7 +64,7 @@ historyContainer.style.display   = "none";
 submitPassword.addEventListener("click", (event)=>{
     event.preventDefault();
     passHold = passwordVal.value;
-    console.log(passHold);
+    console.log(passHold); //MAKE SURE TO REMOVE EVENTUALLY
     passwordContainer.style.display = "none";
 });
 
@@ -202,8 +202,11 @@ nonePoolSel.addEventListener("click", ()=>{
     $("#nonePoolSel").addClass("selected");
 });
 
-window.onload = function() { // run loadAddr when page loads
-    getAddresses();
+//Runs when page loads
+window.onload = function() { 
+    this.updateTaskSubmit.disabled = true;
+    this.stopTaskSubmit.disabled = true;
+    getAddresses(); // run loadAddr when page loads
     loadAddr();
 };
 //loadInfo
@@ -384,7 +387,8 @@ function startTask(startTime, startAccuracy, startCost, startFile){
         accuracy: startAccuracy,
         cost: startCost,
         file: startFile,
-        Account: address
+        Account: address,
+        password: passHold
     };
     $.ajaxSetup({async: false});  
     $.ajax({     
@@ -396,6 +400,9 @@ function startTask(startTime, startAccuracy, startCost, startFile){
         data: JSON.stringify(data), //this is the sent json data
         success: function (result) {
             // console.log(result);
+            startTaskSubmit.disabled = true; //enable/disable appropriate buttons
+            updateTaskSubmit.disabled = false;
+            stopTaskSubmit.disabled = false;
         }
     });
 }
@@ -422,15 +429,22 @@ function updateTask(updateTime, updateAccuracy, updateCost, updateFile){
 }
 function stopTask(){
     var data = {
-        Account: address
+        Account: address,
+        password: passHold
     };
     $.ajaxSetup({async: false});  
     $.ajax({     
         type: "POST",
         url: baseurl + '/stopTask',
         headers: {
-            'Content-Type':'application/json'
+            'Content-Type': 'application/json'
         },
         data: JSON.stringify(data), //this is the sent json data
+        success: function (result) {
+            console.log(result);
+            startTaskSubmit.disabled = false; //enable/disable appropriate buttons
+            updateTaskSubmit.disabled = true;
+            stopTaskSubmit.disabled = true;
+        }
     });
 }

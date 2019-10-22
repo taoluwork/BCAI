@@ -136,7 +136,7 @@ else  #problem downloading
 fi
 ###################################Installing npm packages###################################
 #Install npm stuff for localuser
-cd BCAI/ML/localUser/user\ CLI/
+cd BCAI/ML/localUser/
 echo -e "\e[93m---------------------Installing npm packages for localUser.---------------------\e[0m"
 if npm install ; then #if installed
     echo -e "\e[92mnpm packages for localUser successfully installed."
@@ -158,9 +158,8 @@ else  #problem installing
     esac
 fi
 #Install npm stuff for localworker
-cd ..
 cd .. #back up to ML
-cd localWorker/worker\ CLI/
+cd localWorker/
 echo -e "\e[93m--------------------Installing npm packages for localWorker.--------------------\e[0m"
 if npm install ; then #if installed
     echo -e "\e[92mnpm packages for localWorker successfully installed."
@@ -181,5 +180,5 @@ else  #problem installing
             ;;
     esac
 fi
-echo -e "\e[92mInstallation successful. Run start.bash to start the program.\e[0m"
+echo -e "\e[92mInstallation successful. Run startUser.bash or startWorker.bash without sudo to start the program.\e[0m"
 exit #finished!

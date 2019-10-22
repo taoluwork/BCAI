@@ -15,6 +15,11 @@ var addressBar        = document.getElementById("AddressBar");
 var poolBody          = document.getElementById("poolBody");
 var historyBody       = document.getElementById("historyBody");
 
+var passwordContainer = document.getElementById("passwordContainer");
+passwordContainer.style.display = "none";
+var passwordVal       = document.getElementById("passwordVal");
+var submitPassword    = document.getElementById("submitPassword");
+
 var startProvidingForm     = document.getElementById("startProvidingForm");
 var updateProviderForm    = document.getElementById("updateProviderForm");
 var stopProvidingForm      = document.getElementById("stopProvidingForm");
@@ -54,6 +59,13 @@ var poolContainer        = document.getElementById("poolContainer");
 var historyContainer     = document.getElementById("historyContainer");
 poolContainer.style.display      = "none";
 historyContainer.style.display   = "none";
+
+submitPassword.addEventListener("click", (event)=>{
+    event.preventDefault();
+    passHold = passwordVal.value;
+    console.log(passHold); //MAKE SURE TO REMOVE EVENTUALLY
+    passwordContainer.style.display = "none";
+});
 
 //listeners
 startProvidingSubmit.addEventListener("click", ()=>{ 
@@ -190,8 +202,11 @@ nonePoolSel.addEventListener("click", ()=>{
 });
 
 
-window.onload = function() { // run loadAddr when page loads
-    getAddresses();
+//Runs when page loads
+window.onload = function() { 
+    this.updateProviderSubmit.disabled = true;
+    this.stopProvidingSubmit.disabled = true;
+    getAddresses(); // run loadAddr when page loads
     loadAddr();
 };
 //loadInfo
@@ -220,6 +235,8 @@ function loadAddr(){
         btn.id = "addressNumb"+i;
         addressBar.appendChild(btn);
         document.getElementById("addressNumb"+i).addEventListener("click",(event)=>{
+            passwordContainer.style.display = "block";
+            passHold = "";
             address = event.srcElement.innerHTML
             document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
             console.log(event.srcElement.innerHTML +"=="+ address)
@@ -370,7 +387,8 @@ function startProviding(startTime, startAccuracy, startCost) {
         time: startTime,
         accuracy: startAccuracy,
         cost: startCost,
-        Account: address
+        Account: address,
+        password: passHold
     };
     $.ajaxSetup({ async: false });
     $.ajax({
@@ -382,6 +400,9 @@ function startProviding(startTime, startAccuracy, startCost) {
         data: JSON.stringify(data), //this is the sent json data
         success: function (result) {
             console.log(result);
+            startProvidingSubmit.disabled = true; //enable/disable appropriate buttons
+            updateProviderSubmit.disabled = false;
+            stopProvidingSubmit.disabled = false;
         }
     });
 }
@@ -406,17 +427,24 @@ function updateProvider(updateTime, updateAccuracy, updateCost) {
     });
 }
 
-function stopProviding(){
+function stopProviding() {
     var data = {
-        Account: address
+        Account: address,
+        password: passHold
     };
-    $.ajaxSetup({async: false});  
-    $.ajax({     
+    $.ajaxSetup({ async: false });
+    $.ajax({
         type: "POST",
         url: baseurl + '/stopProviding',
         headers: {
-            'Content-Type':'application/json'
+            'Content-Type': 'application/json'
         },
         data: JSON.stringify(data), //this is the sent json data
+        success: function (result) {
+            console.log(result);
+            startProvidingSubmit.disabled = false; //enable/disable appropriate buttons
+            updateProviderSubmit.disabled = true;
+            stopProvidingSubmit.disabled = true;
+        }
     });
 }
