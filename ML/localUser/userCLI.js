@@ -118,7 +118,7 @@ process.on('SIGINT', async () => {
         {
             if(prov == 1)
             {
-                stopProviding(questions.choices[5]);
+                stopTask(questions.choices[5]);
             }
             else
             {
@@ -973,9 +973,8 @@ function listenWebsite(){
     })
 
     app.post('/startTask', function (req, res) {
-        
         var ABIstartRequest;
-        var UTCfile;
+        var filename;
         var maxTime = parseInt(req.body["time"])
         var maxTarget = parseInt(req.body["accuracy"])
         var minPrice = parseInt(req.body["cost"])
@@ -983,13 +982,15 @@ function listenWebsite(){
         var pass = "localtest" // Later set this to req.body["password"]
         //Get file path based on address passed
         for(i = 0; i < UTCFileArray.length; i++){
-            if(String(req.body["Account"]).toLowerCase() == userAddresses[i].toLowerCase()){
-                UTCfile = UTCFileArray[i]
+            if(String(req.body["Account"]) == userAddresses[i].toLowerCase()){
+                filename = UTCFileArray[i]
                 break
             }
         }
         var keystore;
-        var contents = fs.readFileSync(UTCfile, 'utf8')
+        UTCfile = filename;
+        userAddress = String(req.body["Account"]);
+        var contents = fs.readFileSync(filename, 'utf8')
         keystore = contents;
         decryptedAccount = web3.eth.accounts.decrypt(keystore, pass);
 
@@ -1037,7 +1038,7 @@ function listenWebsite(){
                     ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
                     //console.log(ABIstartRequest);
                     const rawTransaction = {
-                        "from": req.body["Account"],
+                        "from": String(req.body["Account"]),
                         "to": addr,
                         "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
                         "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
@@ -1073,7 +1074,7 @@ function listenWebsite(){
                                 `Failed to load web3, accounts, or contract. Check console for details.`
                             );
                             console.log("\n", chalk.red(err), "\n");
-                            res.send(JSON.stringify({"Success": 0}));
+                            res.send(JSON.stringify({"Success": 0, "Error":"failed to load web3"}));
                         }
 
 
@@ -1086,17 +1087,17 @@ function listenWebsite(){
                         if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
                         {
                             console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                            res.send(JSON.stringify({"Success": 0}));
+                            res.send(JSON.stringify({"Success": 0, "Error":"Not enough ether"}));
                         }
                         else{
                             console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                            res.send(JSON.stringify({"Success": 0}));
+                            res.send(JSON.stringify({"Success": 0, "Error": String(err)}));
                         }
                     });
                 } 
                 else{
                     console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
-                    res.send(JSON.stringify({"Success": 0}));
+                    res.send(JSON.stringify({"Success": 0, "Error" : "Wrong file path"}));
                 }                 
             });
             
@@ -1107,30 +1108,33 @@ function listenWebsite(){
 
     app.post('/updateTask', function(req, res) {
         var ABIstartRequest;
-        var UTCfile;
+        var filename;
         var maxTime = req.body["time"]
-        var maxTarget = req.body["Accuracy"];
+        var maxTarget = req.body["accuracy"];
         var minPrice = req.body["cost"];
         filePath = req.body["file"];
         var pass = "localtest" // Later set this to req.body["password"]
 
         //Get file path based on address passed
         for(i = 0; i < UTCFileArray.length; i++){
-            if(req.body["Address"] == userAddresses[i]){
-                UTCfile = UTCFileArray[i]
+            if(String(req.body["Account"]) == userAddresses[i]){
+                filename = UTCFileArray[i];
                 break
             }
         }
 
         var keystore;
-        var contents = fs.readFileSync(UTCfile, 'utf8')
+        var contents = fs.readFileSync(filename, 'utf8')
         keystore = contents;
+        UTCfile = filename;
+        userAddress = String(req.body["Account"]);
         decryptedAccount = web3.eth.accounts.decrypt(keystore, pass);
 
 
         if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
         {
             console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'start request' to try again..."), "\n")
+            res.send(JSON.stringify({"Success" : 0, "Error": "file isn't a .zip"}));
         }
         else{
             fs.open(filePath, 'r', (err, fd)=>{
@@ -1168,7 +1172,7 @@ function listenWebsite(){
                     ABIstartRequest = myContract.methods.updateRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
                     //console.log(ABIstartRequest);
                     const rawTransaction = {
-                        "from": req.body["Account"],
+                        "from": String(req.body["Account"]),
                         "to": addr,
                         "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
                         "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
@@ -1182,11 +1186,13 @@ function listenWebsite(){
                     .then(receipt => {
                         console.log(chalk.cyan("\n\nTransaction receipt: "));
                         console.log(receipt);
-                        console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+                        console.log(chalk.cyan("\n\nYou have updated request settings to: max time = " + maxTime.toString() +
+                        ", max target = " + maxTarget.toString() + ", and min price = " + minPrice.toString() + "...\n\n"));
+
                         prov = 1;
                     })
                     .then(() => {//Pedro put your code here for start providing
-                        res.send(JSON.stringify({"Success": 1}));
+                        res.send(JSON.stringify({"Success": 1, "Error": "None"}));
                         //call subscribe here
 
                         try{
@@ -1202,7 +1208,7 @@ function listenWebsite(){
                             alert(
                                 `Failed to load web3, accounts, or contract. Check console for details.`
                             );
-                            res.send(JSON.stringify({"Success": 0}));
+                            res.send(JSON.stringify({"Success": 0, "Error": "failed to load web3"}));
                             console.log("\n", chalk.red(err), "\n");
                         }
 
@@ -1212,17 +1218,17 @@ function listenWebsite(){
                         if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
                         {
                             console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                            res.send(JSON.stringify({"Success": 0}));
+                            res.send(JSON.stringify({"Success": 0, "Error": "Not enough ether"}));
                         }
                         else{
                             console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                            res.send(JSON.stringify({"Success": 0}));
+                            res.send(JSON.stringify({"Success": 0, "Error": String(err)}));
                         }
                     });
                 } 
                 else{
                     console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
-                    res.send(JSON.stringify({"Success":0}));
+                    res.send(JSON.stringify({"Success":0, "Error" : "Wrong file path"}));
                 }                 
             });
             
@@ -1233,7 +1239,7 @@ function listenWebsite(){
     app.post('/stopTask', function(req, res){
         var filename;
         for(i = 0; i < UTCFileArray.length; i++){
-            if(String(req.body["Account"]).toLowerCase() == userAddresses[i].toLowerCase()){
+            if(String(req.body["Account"]) == userAddresses[i].toLowerCase()){
                 filename = UTCFileArray[i]
                 break
             }
@@ -1241,12 +1247,14 @@ function listenWebsite(){
         var keystore;
         var contents = fs.readFileSync(filename, 'utf8')
         keystore = contents;
-        var password = 'localtest';
+        var password = String(req.body["password"]);
+        UTCfile = filename;
+        userAddress = String(req.body["Account"]);
         const decryptedAccount = web3.eth.accounts.decrypt(keystore, password);
         var ABIstopRequest; //prepare abi for a function call
         ABIstopRequest = myContract.methods.stopRequest().encodeABI();
         const rawTransaction = {
-            "from": req.body["Account"],
+            "from": String(req.body["Account"]),
             "to": addr,
             "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
             "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
@@ -1263,11 +1271,11 @@ function listenWebsite(){
             prov = 0;
         })
         .then(() => {
-            res.send(JSON.stringify({"Success": 1}));
+            res.send(JSON.stringify({"Success": 1, "Error": "None"}));
         })
         .catch(err => {
             console.log("\n", chalk.red("Error: "), chalk.red(err), "\n")
-            res.send(JSON.stringify({"Success": 0}));
+            res.send(JSON.stringify({"Success": 0, "Error" : String(err)}));
         });
     })
 }

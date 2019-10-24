@@ -169,11 +169,11 @@ process.on('SIGINT', async () => {
             {
                 if(webpageUp == 1){
                     console.log(chalk.red("\nYou must stop providing before you exit the console...\n"))
-                    stopProviding(questions.choices[5]);
+                    stopProviding(questions.choices[3]);
 
                 }
                 else{
-                    stopProviding(questions.choices[5]);
+                    stopProviding(questions.choices[3]);
                 }
             }
             else
@@ -559,7 +559,6 @@ function stopProviding(choice){
             var keystore;
             var contents = fs.readFileSync(filename, 'utf8')
             keystore = contents;
-            console.log(filename);
             const decryptedAccount = web3.eth.accounts.decrypt(keystore, password);
             return decryptedAccount
         }
@@ -957,10 +956,9 @@ function listenWebsite(){
 
     app.post('/startProviding', function(req, res){
         var filename = "";
-        console.log(req.body);
         for(i = 0; i<userAddresses.length; i++)
         {
-            if(String(req.body["Account"]).slice(8, String(req.body["Account"]).length) == userAddresses[i])
+            if(String(req.body["Account"]) == userAddresses[i])
             {
                 filename = UTCFileArray[i];
                 break;
@@ -969,6 +967,8 @@ function listenWebsite(){
         var keystore;
         var contents = fs.readFileSync(filename, 'utf8')
         keystore = contents;
+        UTCfile = filename;
+        userAddress = String(req.body["Account"]);
         decryptedAccount = web3.eth.accounts.decrypt(keystore, String(req.body["password"]));
         console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
         var ABIstartProviding; //prepare abi for a function call
@@ -978,7 +978,7 @@ function listenWebsite(){
         ABIstartProviding = myContract.methods.startProviding(maxTime, maxTarget, minPrice).encodeABI();
         //console.log(chalk.cyan(ABIstartProviding);
         const rawTransaction = {
-            "from": String(req.body["Account"]).slice(8, String(req.body["Account"]).length),
+            "from": String(req.body["Account"]),
             "to": addr,
             "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
             "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
@@ -994,6 +994,8 @@ function listenWebsite(){
             console.log(receipt);
             console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
             prov = 1;
+            res.send(JSON.stringify({"Success":1, "Error": "None"}));
+
         })
         .then(() => {//Pedro put your code here for start providing
             //call subscribe here
@@ -1013,6 +1015,7 @@ function listenWebsite(){
                     `Failed to load web3, accounts, or contract. Check console for details.`
                 );
                 console.log("\n", chalk.red(err), "\n");
+                res.send(JSON.stringify({"Success":0, "Error":String(err)}));
             }
 
 
@@ -1022,20 +1025,21 @@ function listenWebsite(){
             if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
             {
                 console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
+                res.send(JSON.stringify({"Success":0, "Error": "Not enough ether"}));
             }
             else{
                 console.log(chalk.red("\n", err, "\n"))
+                res.send(JSON.stringify({"Success":0, "Error": String(err)}));
             }
         });
 
     })
 
     app.post('/stopProviding', function(req, res){
-        console.log(req.body);
         var filename = "";
         for(i = 0; i<userAddresses.length; i++)
         {
-            if(String(req.body["Account"]).toLowerCase() == userAddresses[i].toLowerCase())
+            if(String(req.body["Account"]) == userAddresses[i].toLowerCase())
             {
                 filename = UTCFileArray[i];
                 break;
@@ -1044,6 +1048,8 @@ function listenWebsite(){
 
         var keystore;
         var contents = fs.readFileSync(filename, 'utf8')
+        UTCfile = filename;
+        userAddress = String(req.body["Account"]);
         keystore = contents;
         decryptedAccount = web3.eth.accounts.decrypt(keystore, String(req.body["password"]));
         console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
@@ -1066,9 +1072,13 @@ function listenWebsite(){
             console.log(receipt)
             console.log(chalk.cyan("\n\nYou have now stopped providing...\n"))
             prov = 0;
+            res.send(JSON.stringify({"Success":1, "Error": "None"}));
+
         })
         .catch(err => {
             console.log("\n", chalk.red("Error: "), chalk.red(err), "\n")
+            res.send(JSON.stringify({"Success":0, "Error": String(err)}));
+
         });        
 
     })
@@ -1076,14 +1086,17 @@ function listenWebsite(){
 
     app.post('/updateProvider', function(req, res){
         console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
+        
+
         var ABIupdateProvider; //prepare abi for a function call
         var maxTime = parseInt(req.body["time"]);
         var maxTarget = parseInt(req.body["accuracy"]);
         var minPrice = parseInt(req.body["cost"]);
+
         ABIupdateProvider = myContract.methods.updateProvider(maxTime, maxTarget, minPrice).encodeABI();
         //console.log(chalk.cyan(ABIstartProviding);
         const rawTransaction = {
-            "from": String(req.body["Account"]),
+            "from": userAddress,
             "to": addr,
             "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
             "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
@@ -1099,9 +1112,11 @@ function listenWebsite(){
             console.log(receipt)
             console.log(chalk.cyan("\n\nYou have updated provider settings to: max time = " + maxTime.toString() +
                 ", max target = " + maxTarget.toString() + ", and min price = " + minPrice.toString() + "...\n\n"));
+            res.send(JSON.stringify({"Success":1, "Error": "None"}));
         })
         .catch(err => {
             console.log("\n", chalk.red(err), "\n");
+            res.send(JSON.stringify({"Success":0, "Error":String(err)}));
         });
     })
 
