@@ -1,4 +1,2 @@
-cd ML/localWorker/WebPage
-sensible-browser UI.html #show webpage
-cd ..
-node workerCLI.js #start CLI
+cd ML/localWorker
+node workerCLI.js #start CLI, can start web page from here

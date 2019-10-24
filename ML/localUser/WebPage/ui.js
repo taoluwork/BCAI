@@ -230,7 +230,7 @@ function loadAddr(){
             document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
         }
         var btn = document.createElement("BUTTON");
-        btn.innerHTML = "Address:" + addresses[i];
+        btn.innerHTML = addresses[i];
         btn.className = address == addresses[i] ? "dropdown-item btn selected" : "dropdown-item btn"; //Add selected class if this is selected address
         btn.type="button";
         btn.id = "addressNumb"+i;
@@ -316,7 +316,7 @@ setInterval(function update(){
 
 //cli call functions
 function getAddresses(){
-    $.ajaxSetup({async: doasync});  
+    $.ajaxSetup({async: false});  //For some reason, initial getaddresses does not work unless async is false
     $.ajax({     
         type: "GET",
         url: baseurl + '/accounts',

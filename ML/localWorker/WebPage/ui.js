@@ -9,6 +9,7 @@ var historyPool = [];
 var currentPoolType = "none";
 var baseurl = "http://localhost:3000";
 var address = "";
+var passHold= "";
 var doasync = true;
 
 //get elements
@@ -40,9 +41,6 @@ var updateProviderAcc        = document.getElementById("updateProviderAccuracy")
    
 var startProvidingCost        = document.getElementById("startProvidingCost");
 var updateProviderCost       = document.getElementById("updateProviderCost");
-   
-var startProvidingFile        = document.getElementById("startProvidingFilePath");
-var updateProviderFile       = document.getElementById("updateProviderFilePath");
    
 var startActionSel       = document.getElementById("startActionSel");
 var updateActionSel      = document.getElementById("updateActionSel");
@@ -228,10 +226,10 @@ function loadAddr(){
         //<button type="button" class="btn btn-secondary">addressPlaceHolder1</button>
         if(i == 0 && !address) { //Set first address by default if null
             address = addresses[i];
-            document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
+            document.getElementById("dropdownMenuButton").innerHTML = "Address:" + address;
         }
         var btn = document.createElement("BUTTON");
-        btn.innerHTML = "Address:" + addresses[i];
+        btn.innerHTML = addresses[i];
         btn.className = address == addresses[i] ? "dropdown-item btn selected" : "dropdown-item btn"; //Add selected class if this is selected address
         btn.type="button";
         btn.id = "addressNumb"+i;
@@ -240,7 +238,7 @@ function loadAddr(){
             passwordContainer.style.display = "block";
             passHold = "";
             address = event.srcElement.innerHTML
-            document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
+            document.getElementById("dropdownMenuButton").innerHTML = "Address" + address;
             console.log(event.srcElement.innerHTML +"=="+ address)
             var thisaddress = event.srcElement.id.replace("addressNumb", "");
             for(var j = 0; j < addresses.length; j++) {
@@ -317,7 +315,7 @@ setInterval(function update(){
 
 //cli call functions
 function getAddresses(){
-    $.ajaxSetup({async: doasync});  
+    $.ajaxSetup({async: false}); //For some reason, initial getaddresses does not work unless async is false
     $.ajax({     
         type: "GET",
         url: baseurl + '/accounts',

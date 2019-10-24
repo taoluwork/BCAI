@@ -1,4 +1,2 @@
-cd ML/localUser/WebPage
-sensible-browser UI.html #show webpage
-cd ..
-node userCLI.js #start CLI
+cd ML/localUser
+node userCLI.js #start CLI, can start web page from here

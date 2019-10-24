@@ -29,7 +29,7 @@ then
 fi
 ###################################Installing Programs###################################
 #Install git
-if ! git --version > /dev/null 2>&1;  #not installed
+if ! git --version > /dev/null 2>&1;  #git not installed
 then
     echo -e "\e[93mgit not installed, installing now.\e[0m"
     add-apt-repository ppa:git-core/ppa -y
