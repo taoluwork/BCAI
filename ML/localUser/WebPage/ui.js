@@ -230,7 +230,7 @@ function loadAddr(){
             document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
         }
         var btn = document.createElement("BUTTON");
-        btn.innerHTML = addresses[i];
+        btn.innerHTML = "Address:" + addresses[i];
         btn.className = address == addresses[i] ? "dropdown-item btn selected" : "dropdown-item btn"; //Add selected class if this is selected address
         btn.type="button";
         btn.id = "addressNumb"+i;
