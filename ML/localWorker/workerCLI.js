@@ -131,6 +131,7 @@ const myContract = new web3.eth.Contract(abi, addr);
 
 //test user account addr : 0x458C5617e4f549578E181F12dA8f840889E3C0A8 and password : localtest
 var prov = 0;
+var webpageUp = 0;
 var decryptedAccount = "";
 var unlockedAccount = ["", "willbeoverwritten"];
 
@@ -166,7 +167,14 @@ process.on('SIGINT', async () => {
         {
             if(prov == 1)
             {
-                stopProviding(questions.choices[5]);
+                if(webpageUp == 1){
+                    console.log(chalk.red("\nYou must stop providing before you exit the console...\n"))
+                    stopProviding(questions.choices[5]);
+
+                }
+                else{
+                    stopProviding(questions.choices[5]);
+                }
             }
             else
             {
@@ -211,6 +219,7 @@ function cliOrSite(){
             askUser();
         }
         else{
+            webpageUp = 1;
             listenWebsite();
         }
     })
@@ -543,7 +552,6 @@ function stopProviding(choice){
             {
                 if(userAddress == userAddresses[i])
                 {
-                    userAddress = userAddresses[i];
                     filename = UTCFileArray[i];
                     break;
                 }
@@ -551,6 +559,7 @@ function stopProviding(choice){
             var keystore;
             var contents = fs.readFileSync(filename, 'utf8')
             keystore = contents;
+            console.log(filename);
             const decryptedAccount = web3.eth.accounts.decrypt(keystore, password);
             return decryptedAccount
         }
@@ -858,7 +867,7 @@ checkEvents = async (showLogs) => {
 
 function listenWebsite(){
     console.log(chalk.cyan("Now listening for webpage...\n"))
-    exec('sensible-browser ./WebPage/UI.html', (err,stdout,stderr)=>{
+    exec('xdg-open ./WebPage/UI.html', (err,stdout,stderr)=>{
         if(err){
 
           console.log(err);
@@ -948,15 +957,15 @@ function listenWebsite(){
 
     app.post('/startProviding', function(req, res){
         var filename = "";
+        console.log(req.body);
         for(i = 0; i<userAddresses.length; i++)
         {
-            if(String(req.body["Account"]) == userAddresses[i])
+            if(String(req.body["Account"]).slice(8, String(req.body["Account"]).length) == userAddresses[i])
             {
                 filename = UTCFileArray[i];
                 break;
             }
         }
-
         var keystore;
         var contents = fs.readFileSync(filename, 'utf8')
         keystore = contents;
@@ -969,7 +978,7 @@ function listenWebsite(){
         ABIstartProviding = myContract.methods.startProviding(maxTime, maxTarget, minPrice).encodeABI();
         //console.log(chalk.cyan(ABIstartProviding);
         const rawTransaction = {
-            "from": String(req.body["Account"]),
+            "from": String(req.body["Account"]).slice(8, String(req.body["Account"]).length),
             "to": addr,
             "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
             "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
@@ -1026,7 +1035,7 @@ function listenWebsite(){
         var filename = "";
         for(i = 0; i<userAddresses.length; i++)
         {
-            if(String(req.body["Account"]) == userAddresses[i])
+            if(String(req.body["Account"]).toLowerCase() == userAddresses[i].toLowerCase())
             {
                 filename = UTCFileArray[i];
                 break;

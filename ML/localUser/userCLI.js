@@ -877,7 +877,7 @@ checkEvents = async () => {
 
 function listenWebsite(){
     console.log(chalk.cyan("Now listening for webpage...\n"))
-    exec('sensible-browser ./WebPage/UI.html', (err,stdout,stderr)=>{
+    exec('xdg-open ./WebPage/UI.html', (err,stdout,stderr)=>{
         if(err){
 
           console.log(err);
@@ -997,7 +997,7 @@ function listenWebsite(){
         if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
         {
             console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'start request' to try again..."), "\n")
-            res.send(JSON.stringify({"Success": 0}));
+            res.send(JSON.stringify({"Success": 0, "Error": "Not a .zip file"}));
         }
         else{
             fs.open(filePath, 'r', (err, fd)=>{
