@@ -81,7 +81,7 @@ updateProviderSubmit.addEventListener("click", ()=>{
     // console.log(updateProvidingAcc.value)
     // console.log(updateProvidingCost.value)
     // console.log(updateProvidingFile.value)
-    updateProviding(updateProvidingTime.value , updateProvidingAcc.value , updateProvidingCost.value )    
+    updateProvider(updateProviderTime.value , updateProviderAcc.value , updateProviderCost.value )    
 });
 stopProvidingSubmit.addEventListener("click", ()=>{ 
     event.preventDefault();
