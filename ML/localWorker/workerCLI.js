@@ -538,12 +538,21 @@ function stopProviding(choice){
     .then(answers => {return answers.keystorePswd})
     .then((password)=>{
             //retrieving keystore file and decrypting with password
+            var filename;
+            for(i = 0; i<userAddresses.length; i++)
+            {
+                if(userAddress == userAddresses[i])
+                {
+                    userAddress = userAddresses[i];
+                    filename = UTCFileArray[i];
+                    break;
+                }
+            }
             var keystore;
-            filename = "UTC--2019-09-16T20-22-39.327891999Z--458c5617e4f549578e181f12da8f840889e3c0a8"
             var contents = fs.readFileSync(filename, 'utf8')
             keystore = contents;
             const decryptedAccount = web3.eth.accounts.decrypt(keystore, password);
-            return decryptedAccount;
+            return decryptedAccount
         }
     )
     .then((decryptedAccount) => {
@@ -849,7 +858,7 @@ checkEvents = async (showLogs) => {
 
 function listenWebsite(){
     console.log(chalk.cyan("Now listening for webpage...\n"))
-    exec('start ./WebPage/UI.html', (err,stdout,stderr)=>{
+    exec('sensible-browser ./WebPage/UI.html', (err,stdout,stderr)=>{
         if(err){
 
           console.log(err);
@@ -937,8 +946,7 @@ function listenWebsite(){
         
     })
 
-    app.post('/startProviding', function(res, req){
-        console.log(req.body);
+    app.post('/startProviding', function(req, res){
         var filename = "";
         for(i = 0; i<userAddresses.length; i++)
         {
@@ -956,7 +964,7 @@ function listenWebsite(){
         console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
         var ABIstartProviding; //prepare abi for a function call
         var maxTime = parseInt(req.body["time"]);
-        var maxTarget = parseInt(req.body["Accuracy"]);
+        var maxTarget = parseInt(req.body["accuracy"]);
         var minPrice = parseInt(req.body["cost"]);
         ABIstartProviding = myContract.methods.startProviding(maxTime, maxTarget, minPrice).encodeABI();
         //console.log(chalk.cyan(ABIstartProviding);
@@ -1013,8 +1021,79 @@ function listenWebsite(){
 
     })
 
-    app.post('/stopProviding', function(res, req){
+    app.post('/stopProviding', function(req, res){
         console.log(req.body);
+        var filename = "";
+        for(i = 0; i<userAddresses.length; i++)
+        {
+            if(String(req.body["Account"]) == userAddresses[i])
+            {
+                filename = UTCFileArray[i];
+                break;
+            }
+        }
+
+        var keystore;
+        var contents = fs.readFileSync(filename, 'utf8')
+        keystore = contents;
+        decryptedAccount = web3.eth.accounts.decrypt(keystore, String(req.body["password"]));
+        console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
+        var ABIstopProviding; //prepare abi for a function call
+        ABIstopProviding = myContract.methods.stopProviding().encodeABI();
+        const rawTransaction = {
+            "from": String(req.body["Account"]),
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIstopProviding
+        }
+
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            console.log(chalk.cyan("\n\nTransaction receipt: "))
+            console.log(receipt)
+            console.log(chalk.cyan("\n\nYou have now stopped providing...\n"))
+            prov = 0;
+        })
+        .catch(err => {
+            console.log("\n", chalk.red("Error: "), chalk.red(err), "\n")
+        });        
+
+    })
+
+
+    app.post('/updateProvider', function(req, res){
+        console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
+        var ABIupdateProvider; //prepare abi for a function call
+        var maxTime = parseInt(req.body["time"]);
+        var maxTarget = parseInt(req.body["accuracy"]);
+        var minPrice = parseInt(req.body["cost"]);
+        ABIupdateProvider = myContract.methods.updateProvider(maxTime, maxTarget, minPrice).encodeABI();
+        //console.log(chalk.cyan(ABIstartProviding);
+        const rawTransaction = {
+            "from": String(req.body["Account"]),
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIupdateProvider
+        }
+
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            console.log(chalk.cyan("\n\nTransaction receipt: "))
+            console.log(receipt)
+            console.log(chalk.cyan("\n\nYou have updated provider settings to: max time = " + maxTime.toString() +
+                ", max target = " + maxTarget.toString() + ", and min price = " + minPrice.toString() + "...\n\n"));
+        })
+        .catch(err => {
+            console.log("\n", chalk.red(err), "\n");
+        });
     })
 
 }
