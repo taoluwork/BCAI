@@ -150,7 +150,8 @@ function cliOrSite(){
         {
             type: 'list',
             name: 'interface',
-            choices: ['Continue with CLI', 'Open Site']
+            choices: ['Continue with CLI', 'Open Site'],
+            message: 'Choose an interface'
         }
     ])
     .then (answers => {

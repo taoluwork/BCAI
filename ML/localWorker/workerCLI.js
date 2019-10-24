@@ -192,8 +192,29 @@ process.on('SIGINT', async () => {
 
 
 
-askUser();
+//askUser();
 
+cliOrSite();
+
+function cliOrSite(){
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'interface',
+            choices: ['Continue with CLI', 'Open Site'],
+            message: 'Choose an interface'
+        }
+    ])
+    .then (answers => {
+        if(answers.interface == 'Continue with CLI'){
+            console.log("\n\n");
+            askUser();
+        }
+        else{
+            listenWebsite();
+        }
+    })
+}
 //Gives the user a starting menu of choices
 function askUser(){
     if(prov == 0)
@@ -825,85 +846,175 @@ checkEvents = async (showLogs) => {
 }
 
 
-var app = express();
 
-//json of all available accounts for the user
-app.use(express.json()); //Use to read json of incoming request
+function listenWebsite(){
+    console.log(chalk.cyan("Now listening for webpage...\n"))
+    exec('start ./WebPage/UI.html', (err,stdout,stderr)=>{
+        if(err){
 
-//Allows CORS stuff
-app.use(function (req, res, next) {
-    //set headers to allow cross origin requestt
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-
-
-app.get('/accounts', function(req, res) {
-    var accountJSON = {"Addresses" : []}
-    var counter = 0
-    userAddresses.forEach(function(address){
-        accountJSON["Addresses"].push({"Address": address});
-        counter+=1;
-    })
-    res.header("Content-Type", 'application/json');
-    res.send(accountJSON);
-})
-
-
-
-//API code
-
-app.get('/pools', function(req, res) {
-    var poolJSON = {"ActiveProviders": 0, "ActiveProviderAddresses" : [], "Pending" : 0, "PendingAddresses" : [], "Providing" : 0, "ProvidingAddresses" : [], "Validating" : 0, "ValidatingAddresses": []};
-    return myContract.methods.getProviderPool().call().then(function(provPool){
-        poolJSON["ActiveProviders"] = provPool.length;
-        console.log(provPool.length);
-        for(var i = 0; i<provPool.length; i++){
-            poolJSON["ActiveProviderAddresses"].push({"Address": provPool[i]})
+          console.log(err);
+          return;
         }
-        return provPool;
-    })
-    .then(function(){
-		return myContract.methods.getPendingPool().call().then(function(reqPool){
-		    poolJSON["Pending"] = reqPool.length;
-            for(var i = 0; i<reqPool.length; i++){
-                poolJSON["PendingAddresses"].push({"Address": reqPool[i]})
-            }
-            return reqPool;
-		})
-    })
-    .then(function(){
-	    return myContract.methods.getProvidingPool().call().then(function(providingPool){
-            poolJSON["Providing"] = providingPool.length;
-            for(var i = 0; i<providingPool.length; i++){
-                poolJSON["ProvidingAddresses"].push({"Address": providingPool[i]})
-            }
-            return providingPool;
-		
-        })
-    })
-    .then(function(){
-		return myContract.methods.getValidatingPool().call().then(function(valiPool){
-            poolJSON["Validating"] = valiPool.length;
-            for(var i = 0; i<valiPool.length; i++){
-                poolJSON["ValidatingAddresses"].push({"Address": valiPool[i]})
-            }
-            return valiPool;
+        console.log(stdout);
         
+    });
+    console.log(chalk.cyan('\nWebpage is now open check your default browser...\n'))
+    var app = express();
+    app.listen(3000);
+    //json of all available accounts for the user
+    app.use(express.json()); //Use to read json of incoming request
+
+    //Allows CORS stuff
+    app.use(function (req, res, next) {
+        //set headers to allow cross origin requestt
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
+
+
+    app.get('/accounts', function(req, res) {
+        var accountJSON = {"Addresses" : []}
+        var counter = 0
+        userAddresses.forEach(function(address){
+            accountJSON["Addresses"].push({"Address": address});
+            counter+=1;
         })
-    })
-    .then(() =>{
         res.header("Content-Type", 'application/json');
-        res.send(poolJSON)
+        res.send(accountJSON);
     })
-    .catch(function(err){
-		console.log("Error: show pool error! ", err);
+
+
+
+    //API code
+
+    app.get('/pools', function(req, res) {
+        var poolJSON = {"ActiveProviders": 0, "ActiveProviderAddresses" : [], "Pending" : 0, "PendingAddresses" : [], "Providing" : 0, "ProvidingAddresses" : [], "Validating" : 0, "ValidatingAddresses": []};
+        return myContract.methods.getProviderPool().call().then(function(provPool){
+            poolJSON["ActiveProviders"] = provPool.length;
+            for(var i = 0; i<provPool.length; i++){
+                poolJSON["ActiveProviderAddresses"].push({"Address": provPool[i]})
+            }
+            return provPool;
+        })
+        .then(function(){
+            return myContract.methods.getPendingPool().call().then(function(reqPool){
+                poolJSON["Pending"] = reqPool.length;
+                for(var i = 0; i<reqPool.length; i++){
+                    poolJSON["PendingAddresses"].push({"Address": reqPool[i]})
+                }
+                return reqPool;
+            })
+        })
+        .then(function(){
+            return myContract.methods.getProvidingPool().call().then(function(providingPool){
+                poolJSON["Providing"] = providingPool.length;
+                for(var i = 0; i<providingPool.length; i++){
+                    poolJSON["ProvidingAddresses"].push({"Address": providingPool[i]})
+                }
+                return providingPool;
+            
+            })
+        })
+        .then(function(){
+            return myContract.methods.getValidatingPool().call().then(function(valiPool){
+                poolJSON["Validating"] = valiPool.length;
+                for(var i = 0; i<valiPool.length; i++){
+                    poolJSON["ValidatingAddresses"].push({"Address": valiPool[i]})
+                }
+                return valiPool;
+            
+            })
+        })
+        .then(() =>{
+            res.header("Content-Type", 'application/json');
+            res.send(poolJSON)
+        })
+        .catch(function(err){
+            console.log("Error: show pool error! ", err);
+        })
+        
     })
+
+    app.post('/startProviding', function(res, req){
+        console.log(req.body);
+        var filename = "";
+        for(i = 0; i<userAddresses.length; i++)
+        {
+            if(String(req.body["Account"]) == userAddresses[i])
+            {
+                filename = UTCFileArray[i];
+                break;
+            }
+        }
+
+        var keystore;
+        var contents = fs.readFileSync(filename, 'utf8')
+        keystore = contents;
+        decryptedAccount = web3.eth.accounts.decrypt(keystore, String(req.body["password"]));
+        console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
+        var ABIstartProviding; //prepare abi for a function call
+        var maxTime = parseInt(req.body["time"]);
+        var maxTarget = parseInt(req.body["Accuracy"]);
+        var minPrice = parseInt(req.body["cost"]);
+        ABIstartProviding = myContract.methods.startProviding(maxTime, maxTarget, minPrice).encodeABI();
+        //console.log(chalk.cyan(ABIstartProviding);
+        const rawTransaction = {
+            "from": String(req.body["Account"]),
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIstartProviding
+        }
     
-})
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            console.log(chalk.cyan("\n\nTransaction receipt: "));
+            console.log(receipt);
+            console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
+            prov = 1;
+        })
+        .then(() => {//Pedro put your code here for start providing
+            //call subscribe here
+
+            try{
+                web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                    if(err) console.log(chalk.cyan("ERRRR", err, result));
+                    //console.log(chalk.cyan("================================================   <- updated! #", result.number);
+                    //console.log(chalk.cyan(result);
+                    //showPools();
+                    //checkEvents();
+                    checkEvents(false);
+                })
+            }
+            catch(error){
+                alert(
+                    `Failed to load web3, accounts, or contract. Check console for details.`
+                );
+                console.log("\n", chalk.red(err), "\n");
+            }
 
 
+        })
+        .catch(err => {
+            //console.log(String(err).slice(0, 41));
+            if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
+            {
+                console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
+            }
+            else{
+                console.log(chalk.red("\n", err, "\n"))
+            }
+        });
 
-app.listen(3000);
+    })
+
+    app.post('/stopProviding', function(res, req){
+        console.log(req.body);
+    })
+
+}
