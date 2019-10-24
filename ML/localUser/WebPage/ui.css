@@ -46,10 +46,17 @@ body {
 .dropdown-menu {
     background-color: #495057!important;
     color: var(--text)!important;
-    width: 24.95%;
 }
 
 .btn {
     background-color: #495057;
     color: var(--text);
+}
+
+.passwordVal {
+    margin-top: 1%;
+}
+
+.submitPassword {
+    margin-top: 1%;
 }

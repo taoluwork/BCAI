@@ -877,7 +877,7 @@ checkEvents = async () => {
 
 function listenWebsite(){
     console.log(chalk.cyan("Now listening for webpage...\n"))
-    exec('sensible-browser ./page/UI.html', (err,stdout,stderr)=>{
+    exec('sensible-browser ./WebPage/UI.html', (err,stdout,stderr)=>{
         if(err){
 
           console.log(err);

@@ -9,6 +9,7 @@ var historyPool = [];
 var currentPoolType = "none";
 var baseurl = "http://localhost:3000";
 var address = "";
+var doasync = true;
 
 //get elements
 var addressBar        = document.getElementById("AddressBar");
@@ -315,7 +316,7 @@ setInterval(function update(){
 
 //cli call functions
 function getAddresses(){
-    $.ajaxSetup({async: false});  
+    $.ajaxSetup({async: doasync});  
     $.ajax({     
         type: "GET",
         url: baseurl + '/accounts',
@@ -330,7 +331,7 @@ function getAddresses(){
     });
 }
 function getPools(){
-    $.ajaxSetup({async: false});  
+    $.ajaxSetup({async: doasync});  
     $.ajax({     
         type: "GET",
         url: baseurl + '/pools',
@@ -363,7 +364,7 @@ function getHistory(){
     var data = {
         Account: address
     };
-    $.ajaxSetup({async: false});  
+    $.ajaxSetup({async: doasync});  
     $.ajax({     
         type: "POST",
         url: baseurl + '/history',
@@ -390,7 +391,7 @@ function startProviding(startTime, startAccuracy, startCost) {
         Account: address,
         password: passHold
     };
-    $.ajaxSetup({ async: false });
+    $.ajaxSetup({ async: doasync });
     $.ajax({
         type: "POST",
         url: baseurl + '/startProviding',
@@ -413,7 +414,7 @@ function updateProvider(updateTime, updateAccuracy, updateCost) {
         accuracy: updateAccuracy,
         cost: updateCost
     };
-    $.ajaxSetup({ async: false });
+    $.ajaxSetup({ async: doasync });
     $.ajax({
         type: "POST",
         url: baseurl + '/updateProvider',
@@ -432,7 +433,7 @@ function stopProviding() {
         Account: address,
         password: passHold
     };
-    $.ajaxSetup({ async: false });
+    $.ajaxSetup({ async: doasync });
     $.ajax({
         type: "POST",
         url: baseurl + '/stopProviding',

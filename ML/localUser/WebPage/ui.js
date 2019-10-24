@@ -10,6 +10,7 @@ var currentPoolType = "none";
 var baseurl = "http://localhost:3000";
 var address = "";
 var passHold= "";
+var doasync = true;
 
 //get elements
 var addressBar        = document.getElementById("AddressBar");
@@ -315,7 +316,7 @@ setInterval(function update(){
 
 //cli call functions
 function getAddresses(){
-    $.ajaxSetup({async: false});  
+    $.ajaxSetup({async: doasync});  
     $.ajax({     
         type: "GET",
         url: baseurl + '/accounts',
@@ -330,7 +331,7 @@ function getAddresses(){
     });
 }
 function getPools(){
-    $.ajaxSetup({async: false});  
+    $.ajaxSetup({async: doasync});  
     $.ajax({     
         type: "GET",
         url: baseurl + '/pools',
@@ -363,7 +364,7 @@ function getHistory(){
     var data = {
         Account: address
     };
-    $.ajaxSetup({async: false});  
+    $.ajaxSetup({async: doasync});  
     $.ajax({     
         type: "POST",
         url: baseurl + '/history',
@@ -390,7 +391,7 @@ function startTask(startTime, startAccuracy, startCost, startFile){
         Account: address,
         password: passHold
     };
-    $.ajaxSetup({async: false});  
+    $.ajaxSetup({async: doasync});  
     $.ajax({     
         type: "POST",
         url: baseurl + '/startTask',
@@ -414,7 +415,7 @@ function updateTask(updateTime, updateAccuracy, updateCost, updateFile){
         file: updateFile,
         Account: address
       };
-    $.ajaxSetup({async: false});  
+    $.ajaxSetup({async: doasync});  
     $.ajax({     
         type: "POST",
         url: baseurl + '/updateTask',
@@ -432,7 +433,7 @@ function stopTask(){
         Account: address,
         password: passHold
     };
-    $.ajaxSetup({async: false});  
+    $.ajaxSetup({async: doasync});  
     $.ajax({     
         type: "POST",
         url: baseurl + '/stopTask',
