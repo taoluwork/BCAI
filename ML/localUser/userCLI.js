@@ -178,7 +178,7 @@ function askUser(){
 
 function receiveResult(){
 
-    exec('python3 execute.py ' + '0 ' + requestIP + ' none', (err,stdout,stderr)=>{
+    exec('python3 execute.py ' + '0 ' + requestIP + ' none ' + ip, (err,stdout,stderr)=>{
 
         if(err){
           console.log(err);
@@ -190,7 +190,7 @@ function receiveResult(){
 }
 
 function offer(){ 
-    exec('python3 execute.py ' + '0 ' + requestIP + ' image.zip', (err,stdout,stderr)=>{
+    exec('python3 execute.py ' + '0 ' + requestIP + ' image.zip ' + ip, (err,stdout,stderr)=>{
         if(err){
 
           console.log(err);

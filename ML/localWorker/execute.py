@@ -8,6 +8,7 @@ from signal import signal, SIGINT
 
 # 0-> provider
 # 1-> validator
+print(sys.argv)
 mode = sys.argv[1]
 ip   = sys.argv[2]
 file = sys.argv[3]

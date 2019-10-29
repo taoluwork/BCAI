@@ -64,7 +64,7 @@ function execute(){
 
     if(!executing) {
         executing = true;
-        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none', (err,stdout,stderr)=>{
+        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip, (err,stdout,stderr)=>{
             if(err){
                 console.log(err);
                 return;
@@ -85,7 +85,7 @@ function offer(){
     
     if(!executing) {
         executing = true;
-        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none', (err,stdout,stderr)=>{
+        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none '+ip, (err,stdout,stderr)=>{
             if(err){
                 console.log(err);
                 return;
@@ -800,8 +800,7 @@ checkEvents = async (showLogs) => {
         // Request Assigned
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
         if (pastEvents[i] && userAddress.toLowerCase() === pastEvents[i].returnValues.provAddr.toLowerCase()) {
-            //if (showLogs) 
-            console.log("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + pastEvents[i].returnValues.reqAddr + " The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
+            //if (showLogs) console.log("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + pastEvents[i].returnValues.reqAddr + " The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
             mode = 0;
             requestAddr = pastEvents[i].returnValues.reqAddr
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
