@@ -786,8 +786,8 @@ checkEvents = async (showLogs) => {
     
 
     for(var i = 0 ; i < pastEvents.length; i++){
-      if((pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr) || 
-        (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr) ){
+      if((hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr) || 
+        (hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr) ){
         pastEvents.splice(0,i+1);
 
        //if (showLogs) console.log("Validator signed/validation complete");
@@ -799,8 +799,9 @@ checkEvents = async (showLogs) => {
 
         // Request Assigned
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
-        if (pastEvents[i] && userAddress && userAddress.toLowerCase() === pastEvents[i].returnValues.provAddr) {
-            if (showLogs) console.log("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + pastEvents[i].returnValues.reqAddr + " The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
+        if (pastEvents[i] && userAddress.toLowerCase() === pastEvents[i].returnValues.provAddr.toLowerCase()) {
+            //if (showLogs) 
+            console.log("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + pastEvents[i].returnValues.reqAddr + " The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
             mode = 0;
             requestAddr = pastEvents[i].returnValues.reqAddr
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
