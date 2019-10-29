@@ -190,6 +190,7 @@ function receiveResult(){
 }
 
 function offer(){ 
+    //console.log("in offer function");
     exec('python3 execute.py ' + '0 ' + requestIP + ' image.zip ' + ip4, (err,stdout,stderr)=>{
         if(err){
 
@@ -407,7 +408,7 @@ function startTask(){
                                                 //console.log("================================================   <- updated! #", result.number);
                                                 //console.log(result);
                                                 //showPools();
-                                                //checkEvents();
+                                                checkEvents();
                                             })
                                         }
                                         catch(error){
@@ -555,7 +556,7 @@ function startTask(){
                                         //console.log("================================================   <- updated! #", result.number);
                                         //console.log(result);
                                         //showPools();
-                                        //checkEvents();
+                                        checkEvents();
                                     })
                                 }
                                 catch(error){
@@ -800,7 +801,7 @@ function updateTask(){
 
 function showPools(){
     //Lists pool all pools
-    //checkEvents();
+    checkEvents();
     return myContract.methods.getProviderPool().call().then(function(provPool){
 		console.log("\n\n=======================================================");
 		console.log("Active provider pool: Total = ", provPool.length);
@@ -864,7 +865,7 @@ checkEvents = async () => {
       }
 
         // Request Assigned
-        if (hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
+        if (pastEvents[i].returnValues  && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
             //console.log("Request has been assigned.");
             offer();
@@ -1067,7 +1068,7 @@ function listenWebsite(){
                                 //console.log("================================================   <- updated! #", result.number);
                                 //console.log(result);
                                 //showPools();
-                                //checkEvents();
+                                checkEvents();
                             })
                         }
                         catch(error){
@@ -1202,7 +1203,7 @@ function listenWebsite(){
                                 //console.log("================================================   <- updated! #", result.number);
                                 //console.log(result);
                                 //showPools();
-                                //checkEvents();
+                                checkEvents();
                             })
                         }
                         catch(error){
