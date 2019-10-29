@@ -224,9 +224,13 @@ function loadAddr(){
     // }
     for(var i = 0 ; i < addresses.length; i++){
         //<button type="button" class="btn btn-secondary">addressPlaceHolder1</button>
-        if(i == 0 && !address) { //Set first address by default if null
-            address = addresses[i];
-            document.getElementById("dropdownMenuButton").innerHTML = "Address:" + address;
+        if(i == 0 && !address) { //Set first address by default if null and address is found
+            if(addresses[i]) {
+                address = addresses[i];
+                document.getElementById("dropdownMenuButton").innerHTML = "Address: " + address;
+                passwordContainer.style.display = "block";
+                passHold = "";
+            }
         }
         var btn = document.createElement("BUTTON");
         btn.innerHTML = addresses[i];

@@ -64,7 +64,7 @@ function execute(){
 
     if(!executing) {
         executing = true;
-        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip, (err,stdout,stderr)=>{
+        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
             if(err){
                 console.log(err);
                 return;
@@ -85,7 +85,7 @@ function offer(){
     
     if(!executing) {
         executing = true;
-        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none '+ip, (err,stdout,stderr)=>{
+        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
             if(err){
                 console.log(err);
                 return;
