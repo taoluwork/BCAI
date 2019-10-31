@@ -194,7 +194,7 @@ function receiveResult(){
 }
 
 function offer(){ 
-    //console.log("in offer function");
+    console.log("in offer function");
     if(!executing) {
         console.log("about to offer");
         executing = true;
@@ -876,7 +876,7 @@ checkEvents = async () => {
         // Request Assigned
         if (pastEvents[i].returnValues  && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
-            //console.log("Request has been assigned.");
+            console.log("Request has been assigned.");
             offer();
         }
 
