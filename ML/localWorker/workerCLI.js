@@ -401,7 +401,7 @@ function startProviding(){
                                     //console.log(chalk.cyan(result);
                                     //showPools();
                                     //checkEvents();
-                                    checkEvents(false);
+                                    //checkEvents(false);
                                 })
                             }
                             catch(error){
@@ -500,7 +500,7 @@ function startProviding(){
                                 //console.log(chalk.cyan("================================================   <- updated! #", result.number);
                                 //console.log(chalk.cyan(result);
                                 //showPools();
-                                checkEvents(false);
+                                //checkEvents(false);
                             })
                         }
                         catch(error){
@@ -1008,7 +1008,7 @@ function listenWebsite(){
                     //console.log(chalk.cyan(result);
                     //showPools();
                     //checkEvents();
-                    checkEvents(false);
+                    //checkEvents(false);
                 })
             }
             catch(error){

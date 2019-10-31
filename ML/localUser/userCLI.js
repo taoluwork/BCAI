@@ -417,7 +417,7 @@ function startTask(){
                                                 //console.log("================================================   <- updated! #", result.number);
                                                 //console.log(result);
                                                 //showPools();
-                                                checkEvents();
+                                                //checkEvents();
                                             })
                                         }
                                         catch(error){
@@ -565,7 +565,7 @@ function startTask(){
                                         //console.log("================================================   <- updated! #", result.number);
                                         //console.log(result);
                                         //showPools();
-                                        checkEvents();
+                                        //checkEvents();
                                     })
                                 }
                                 catch(error){
@@ -1077,7 +1077,7 @@ function listenWebsite(){
                                 //console.log("================================================   <- updated! #", result.number);
                                 //console.log(result);
                                 //showPools();
-                                checkEvents();
+                                //checkEvents();
                             })
                         }
                         catch(error){
@@ -1212,7 +1212,7 @@ function listenWebsite(){
                                 //console.log("================================================   <- updated! #", result.number);
                                 //console.log(result);
                                 //showPools();
-                                checkEvents();
+                                //checkEvents();
                             })
                         }
                         catch(error){

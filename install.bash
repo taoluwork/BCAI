@@ -71,7 +71,7 @@ else
     echo -e "\e[92mnode already installed."
 fi
 #Install python
-if ! python3 --version > /dev/null 2>&1 ; #node not installed
+if ! python3 --version > /dev/null 2>&1 ; #python not installed
 then
     echo -e "\e[93mpython not installed, installing now.\e[0m"
     if sudo apt install python3 --yes --force-yes ; then #if installed
@@ -84,7 +84,7 @@ else
     echo -e "\e[92mpython already installed."
 fi
 #Install flask
-if ! flask --version > /dev/null 2>&1 ; #node not installed
+if ! flask --version > /dev/null 2>&1 ; #flask not installed
 then
     echo -e "\e[93mflask not installed, installing now.\e[0m"
     if sudo apt install python3-flask --yes --force-yes ; then #if installed
@@ -97,7 +97,7 @@ else
     echo -e "\e[92mflask already installed."
 fi
 #Install docker
-if ! docker --version > /dev/null 2>&1 ;  #not installed
+if ! docker --version > /dev/null 2>&1 ;  #docker not installed
 then
     echo -e "\e[93mDocker not installed, installing now.\e[0m"
     sudo apt-get update
