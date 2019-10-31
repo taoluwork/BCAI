@@ -6,6 +6,7 @@ const prompts = require('prompts');
 const chalk = require('chalk');
 var path = require('path');
 const {exec} = require('child_process');
+const {execSync} = require('child_process');
 const Folder = './';
 var publicIp = require("public-ip");
 const hex2ascii = require("hex2ascii");
@@ -64,7 +65,7 @@ function execute(){
 
     if(!executing) {
         executing = true;
-        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
+        execSync('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
             if(err){
                 console.log(err);
                 return;
@@ -85,7 +86,7 @@ function offer(){
     
     if(!executing) {
         executing = true;
-        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
+        execSync('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
             if(err){
                 console.log(err);
                 return;
@@ -401,7 +402,7 @@ function startProviding(){
                                     //console.log(chalk.cyan(result);
                                     //showPools();
                                     //checkEvents();
-                                    //checkEvents(false);
+                                    checkEvents(false);
                                 })
                             }
                             catch(error){
@@ -500,7 +501,7 @@ function startProviding(){
                                 //console.log(chalk.cyan("================================================   <- updated! #", result.number);
                                 //console.log(chalk.cyan(result);
                                 //showPools();
-                                //checkEvents(false);
+                                checkEvents(false);
                             })
                         }
                         catch(error){
@@ -1008,7 +1009,7 @@ function listenWebsite(){
                     //console.log(chalk.cyan(result);
                     //showPools();
                     //checkEvents();
-                    //checkEvents(false);
+                    checkEvents(false);
                 })
             }
             catch(error){

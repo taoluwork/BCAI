@@ -6,6 +6,7 @@ var figlet = require('figlet');
 const chalk = require('chalk');
 var path = require('path');
 const {exec} = require('child_process');
+const {execSync} = require('child_process');
 const Folder = './';
 var publicIp = require("public-ip");
 var hex2ascii= require("hex2ascii")
@@ -180,7 +181,7 @@ function askUser(){
 function receiveResult(){
     if(!executing) {
         executing = true;
-        exec('python3 execute.py ' + '0 ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
+        execSync('python3 execute.py ' + '0 ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
 
             if(err){
             console.log(err);
@@ -198,7 +199,7 @@ function offer(){
     if(!executing) {
         console.log("about to offer");
         executing = true;
-        exec('python3 execute.py ' + '0 ' + requestIP + ' image.zip ' + ip4, (err,stdout,stderr)=>{
+        execSync('python3 execute.py ' + '0 ' + requestIP + ' image.zip ' + ip4, (err,stdout,stderr)=>{
             if(err){
 
             console.log(err);
@@ -417,7 +418,7 @@ function startTask(){
                                                 //console.log("================================================   <- updated! #", result.number);
                                                 //console.log(result);
                                                 //showPools();
-                                                //checkEvents();
+                                                checkEvents();
                                             })
                                         }
                                         catch(error){
@@ -565,7 +566,7 @@ function startTask(){
                                         //console.log("================================================   <- updated! #", result.number);
                                         //console.log(result);
                                         //showPools();
-                                        //checkEvents();
+                                        checkEvents();
                                     })
                                 }
                                 catch(error){
@@ -1077,7 +1078,7 @@ function listenWebsite(){
                                 //console.log("================================================   <- updated! #", result.number);
                                 //console.log(result);
                                 //showPools();
-                                //checkEvents();
+                                checkEvents();
                             })
                         }
                         catch(error){
@@ -1212,7 +1213,7 @@ function listenWebsite(){
                                 //console.log("================================================   <- updated! #", result.number);
                                 //console.log(result);
                                 //showPools();
-                                //checkEvents();
+                                checkEvents();
                             })
                         }
                         catch(error){
