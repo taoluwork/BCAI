@@ -65,7 +65,7 @@ function execute(){
 
     if(!executing) {
         executing = true;
-        execSync('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
+        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
             if(err){
                 console.log(err);
                 return;
@@ -86,7 +86,7 @@ function offer(){
     
     if(!executing) {
         executing = true;
-        execSync('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
+        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
             if(err){
                 console.log(err);
                 return;
@@ -402,7 +402,7 @@ function startProviding(){
                                     //console.log(chalk.cyan(result);
                                     //showPools();
                                     //checkEvents();
-                                    checkEvents(false);
+                                    //checkEvents(false);
                                 })
                             }
                             catch(error){
@@ -501,7 +501,7 @@ function startProviding(){
                                 //console.log(chalk.cyan("================================================   <- updated! #", result.number);
                                 //console.log(chalk.cyan(result);
                                 //showPools();
-                                checkEvents(false);
+                                //checkEvents(false);
                             })
                         }
                         catch(error){
@@ -1009,7 +1009,7 @@ function listenWebsite(){
                     //console.log(chalk.cyan(result);
                     //showPools();
                     //checkEvents();
-                    checkEvents(false);
+                    //checkEvents(false);
                 })
             }
             catch(error){
