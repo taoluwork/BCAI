@@ -27,6 +27,7 @@ var filePath = undefined;
 var requestIP = undefined;
 var buffer = [];
 var webpageUp = 0;
+var executing = false;
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
@@ -177,29 +178,37 @@ function askUser(){
 }
 
 function receiveResult(){
+    if(!executing) {
+        executing = true;
+        exec('python3 execute.py ' + '0 ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
 
-    exec('python3 execute.py ' + '0 ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
-
-        if(err){
-          console.log(err);
-          return;
-        }
+            if(err){
+            console.log(err);
+            return;
+            }
+        executing = false;
         console.log(stdout);
         
       });
+    }
 }
 
 function offer(){ 
     //console.log("in offer function");
-    exec('python3 execute.py ' + '0 ' + requestIP + ' image.zip ' + ip4, (err,stdout,stderr)=>{
-        if(err){
+    if(!executing) {
+        console.log("about to offer");
+        executing = true;
+        exec('python3 execute.py ' + '0 ' + requestIP + ' image.zip ' + ip4, (err,stdout,stderr)=>{
+            if(err){
 
-          console.log(err);
-          return;
-        }
+            console.log(err);
+            return;
+            }
+        executing = false;
         console.log(stdout);
         
       });
+    }
 }
 
 
