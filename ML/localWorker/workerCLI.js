@@ -746,6 +746,7 @@ function submitValidation(reqAddress, result){
 
 function showPools(){
     //Lists pool all pools
+    //checkEvents();
     return myContract.methods.getProviderPool().call().then(function(provPool){
 		console.log("\n\n=======================================================");
 		console.log("Active provider pool: Total = ", provPool.length);
@@ -909,6 +910,9 @@ function listenWebsite(){
     //API code
 
     app.get('/pools', function(req, res) {
+        if(userAddress != undefined){
+            checkEvents(false);
+        }
         var poolJSON = {"ActiveProviders": 0, "ActiveProviderAddresses" : [], "Pending" : 0, "PendingAddresses" : [], "Providing" : 0, "ProvidingAddresses" : [], "Validating" : 0, "ValidatingAddresses": []};
         return myContract.methods.getProviderPool().call().then(function(provPool){
             poolJSON["ActiveProviders"] = provPool.length;
