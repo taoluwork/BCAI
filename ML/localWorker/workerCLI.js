@@ -820,7 +820,7 @@ checkEvents = async (showLogs) => {
 
       // Validation Assigned to Provider
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Assigned to Provider") {
-        if (pastEvents[i] && userAddress === pastEvents[i].returnValues.provAddr) {
+        if (userAddress === pastEvents[i].returnValues.provAddr) {
             //if (showLogs) console.log("You are a validator", "You need to validate the task for: " + pastEvents[i].reqAddr + " as true or false. The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
             console.log("\nIn here this is the request IP " + String(hex2ascii(pastEvents[i].returnValues.extra)) + "\n");
             mode = 1;
