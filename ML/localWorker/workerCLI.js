@@ -86,6 +86,7 @@ function offer(){
     
     if(!executing) {
         executing = true;
+        console.log("\nNOW OFFERING!!!!!\n")
         exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
             if(err){
                 console.log(err);
