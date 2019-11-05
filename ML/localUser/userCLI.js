@@ -202,7 +202,15 @@ function receiveResult(){
             fs.truncate('./stat.txt', 0, function(){
                 if (err) throw err
             })
-            fs.appendFile('./stat.txt', "0"+"\n"+ String(requestIP), function (err){
+            fs.appendFile('./stat.txt',  String(requestIP)+"\n"+"0", function (err){
+                if (err) throw err;
+            })   
+        }
+        else if(fileContent.toString('utf8') !== 'Executing'){
+            fs.truncate('./stat.txt', 0, function(){
+                if (err) throw err
+            })
+            fs.appendFile('./stat.txt',  String(requestIP)+"\n"+"0", function (err){
                 if (err) throw err;
             })   
         }
@@ -433,7 +441,7 @@ function startTask(){
                                                 //console.log("================================================   <- updated! #", result.number);
                                                 //console.log(result);
                                                 //showPools();
-                                                //checkEvents();
+                                                checkEvents();
                                             })
                                         }
                                         catch(error){
@@ -581,7 +589,7 @@ function startTask(){
                                         //console.log("================================================   <- updated! #", result.number);
                                         //console.log(result);
                                         //showPools();
-                                        //checkEvents();
+                                        checkEvents();
                                     })
                                 }
                                 catch(error){
@@ -826,7 +834,7 @@ function updateTask(){
 
 function showPools(){
     //Lists pool all pools
-    checkEvents();
+    //checkEvents();
     return myContract.methods.getProviderPool().call().then(function(provPool){
 		console.log("\n\n=======================================================");
 		console.log("Active provider pool: Total = ", provPool.length);
@@ -1093,7 +1101,7 @@ function listenWebsite(){
                                 //console.log("================================================   <- updated! #", result.number);
                                 //console.log(result);
                                 //showPools();
-                                //checkEvents();
+                                checkEvents();
                             })
                         }
                         catch(error){
@@ -1228,7 +1236,7 @@ function listenWebsite(){
                                 //console.log("================================================   <- updated! #", result.number);
                                 //console.log(result);
                                 //showPools();
-                                //checkEvents();
+                                checkEvents();
                             })
                         }
                         catch(error){

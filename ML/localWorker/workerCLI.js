@@ -356,7 +356,7 @@ function choiceMade(choice){
     else if (choice == questions.choices[1] || choice == questions1.choices[4])
     {
         showPools();
-        checkEvents(true);
+        //checkEvents(true);
     }
     else
     {
@@ -483,7 +483,7 @@ function startProviding(){
                                     //console.log(chalk.cyan(result);
                                     //showPools();
                                     //checkEvents();
-                                    //checkEvents(false);
+                                    checkEvents(false);
                                 })
                             }
                             catch(error){
@@ -582,7 +582,7 @@ function startProviding(){
                                 //console.log(chalk.cyan("================================================   <- updated! #", result.number);
                                 //console.log(chalk.cyan(result);
                                 //showPools();
-                                //checkEvents(false);
+                                checkEvents(false);
                             })
                         }
                         catch(error){
@@ -993,7 +993,7 @@ function listenWebsite(){
 
     app.get('/pools', function(req, res) {
         if(userAddress != undefined){
-            checkEvents(false);
+            //checkEvents(false);
         }
         var poolJSON = {"ActiveProviders": 0, "ActiveProviderAddresses" : [], "Pending" : 0, "PendingAddresses" : [], "Providing" : 0, "ProvidingAddresses" : [], "Validating" : 0, "ValidatingAddresses": []};
         return myContract.methods.getProviderPool().call().then(function(provPool){
@@ -1095,7 +1095,7 @@ function listenWebsite(){
                     //console.log(chalk.cyan(result);
                     //showPools();
                     //checkEvents();
-                    //checkEvents(false);
+                    checkEvents(false);
                 })
             }
             catch(error){
