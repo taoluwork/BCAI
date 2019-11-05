@@ -89,7 +89,6 @@ const myContract = new web3.eth.Contract(abi, addr);
 var prov = 0;
 var decryptedAccount = "";
 
-
 questions = {
     type : 'list',
     name : 'whatToDo',
@@ -178,8 +177,9 @@ function askUser(){
         inquirer.prompt([questions1]).then(answers => {choiceMade(answers.whatToDo1)});
 }
 
+
 function receiveResult(){
-    if(!executing) {
+    /*if(!executing) {
         executing = true;
         exec('python3 execute.py ' + '0 ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
 
@@ -191,10 +191,25 @@ function receiveResult(){
         console.log(stdout);
         
       });
-    }
+    }*/
+
+    fs.readFile('./data.txt', function read(err, data){
+        if (err) throw err;
+        fileContent = data;
+        console.log(fileContent.toString('utf8'));
+        if(fileContent.toString('utf8') === 'Ready')
+        {
+            fs.truncate('./data.txt', 0, function(){
+                if (err) throw err
+            })
+            fs.appendFile('./data.txt', "0"+"\n"+ String(requestIP), function (err){
+                if (err) throw err;
+            })   
+        }
+    })
 }
 
-function offer(){ 
+/*function offer(){ 
     console.log("in offer function");
     if(!executing) {
         console.log("about to offer");
@@ -211,7 +226,7 @@ function offer(){
       });
     }
 }
-
+*/
 
 //Takes choice made by prompt and controls where to go
 function choiceMade(choice){
@@ -878,7 +893,7 @@ checkEvents = async () => {
         if (pastEvents[i].returnValues  && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
             console.log("Request has been assigned.");
-            offer();
+            //offer();
         }
 
     }
