@@ -25,11 +25,47 @@ var mode       = undefined;
 var requestAddr= undefined;
 var requestIP= undefined;
 var executing = false;
+var submitted = true;
 
+var fileContent;
+fs.open('./data.txt', 'w', function(err){
+    if (err) throw err;
+})
 
+/*fs.appendFile('./data.txt', 'Ready', function (err){
+    if (err) throw err;
+})
+requestIP = "132.0.0.21";
+mode = 0;
 
-
-
+fs.readFile('./data.txt', function read(err, data){
+    if (err) throw err;
+    fileContent = data;
+    console.log(fileContent.toString('utf8'));
+    if(fileContent.toString('utf8') === 'Ready')
+    {
+        if(submitted == false && mode == 0){
+            //havent submitted request yet need to submit
+            submitted = true;
+            completeRequest(requestAddr, web3.utils.asciiToHex(ip));
+        }
+        if(submitted == false && mode == 1){
+            //havent submitted validatiion yet need to submit
+            submitted = true;
+            submitValidation(requestAddr, true);
+        }
+        else{
+            //have already submitted write next 
+            submitted = false;
+            fs.truncate('./data.txt', 0, function(){
+                if (err) throw err
+            })
+            fs.appendFile('./data.txt', String(mode)+"\n"+ String(requestIP), function (err){
+                if (err) throw err;
+            })    
+        }
+    }
+})*/
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 var getIp = (async() => {
@@ -63,8 +99,9 @@ getIp().then(() => {
 //this should only be called by write file
 function execute(){
 
-    if(!executing) {
+    /*if(!executing) {
         executing = true;
+        //need requestIP in data.txt
         exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
             if(err){
                 console.log(err);
@@ -79,10 +116,39 @@ function execute(){
                 submitValidation(requestAddr, true);
             }
         });
-    }
+    }*/
+    fs.readFile('./data.txt', function read(err, data){
+        if (err) throw err;
+        fileContent = data;
+        console.log(fileContent.toString('utf8'));
+        if(fileContent.toString('utf8') === 'Ready')
+        {
+            if(submitted == false && mode == 0){
+                //havent submitted request yet need to submit
+                submitted = true;
+                completeRequest(requestAddr, web3.utils.asciiToHex(ip));
+            }
+            if(submitted == false && mode == 1){
+                //havent submitted validatiion yet need to submit
+                submitted = true;
+                submitValidation(requestAddr, true);
+            }
+            else{
+                //have already submitted write next 
+                submitted = false;
+                fs.truncate('./data.txt', 0, function(){
+                    if (err) throw err
+                })
+                fs.appendFile('./data.txt', String(mode)+"\n"+ String(requestIP), function (err){
+                    if (err) throw err;
+                })    
+            }
+        }
+    })
 }
 
-function offer(){
+
+/*function offer(){
     
     if(!executing) {
         executing = true;
@@ -102,7 +168,7 @@ function offer(){
             }
         });
     }
-}
+}*/
 
 
 var UTCFileArray = [];
@@ -826,7 +892,7 @@ checkEvents = async (showLogs) => {
             mode = 1;
             requestAddr = pastEvents[i].returnValues.reqAddr
             requestIP = hex2ascii(pastEvents[i].returnValues.extra)
-            offer();
+            //offer();
         }
       }
 
