@@ -28,17 +28,17 @@ var executing = false;
 var submitted = true;
 
 var fileContent;
-fs.open('./data.txt', 'w', function(err){
+fs.open('./stat.txt', 'w', function(err){
     if (err) throw err;
 })
 
-/*fs.appendFile('./data.txt', 'Ready', function (err){
+/*fs.appendFile('./stat.txt', 'Ready', function (err){
     if (err) throw err;
 })
 requestIP = "132.0.0.21";
 mode = 0;
 
-fs.readFile('./data.txt', function read(err, data){
+fs.readFile('./stat.txt', function read(err, data){
     if (err) throw err;
     fileContent = data;
     console.log(fileContent.toString('utf8'));
@@ -57,10 +57,10 @@ fs.readFile('./data.txt', function read(err, data){
         else{
             //have already submitted write next 
             submitted = false;
-            fs.truncate('./data.txt', 0, function(){
+            fs.truncate('./stat.txt', 0, function(){
                 if (err) throw err
             })
-            fs.appendFile('./data.txt', String(mode)+"\n"+ String(requestIP), function (err){
+            fs.appendFile('./stat.txt', String(mode)+"\n"+ String(requestIP), function (err){
                 if (err) throw err;
             })    
         }
@@ -101,7 +101,7 @@ function execute(){
 
     /*if(!executing) {
         executing = true;
-        //need requestIP in data.txt
+        //need requestIP in stat.txt
         exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
             if(err){
                 console.log(err);
@@ -117,7 +117,7 @@ function execute(){
             }
         });
     }*/
-    fs.readFile('./data.txt', function read(err, data){
+    fs.readFile('./stat.txt', function read(err, data){
         if (err) throw err;
         fileContent = data;
         console.log(fileContent.toString('utf8'));
@@ -136,10 +136,10 @@ function execute(){
             else{
                 //have already submitted write next 
                 submitted = false;
-                fs.truncate('./data.txt', 0, function(){
+                fs.truncate('./stat.txt', 0, function(){
                     if (err) throw err
                 })
-                fs.appendFile('./data.txt', String(mode)+"\n"+ String(requestIP), function (err){
+                fs.appendFile('./stat.txt', String(mode)+"\n"+ String(requestIP), function (err){
                     if (err) throw err;
                 })    
             }

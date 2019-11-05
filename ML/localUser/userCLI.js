@@ -193,16 +193,16 @@ function receiveResult(){
       });
     }*/
 
-    fs.readFile('./data.txt', function read(err, data){
+    fs.readFile('./stat.txt', function read(err, data){
         if (err) throw err;
         fileContent = data;
         console.log(fileContent.toString('utf8'));
         if(fileContent.toString('utf8') === 'Ready')
         {
-            fs.truncate('./data.txt', 0, function(){
+            fs.truncate('./stat.txt', 0, function(){
                 if (err) throw err
             })
-            fs.appendFile('./data.txt', "0"+"\n"+ String(requestIP), function (err){
+            fs.appendFile('./stat.txt', "0"+"\n"+ String(requestIP), function (err){
                 if (err) throw err;
             })   
         }
