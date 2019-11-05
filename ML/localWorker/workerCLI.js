@@ -123,12 +123,12 @@ function execute(){
         console.log(fileContent.toString('utf8'));
         if(fileContent.toString('utf8') === 'Ready')
         {
-            if(submitted == false && mode == 0){
+            if(submitted == false && mode === 0){
                 //havent submitted request yet need to submit
                 submitted = true;
                 completeRequest(requestAddr, web3.utils.asciiToHex(ip));
             }
-            if(submitted == false && mode == 1){
+            if(submitted == false && mode === 1){
                 //havent submitted validatiion yet need to submit
                 submitted = true;
                 submitValidation(requestAddr, true);
@@ -139,10 +139,24 @@ function execute(){
                 fs.truncate('./stat.txt', 0, function(){
                     if (err) throw err
                 })
-                fs.appendFile('./stat.txt', String(mode)+"\n"+ String(requestIP), function (err){
+                fs.appendFile('./stat.txt', String(requestIP)+"\n"+String(mode) , function (err){
                     if (err) throw err;
                 })    
             }
+        }
+        else if(fileContent.toString('utf8') !== 'Executing') {
+            fs.readFile('./stat.txt', function read(err, data){
+                if (err) throw err;
+                    //have already submitted write next 
+                    submitted = false;
+                    fs.truncate('./stat.txt', 0, function(){
+                        if (err) throw err
+                    })
+                    fs.appendFile('./stat.txt', String(requestIP)+"\n"+String(mode) , function (err){
+                        if (err) throw err;
+                    })    
+                    }
+            )
         }
     })
 }
