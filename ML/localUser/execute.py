@@ -19,6 +19,7 @@ def loop():
             statF.close()
 
             res = r.get('http://' + reqIp + '/files')
+            open('image.zip','w').close() #empties the image file to be written to
             open('image.zip', 'wb').write(res.content)
             res = r.get('http://' + reqIp + '/exit')
             os.system("unzip image.zip")

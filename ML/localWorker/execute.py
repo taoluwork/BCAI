@@ -47,6 +47,7 @@ def executeDocker(ip, mode):
 
     #print('requesting files from: ' + ip)
     res = r.get('http://' + ip + '/files')
+    open('image.zip','w').close() #empties the image file to be written to
     open('image.zip', 'wb').write(res.content)
     res = r.put('http://' + ip + '/exit')
     #unzip file (!!!!assume that image.zip is created by cli!!!!)
