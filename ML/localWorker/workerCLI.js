@@ -14,8 +14,6 @@ const express = require('express');
 
 
 
-var now = new Date();
-var date = "";
 
 var assignedValidation = 0;
 var assignedRequest = 0;
@@ -157,10 +155,14 @@ function execute(){
 
 function clearStat() {
     fs.truncate('./stat.txt', 0, function(err){
-        if (err) throw err
+        if (err) throw err;
     })
 }
-
+function clearLog(){
+    fs.truncate('./log.txt', 0, function(err){
+        if(err) throw err;
+    })
+}
 
 /*function offer(){
     
@@ -233,7 +235,9 @@ questions1 = {
     choices : ['stop providing', 'update provider', 'show pools', 'quit'],
 };
 
-clearStat()
+clearStat();
+clearLog();
+fs.appendFile('./log.txt', String(Date(Date.now())));
 console.log(chalk.cyan(" _  ____ _           _       \n(_)/ ___| |__   __ _(_)_ __  \n| | |   | '_ \\ / _` | | '_ \\ \n| | |___| | | | (_| | | | | |\n|_|\\____|_| |_|\\__,_|_|_| |_|\n\n"))
 console.log(chalk.cyan("Thank you for using iChain worker CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start providing' to get started or 'help' \nto get more information about the application.\n"))
 
@@ -885,9 +889,7 @@ checkEvents = async (showLogs) => {
         if (pastEvents[i] && userAddress.toLowerCase() === pastEvents[i].returnValues.provAddr.toLowerCase()) {
             //if (showLogs) console.log("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + pastEvents[i].returnValues.reqAddr + " The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
             if(assignedRequest == 0){
-                now = new Date();
-                date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+today.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
-                fs.appendFile('./log.txt', date + " Assigned request\n", function (err){
+                fs.appendFile('./log.txt', String(Date(Date.now())) + " Assigned request\n", function (err){
                     if (err) throw err;
                 })
                 assignedRequest = 1;
@@ -904,9 +906,7 @@ checkEvents = async (showLogs) => {
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
         if (pastEvents[i] && userAddress === pastEvents[i].returnValues.provAddr) {
             assignedRequest = 0;
-            now = new Date();
-            date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+today.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
-            fs.appendFile('./log.txt', date + " Completed a request\n", function (err){
+            fs.appendFile('./log.txt', String(Date(Date.now())) + " Completed a request\n", function (err){
                 if (err) throw err;
             })
             //if (showLogs) console.log("Awaiting validation", "You have completed a task an are waiting for validation");
@@ -920,9 +920,7 @@ checkEvents = async (showLogs) => {
             //if (showLogs) console.log("You are a validator", "You need to validate the task for: " + pastEvents[i].reqAddr + " as true or false. The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
             //console.log("\nIn here this is the request IP " + String(hex2ascii(pastEvents[i].returnValues.extra)) + "\n");
             if(assignedValidation == 0){
-                now = new Date();
-                date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+today.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
-                fs.appendFile('./log.txt', date + " Assigned validator\n", function (err){
+                fs.appendFile('./log.txt', String(Date(Date.now())) + " Assigned validator\n", function (err){
                     if (err) throw err;
                 })
                 assignedValidation = 1;
@@ -967,9 +965,7 @@ checkEvents = async (showLogs) => {
         if (userAddress === pastEvents[i].returnValues.provAddr) {
             //if (showLogs) console.log("Work Validated!", "Your work was validated and you should receive payment soon");
             assignedValidation = 0;
-            now = new Date();
-            date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+today.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
-            fs.appendFile('./log.txt', date + " Completed a validation\n", function (err){
+            fs.appendFile('./log.txt', String(Date(Date.now())) + " Completed a validation\n", function (err){
                 if (err) throw err;
             })
             mode = undefined;

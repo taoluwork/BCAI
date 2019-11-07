@@ -901,7 +901,12 @@ checkEvents = async () => {
       if((pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr) || 
         (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr) ){
         pastEvents.splice(0,i+1);
-
+        if(validationAssignedFlag == 0){
+            fs.appendFile('./log.txt', String(Date(Date.now())) + " Request has been assigned to validator\n", function (err){
+                if (err) throw err;
+            })
+            requestAssignedFlag = 1;
+        }
        // console.log("Validator signed/validation complete");
       }
     }
@@ -913,9 +918,7 @@ checkEvents = async () => {
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
         if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
             requestAssignedFlag = 0;
-            now = new Date();
-            date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+today.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
-            fs.appendFile('./log.txt', date + " Request has been completed\n", function (err){
+            fs.appendFile('./log.txt', String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
                 if (err) throw err;
             })
          // console.log("Awaiting validation", "You have completed a task an are waiting for validation");
@@ -930,9 +933,7 @@ checkEvents = async () => {
         // Request Assigned
         if (pastEvents[i].returnValues  && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
             if(requestAssignedFlag == 0){
-                now = new Date();
-                date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+today.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
-                fs.appendFile('./log.txt', date + " Request has been assigned\n", function (err){
+                fs.appendFile('./log.txt', String(Date(Date.now())) + " Request has been assigned to provider\n", function (err){
                     if (err) throw err;
                 })
                 requestAssignedFlag = 1;
@@ -945,6 +946,10 @@ checkEvents = async () => {
         }
         //validation complete
         if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete"){
+            validationAssignedFlag = 0;
+            fs.appendFile('./log.txt', String(Date(Date.now())) + " Request has been validated\n", function (err){
+                if (err) throw err;
+            })
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
             receiveResult();
         }
