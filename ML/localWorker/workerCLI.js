@@ -750,7 +750,7 @@ function updateProvider(){
 
 function completeRequest(reqAddress, resultId){
     taskCounter+=1;
-    console.log(chalk.cyan("Completed task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
+    console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
     console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
         var ABIcompleteRequest; //prepare abi for a function call
         ABIcompleteRequest = myContract.methods.completeRequest(reqAddress, resultId).encodeABI();
@@ -781,7 +781,7 @@ function completeRequest(reqAddress, resultId){
 
 function submitValidation(reqAddress, result){
     validationCounter+=1;
-    console.log(chalk.cyan("Completed task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
+    console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
     console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
         var ABIsubmitValidation; //prepare abi for a function call
         ABIsubmitValidation = myContract.methods.submitValidation(reqAddress, result).encodeABI();
