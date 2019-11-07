@@ -900,7 +900,7 @@ checkEvents = async () => {
         // Request Assigned
         if (pastEvents[i].returnValues  && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
-            console.log("Request has been assigned.");
+            //console.log("Request has been assigned.");
             //offer();
         }
         //validation complete

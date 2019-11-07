@@ -888,7 +888,7 @@ checkEvents = async (showLogs) => {
           //console.log(pastEvents[i].returnValues);
         if (userAddress === pastEvents[i].returnValues.provAddr.toLowerCase()) {
             //if (showLogs) console.log("You are a validator", "You need to validate the task for: " + pastEvents[i].reqAddr + " as true or false. The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
-            console.log("\nIn here this is the request IP " + String(hex2ascii(pastEvents[i].returnValues.extra)) + "\n");
+            //console.log("\nIn here this is the request IP " + String(hex2ascii(pastEvents[i].returnValues.extra)) + "\n");
             mode = 1;
             requestAddr = pastEvents[i].returnValues.reqAddr
             requestIP = hex2ascii(pastEvents[i].returnValues.extra)
