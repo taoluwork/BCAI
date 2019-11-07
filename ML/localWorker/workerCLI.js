@@ -25,7 +25,7 @@ var mode       = undefined;
 var requestAddr= undefined;
 var requestIP= undefined;
 var executing = false;
-var submitted = true;
+var submitted = false;
 
 var fileContent;
 fs.open('./stat.txt', 'w', function(err){
@@ -134,7 +134,7 @@ function execute(){
                 submitValidation(requestAddr, true);
             }
         }
-        else if(fileContent.toString('utf8') === '' && submitted === false){
+        else if(fileContent.toString('utf8') !== 'Executing' && submitted === false){
             //submitted = false;
             fs.truncate('./stat.txt', 0, function(){
                 if (err) throw err
