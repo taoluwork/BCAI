@@ -216,7 +216,7 @@ function receiveResult(){
 }
 
 function clearStat() {
-    fs.truncate('./stat.txt', 0, function(){
+    fs.truncate('./stat.txt', 0, function(err){
         if (err) throw err
     })
 }

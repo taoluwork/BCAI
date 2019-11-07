@@ -50,7 +50,7 @@ def executeDocker(ip, mode):
     ##removes file
     os.system("sudo rm -rf image.*")
     open('image.zip', 'wb').write(res.content)
-    res = r.put('http://' + ip + '/exit')
+    #res = r.put('http://' + ip + '/exit')
     #unzip file (!!!!assume that image.zip is created by cli!!!!)
     os.system("unzip image.zip")
     #this will load the image back into docker
