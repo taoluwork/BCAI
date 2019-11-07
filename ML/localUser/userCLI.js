@@ -104,7 +104,7 @@ questions1 = {
     choices : ['stop request', 'update request', 'show pools', 'quit'],
 };
 
-
+clearStat();
 console.log(chalk.cyan(" _  ____ _           _       \n(_)/ ___| |__   __ _(_)_ __  \n| | |   | '_ \\ / _` | | '_ \\ \n| | |___| | | | (_| | | | | |\n|_|\\____|_| |_|\\__,_|_|_| |_|\n\n"))
 console.log(chalk.cyan("Thank you for using iChain user CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start request' to get started or 'help' \nto get more information about the application.\n"))
 
@@ -200,22 +200,24 @@ function receiveResult(){
         //console.log(fileContent.toString('utf8'));
         if(fileContent.toString('utf8') === 'Ready')
         {
-            fs.truncate('./stat.txt', 0, function(){
-                if (err) throw err
-            })
+            clearStat();
             fs.appendFile('./stat.txt',  String(requestIP)+"\n"+"0", function (err){
                 if (err) throw err;
             })   
         }
         else if(fileContent.toString('utf8') !== 'Executing' && finished === false){
             finished = true;
-            fs.truncate('./stat.txt', 0, function(){
-                if (err) throw err
-            })
+            clearStat();
             fs.appendFile('./stat.txt',  String(requestIP)+"\n"+"0", function (err){
                 if (err) throw err;
             })   
         }
+    })
+}
+
+function clearStat() {
+    fs.truncate('./stat.txt', 0, function(){
+        if (err) throw err
     })
 }
 

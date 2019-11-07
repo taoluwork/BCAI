@@ -136,13 +136,17 @@ function execute(){
         }
         else if(fileContent.toString('utf8') !== 'Executing' && submitted === false){
             //submitted = false;
-            fs.truncate('./stat.txt', 0, function(){
-                if (err) throw err
-            })
+            clearStat();
             fs.appendFile('./stat.txt', String(requestIP)+"\n"+String(mode) , function (err){
                 if (err) throw err;
             })    
         }
+    })
+}
+
+function clearStat() {
+    fs.truncate('./stat.txt', 0, function(){
+        if (err) throw err
     })
 }
 
@@ -218,7 +222,7 @@ questions1 = {
     choices : ['stop providing', 'update provider', 'show pools', 'quit'],
 };
 
-
+clearStat()
 console.log(chalk.cyan(" _  ____ _           _       \n(_)/ ___| |__   __ _(_)_ __  \n| | |   | '_ \\ / _` | | '_ \\ \n| | |___| | | | (_| | | | | |\n|_|\\____|_| |_|\\__,_|_|_| |_|\n\n"))
 console.log(chalk.cyan("Thank you for using iChain worker CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start providing' to get started or 'help' \nto get more information about the application.\n"))
 
@@ -933,9 +937,7 @@ checkEvents = async (showLogs) => {
             submitted = false;
             fs.readFile('./stat.txt', function read(err, data){
                 if (err) throw err;
-                fs.truncate('./stat.txt', 0, function(){
-                    if (err) throw err
-                })    
+                clearStat(); 
             })
         }
         //if (showLogs) console.log(pastEvents[i].blockNumber);
