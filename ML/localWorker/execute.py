@@ -6,10 +6,10 @@ import time
 import json
 from signal import signal, SIGINT
 import threading
+from datetime import datetime
 
 # 0-> provider
 # 1-> validator
-print(sys.argv)
 #myIp = sys.argv[1]
 
 #mode = sys.argv[1] 
@@ -17,6 +17,15 @@ print(sys.argv)
 #file = sys.argv[3]
 #myIp = sys.argv[4] 
 #print('FILE PROCESS BEGINNING')
+
+def getTime(mess):
+    now = datetime.now()
+    end = open('log.txt', 'r').readline()[24:40]
+    #print(now.strftime("%a %b %d %Y %H:%M:%S" + end))
+    time = now.strftime("%a %b %d %Y %H:%M:%S" + end)
+    f = open('log.txt', 'a')
+    f.write(time + " "+ mess)
+    f.close()
 
 app = Flask(__name__)
 #f = open(file , 'rb')
@@ -32,6 +41,7 @@ def fileRead():
         file = open("image.zip", "rb")
         f = file.read()
         file.close()
+        getTime('File Requested')
         return f
     else:
         return "Not Ready"
@@ -45,6 +55,8 @@ def executeDocker(ip, mode):
     ipfile.writelines("Executing") #write executing so .js knows status
     ipfile.close()
 
+    getTime('Requesting file for Execution')
+
     #print('requesting files from: ' + ip)
     res = r.get('http://' + ip + '/files')
     ##removes file
@@ -53,22 +65,33 @@ def executeDocker(ip, mode):
     #res = r.put('http://' + ip + '/exit')
     #unzip file (!!!!assume that image.zip is created by cli!!!!)
     os.system("unzip image.zip")
+
+    getTime('File Received and Saved')
+
     #this will load the image back into docker
     os.system("sudo docker load -i image.tgz")
     #this will start the container in a bash
     os.system("sudo docker run -dit execute:latest bash")
+
+    getTime('Docker Image Loaded and Executing')
+
     #this will execute the code
     os.system("sudo docker exec $(sudo docker container ls -q) python3 execute.py " + str(mode) )
     #this will delete the old image file
     os.system("sudo rm -rf image.tgz")
     #this will update the container
     os.system("sudo docker commit $(sudo docker container ls -q) execute:latest")
+
+    getTime("Execution Finished")
+
     #this will remove the image to be transmitted to the next step
     os.system("sudo docker save execute -o image.tgz")
     #zip the image
     os.system('sudo zip -0 image.zip image.tgz')
     #this will stop the docker image
     os.system("sudo docker stop $(sudo docker container ls -q)")
+
+    getTime('Image Unloaded and Ready For Transmission')
 
     ipfile = open("stat.txt", "w")
     ipfile.close() #empties file
@@ -90,7 +113,6 @@ def loop():
                 ipfile.close()
                 executeDocker(ip, mode) #send to execute function
             
-
 if __name__ == '__main__':
     t1 = threading.Thread(target=loop)
     t1.start()

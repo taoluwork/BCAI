@@ -3,6 +3,16 @@ from flask import Flask
 import requests as r
 import time
 import threading
+from datetime import datetime
+
+def getTime(mess):
+    now = datetime.now()
+    end = open('log.txt', 'r').readline()[24:40]
+    #print(now.strftime("%a %b %d %Y %H:%M:%S" + end))
+    time = now.strftime("%a %b %d %Y %H:%M:%S" + end)
+    f = open('log.txt', 'a')
+    f.write(time + " "+ mess)
+    f.close()
 
 def loop():
     while True:
@@ -18,12 +28,22 @@ def loop():
             statF.write("Executing")
             statF.close()
 
+            getTime("Requesting Files")
+
             res = r.get('http://' + reqIp + '/files')
+
+            getTime("Image Files Recieved")
+
             ##removes file
             os.system("sudo rm -rf image.*")
+            
+            getTime("Writing Image to File")
+            
             open('image.zip', 'wb').write(res.content)
-            res = r.get('http://' + reqIp + '/exit')
+            #res = r.get('http://' + reqIp + '/exit')
             os.system("unzip image.zip")
+
+            getTime("File ready")
 
             statF=open("stat.txt", 'w')
             statF.close()
@@ -42,6 +62,7 @@ def hello():
 def fileRead():
     if os.path.isfile('image.zip'):
         f = open('image.zip' , 'rb') 
+        getTime("File Requested")
         return f.read()
     else:
         return b'err'
