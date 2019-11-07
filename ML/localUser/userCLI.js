@@ -197,7 +197,7 @@ function receiveResult(){
     fs.readFile('./stat.txt', function read(err, data){
         if (err) throw err;
         fileContent = data;
-        console.log(fileContent.toString('utf8'));
+        //console.log(fileContent.toString('utf8'));
         if(fileContent.toString('utf8') === 'Ready')
         {
             fs.truncate('./stat.txt', 0, function(){
