@@ -145,7 +145,7 @@ function execute(){
 }
 
 function clearStat() {
-    fs.truncate('./stat.txt', 0, function(){
+    fs.truncate('./stat.txt', 0, function(err){
         if (err) throw err
     })
 }
@@ -456,7 +456,7 @@ function startProviding(){
                         decryptedAccount.signTransaction(rawTransaction)
                         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                         .then(receipt => {
-                            console.log(chalk.cyan("\n\nTransaction receipt: "));
+                            //console.log(chalk.cyan("\n\nTransaction receipt: "));
                             //console.log(receipt);
                             console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
                             prov = 1;
@@ -557,7 +557,7 @@ function startProviding(){
                     decryptedAccount.signTransaction(rawTransaction)
                     .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                     .then(receipt => {
-                        console.log(chalk.cyan("\n\nTransaction receipt: "));
+                        //console.log(chalk.cyan("\n\nTransaction receipt: "));
                         //console.log(receipt)
                         console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
                         prov = 1;
@@ -652,7 +652,7 @@ function stopProviding(choice){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            console.log(chalk.cyan("\n\nTransaction receipt: "))
+            //console.log(chalk.cyan("\n\nTransaction receipt: "))
             //console.log(receipt)
             console.log(chalk.cyan("\n\nYou have now stopped providing...\n"))
             prov = 0;
@@ -731,7 +731,7 @@ function updateProvider(){
             decryptedAccount.signTransaction(rawTransaction)
             .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
             .then(receipt => {
-                console.log(chalk.cyan("\n\nTransaction receipt: "))
+                //console.log(chalk.cyan("\n\nTransaction receipt: "))
                 //console.log(receipt)
                 console.log(chalk.cyan("\n\nYou have updated provider settings to: max time = " + maxTime.toString() +
                     ", max target = " + maxTarget.toString() + ", and min price = " + minPrice.toString() + "...\n\n"));
@@ -767,7 +767,7 @@ function completeRequest(reqAddress, resultId){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            console.log(chalk.cyan("\n\nTransaction receipt: "))
+            //console.log(chalk.cyan("\n\nTransaction receipt: "))
             //console.log(receipt)
         })
         .then(() => {
@@ -798,7 +798,7 @@ function submitValidation(reqAddress, result){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            console.log(chalk.cyan("\n\nTransaction receipt: "))
+            //console.log(chalk.cyan("\n\nTransaction receipt: "))
             //console.log(receipt)
         })
         .then(() => {
@@ -1076,7 +1076,7 @@ function listenWebsite(){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            console.log(chalk.cyan("\n\nTransaction receipt: "));
+            //console.log(chalk.cyan("\n\nTransaction receipt: "));
             //console.log(receipt);
             console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
             prov = 1;
@@ -1154,7 +1154,7 @@ function listenWebsite(){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            console.log(chalk.cyan("\n\nTransaction receipt: "))
+            //console.log(chalk.cyan("\n\nTransaction receipt: "))
             //console.log(receipt)
             console.log(chalk.cyan("\n\nYou have now stopped providing...\n"))
             prov = 0;
@@ -1194,7 +1194,7 @@ function listenWebsite(){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            console.log(chalk.cyan("\n\nTransaction receipt: "))
+            //console.log(chalk.cyan("\n\nTransaction receipt: "))
             //console.log(receipt)
             console.log(chalk.cyan("\n\nYou have updated provider settings to: max time = " + maxTime.toString() +
                 ", max target = " + maxTarget.toString() + ", and min price = " + minPrice.toString() + "...\n\n"));

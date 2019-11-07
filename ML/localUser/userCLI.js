@@ -430,7 +430,7 @@ function startTask(){
                                     decryptedAccount.signTransaction(rawTransaction)
                                     .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                                     .then(receipt => {
-                                        console.log(chalk.cyan("\n\nTransaction receipt: "));
+                                        //console.log(chalk.cyan("\n\nTransaction receipt: "));
                                         //console.log(receipt);
                                         console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
                                         prov = 1;
@@ -578,7 +578,7 @@ function startTask(){
                             decryptedAccount.signTransaction(rawTransaction)
                             .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                             .then(receipt => {
-                                console.log(chalk.cyan("\n\nTransaction receipt: "));
+                                //console.log(chalk.cyan("\n\nTransaction receipt: "));
                                 //console.log(receipt);
                                 console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
                                 prov = 1;
@@ -1094,7 +1094,7 @@ function listenWebsite(){
                     decryptedAccount.signTransaction(rawTransaction)
                     .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                     .then(receipt => {
-                        console.log(chalk.cyan("\n\nTransaction receipt: "));
+                        //console.log(chalk.cyan("\n\nTransaction receipt: "));
                         //console.log(receipt);
                         console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
                         prov = 1;
@@ -1228,7 +1228,7 @@ function listenWebsite(){
                     decryptedAccount.signTransaction(rawTransaction)
                     .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                     .then(receipt => {
-                        console.log(chalk.cyan("\n\nTransaction receipt: "));
+                        //console.log(chalk.cyan("\n\nTransaction receipt: "));
                         //console.log(receipt);
                         console.log(chalk.cyan("\n\nYou have updated request settings to: max time = " + maxTime.toString() +
                         ", max target = " + maxTarget.toString() + ", and min price = " + minPrice.toString() + "...\n\n"));
