@@ -13,6 +13,10 @@ var hex2ascii= require("hex2ascii")
 var express = require('express');
 require('events').EventEmitter.prototype._maxListeners = 100;
 
+var now = new Date();
+var date = "";
+var requestAssignedFlag = 0;
+var validationAssignedFlag = 0;
 //position 38 or 37
 var validationCounter = 0;
 var taskCounter = 0;
@@ -33,6 +37,13 @@ var finished  = false;
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
+fs.open('./stat.txt', 'w', function(err){
+    if (err) throw err;
+})
+
+fs.open('./log.txt', function(err){
+    if (err) throw err;
+})
 
 var getIp = (async() => {
     await publicIp.v4().then(val => {ip4 = val});
@@ -105,6 +116,7 @@ questions1 = {
 };
 
 clearStat();
+clearLog();
 console.log(chalk.cyan(" _  ____ _           _       \n(_)/ ___| |__   __ _(_)_ __  \n| | |   | '_ \\ / _` | | '_ \\ \n| | |___| | | | (_| | | | | |\n|_|\\____|_| |_|\\__,_|_|_| |_|\n\n"))
 console.log(chalk.cyan("Thank you for using iChain user CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start request' to get started or 'help' \nto get more information about the application.\n"))
 
@@ -220,6 +232,14 @@ function clearStat() {
         if (err) throw err
     })
 }
+
+
+function clearLog(){
+    fs.truncate('./log.txt', 0, function(err){
+        if(err) throw err;
+    })
+}
+
 
 /*function offer(){ 
     console.log("in offer function");
@@ -892,6 +912,12 @@ checkEvents = async () => {
       // Request Computation Complete
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
         if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
+            requestAssignedFlag = 0;
+            now = new Date();
+            date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+today.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
+            fs.appendFile('./log.txt', date + " Request has been completed\n", function (err){
+                if (err) throw err;
+            })
          // console.log("Awaiting validation", "You have completed a task an are waiting for validation");
 
          //requestIP = hex2ascii(pastEvents[i].returnValues.extra);
@@ -903,8 +929,17 @@ checkEvents = async () => {
 
         // Request Assigned
         if (pastEvents[i].returnValues  && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
+            if(requestAssignedFlag == 0){
+                now = new Date();
+                date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+today.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
+                fs.appendFile('./log.txt', date + " Request has been assigned\n", function (err){
+                    if (err) throw err;
+                })
+                requestAssignedFlag = 1;
+            }
+            
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
-            console.log("Request has been assigned.");
+            //console.log("Request has been assigned.");
             finished = false;
             //offer();
         }
