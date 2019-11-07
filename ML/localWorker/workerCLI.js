@@ -457,7 +457,7 @@ function startProviding(){
                         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                         .then(receipt => {
                             console.log(chalk.cyan("\n\nTransaction receipt: "));
-                            console.log(receipt);
+                            //console.log(receipt);
                             console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
                             prov = 1;
                         })
@@ -558,7 +558,7 @@ function startProviding(){
                     .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                     .then(receipt => {
                         console.log(chalk.cyan("\n\nTransaction receipt: "));
-                        console.log(receipt)
+                        //console.log(receipt)
                         console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
                         prov = 1;
                     })
@@ -653,7 +653,7 @@ function stopProviding(choice){
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
             console.log(chalk.cyan("\n\nTransaction receipt: "))
-            console.log(receipt)
+            //console.log(receipt)
             console.log(chalk.cyan("\n\nYou have now stopped providing...\n"))
             prov = 0;
         })
@@ -732,7 +732,7 @@ function updateProvider(){
             .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
             .then(receipt => {
                 console.log(chalk.cyan("\n\nTransaction receipt: "))
-                console.log(receipt)
+                //console.log(receipt)
                 console.log(chalk.cyan("\n\nYou have updated provider settings to: max time = " + maxTime.toString() +
                     ", max target = " + maxTarget.toString() + ", and min price = " + minPrice.toString() + "...\n\n"));
             })
@@ -768,7 +768,7 @@ function completeRequest(reqAddress, resultId){
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
             console.log(chalk.cyan("\n\nTransaction receipt: "))
-            console.log(receipt)
+            //console.log(receipt)
         })
         .then(() => {
             askUser();
@@ -799,7 +799,7 @@ function submitValidation(reqAddress, result){
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
             console.log(chalk.cyan("\n\nTransaction receipt: "))
-            console.log(receipt)
+            //console.log(receipt)
         })
         .then(() => {
             askUser();
@@ -1077,7 +1077,7 @@ function listenWebsite(){
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
             console.log(chalk.cyan("\n\nTransaction receipt: "));
-            console.log(receipt);
+            //console.log(receipt);
             console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
             prov = 1;
             res.send(JSON.stringify({"Success":1, "Error": "None"}));
@@ -1155,7 +1155,7 @@ function listenWebsite(){
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
             console.log(chalk.cyan("\n\nTransaction receipt: "))
-            console.log(receipt)
+            //console.log(receipt)
             console.log(chalk.cyan("\n\nYou have now stopped providing...\n"))
             prov = 0;
             res.send(JSON.stringify({"Success":1, "Error": "None"}));
@@ -1195,7 +1195,7 @@ function listenWebsite(){
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
             console.log(chalk.cyan("\n\nTransaction receipt: "))
-            console.log(receipt)
+            //console.log(receipt)
             console.log(chalk.cyan("\n\nYou have updated provider settings to: max time = " + maxTime.toString() +
                 ", max target = " + maxTarget.toString() + ", and min price = " + minPrice.toString() + "...\n\n"));
             res.send(JSON.stringify({"Success":1, "Error": "None"}));
