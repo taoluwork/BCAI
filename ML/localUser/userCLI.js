@@ -29,6 +29,7 @@ var requestIP = undefined;
 var buffer = [];
 var webpageUp = 0;
 var executing = false;
+var finished  = false;
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
@@ -206,7 +207,8 @@ function receiveResult(){
                 if (err) throw err;
             })   
         }
-        else if(fileContent.toString('utf8') !== 'Executing'){
+        else if(fileContent.toString('utf8') !== 'Executing' && finished === false){
+            finished = true;
             fs.truncate('./stat.txt', 0, function(){
                 if (err) throw err
             })
@@ -901,6 +903,7 @@ checkEvents = async () => {
         if (pastEvents[i].returnValues  && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
             console.log("Request has been assigned.");
+            finished = false;
             //offer();
         }
         //validation complete
