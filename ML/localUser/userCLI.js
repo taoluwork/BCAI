@@ -890,10 +890,10 @@ checkEvents = async () => {
         if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
          // console.log("Awaiting validation", "You have completed a task an are waiting for validation");
 
-         requestIP = hex2ascii(pastEvents[i].returnValues.extra);
-         receiveResult();
-         prov = 0;
-         askUser();
+         //requestIP = hex2ascii(pastEvents[i].returnValues.extra);
+         //receiveResult();
+         //prov = 0;
+         //askUser();
         }
       }
 
@@ -903,7 +903,11 @@ checkEvents = async () => {
             console.log("Request has been assigned.");
             //offer();
         }
-
+        //validation complete
+        if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete"){
+            requestIP = hex2ascii(pastEvents[i].returnValues.extra);
+            receiveResult();
+        }
     }
 }
 

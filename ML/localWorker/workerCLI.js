@@ -907,6 +907,7 @@ checkEvents = async (showLogs) => {
             requestAddr = pastEvents[i].returnValues.reqAddr
             requestIP = hex2ascii(pastEvents[i].returnValues.extra)
             //offer();
+            execute()
         }
       }
 
