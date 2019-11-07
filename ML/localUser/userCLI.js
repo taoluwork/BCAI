@@ -41,7 +41,7 @@ fs.open('./stat.txt', 'w', function(err){
     if (err) throw err;
 })
 
-fs.open('./log.txt', function(err){
+fs.open('./log.txt', 'w', function(err){
     if (err) throw err;
 })
 
