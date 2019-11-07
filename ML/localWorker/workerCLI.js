@@ -121,42 +121,27 @@ function execute(){
         if (err) throw err;
         fileContent = data;
         console.log(fileContent.toString('utf8'));
-        if(fileContent.toString('utf8') === 'Ready')
+        if(fileContent.toString('utf8') === 'Ready' && submitted === false)
         {
-            if(submitted == false && mode === 0){
+            if(mode === 0){
                 //havent submitted request yet need to submit
                 submitted = true;
                 completeRequest(requestAddr, web3.utils.asciiToHex(ip));
             }
-            if(submitted == false && mode === 1){
+            if(mode === 1){
                 //havent submitted validatiion yet need to submit
                 submitted = true;
                 submitValidation(requestAddr, true);
             }
-            else{
-                //have already submitted write next 
-                submitted = false;
-                fs.truncate('./stat.txt', 0, function(){
-                    if (err) throw err
-                })
-                fs.appendFile('./stat.txt', String(requestIP)+"\n"+String(mode) , function (err){
-                    if (err) throw err;
-                })    
-            }
         }
-        else if(fileContent.toString('utf8') !== 'Executing') {
-            fs.readFile('./stat.txt', function read(err, data){
+        else if(fileContent.toString('utf8') === '' && submitted === false){
+            //submitted = false;
+            fs.truncate('./stat.txt', 0, function(){
+                if (err) throw err
+            })
+            fs.appendFile('./stat.txt', String(requestIP)+"\n"+String(mode) , function (err){
                 if (err) throw err;
-                    //have already submitted write next 
-                    submitted = false;
-                    fs.truncate('./stat.txt', 0, function(){
-                        if (err) throw err
-                    })
-                    fs.appendFile('./stat.txt', String(requestIP)+"\n"+String(mode) , function (err){
-                        if (err) throw err;
-                    })    
-                    }
-            )
+            })    
         }
     })
 }
@@ -942,6 +927,15 @@ checkEvents = async (showLogs) => {
         if (userAddress === pastEvents[i].returnValues.provAddr) {
             if (showLogs) console.log("Work Validated!", "Your work was validated and you should receive payment soon");
             mode = undefined;
+            
+            //empty the stat file and set submitted to false
+            submitted = false;
+            fs.readFile('./stat.txt', function read(err, data){
+                if (err) throw err;
+                fs.truncate('./stat.txt', 0, function(){
+                    if (err) throw err
+                })    
+            })
         }
         //if (showLogs) console.log(pastEvents[i].blockNumber);
       }

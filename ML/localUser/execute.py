@@ -19,7 +19,8 @@ def loop():
             statF.close()
 
             res = r.get('http://' + reqIp + '/files')
-            open('image.zip','w').close() #empties the image file to be written to
+            ##removes file
+            os.system("sudo rm -rf image.*")
             open('image.zip', 'wb').write(res.content)
             res = r.get('http://' + reqIp + '/exit')
             os.system("unzip image.zip")
