@@ -20,7 +20,7 @@ from datetime import datetime
 
 def getTime(mess):
     now = datetime.now()
-    end = open('log.txt', 'r').readline()[24:40]
+    end = open('log.txt', 'r').readline().rstrip()[24:]
     #print(now.strftime("%a %b %d %Y %H:%M:%S" + end))
     time = now.strftime("%a %b %d %Y %H:%M:%S" + end)
     f = open('log.txt', 'a')
