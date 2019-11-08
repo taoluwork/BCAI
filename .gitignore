@@ -17,4 +17,5 @@
 /ML/localUser/'user CLI'/image.zip
 /ML/localUser/'worker CLI'/image.zip
 
-
+/cryptographic/privKey.txt
+/cryptographic/pubKey.txt
