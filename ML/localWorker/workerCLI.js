@@ -787,12 +787,8 @@ function completeRequest(reqAddress, resultId){
             //console.log(chalk.cyan("\n\nTransaction receipt: "))
             //console.log(receipt)
         })
-        .then(() => {
-            askUser();
-        })
         .catch(err => {
             console.log("\n", chalk.red(err), "\n");
-            askUser();
         });
 }
 
@@ -818,12 +814,8 @@ function submitValidation(reqAddress, result){
             //console.log(chalk.cyan("\n\nTransaction receipt: "))
             //console.log(receipt)
         })
-        .then(() => {
-            askUser();
-        })
         .catch(err => {
             console.log("\n", chalk.red(err), "\n");
-            askUser();
         });
     
 }
@@ -1094,69 +1086,94 @@ function listenWebsite(){
         keystore = contents;
         UTCfile = filename;
         userAddress = String(req.body["Account"]);
-        decryptedAccount = web3.eth.accounts.decrypt(keystore, String(req.body["password"]));
-        console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
-        var ABIstartProviding; //prepare abi for a function call
-        var maxTime = parseInt(req.body["time"]);
-        var maxTarget = parseInt(req.body["accuracy"]);
-        var minPrice = parseInt(req.body["cost"]);
-        ABIstartProviding = myContract.methods.startProviding(maxTime, maxTarget, minPrice).encodeABI();
-        //console.log(chalk.cyan(ABIstartProviding);
-        const rawTransaction = {
-            "from": String(req.body["Account"]),
-            "to": addr,
-            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-            "gas": 5000000,
-            "chainId": 3,
-            "data": ABIstartProviding
+        try{
+            decryptedAccount = web3.eth.accounts.decrypt(keystore, String(req.body["password"]))
+            console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
+            var ABIstartProviding; //prepare abi for a function call
+            var maxTime = parseInt(req.body["time"]);
+            var maxTarget = parseInt(req.body["accuracy"]);
+            var minPrice = parseInt(req.body["cost"]);
+            ABIstartProviding = myContract.methods.startProviding(maxTime, maxTarget, minPrice).encodeABI();
+            //console.log(chalk.cyan(ABIstartProviding);
+            const rawTransaction = {
+                "from": String(req.body["Account"]),
+                "to": addr,
+                "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                "gas": 5000000,
+                "chainId": 3,
+                "data": ABIstartProviding
+            }
+        
+            decryptedAccount.signTransaction(rawTransaction)
+            .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+            .then(receipt => {
+                //console.log(chalk.cyan("\n\nTransaction receipt: "));
+                //console.log(receipt);
+                console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
+                prov = 1;
+
+            })
+            .then(() => {//Pedro put your code here for start providing
+                //call subscribe here
+
+                try{
+                    web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                        if(err) console.log(chalk.cyan("ERRRR", err, result));
+                        //console.log(chalk.cyan("================================================   <- updated! #", result.number);
+                        //console.log(chalk.cyan(result);
+                        //showPools();
+                        //checkEvents();
+                        checkEvents(false);
+                    })
+                }
+                catch(error){
+                    alert(
+                        `Failed to load web3, accounts, or contract. Check console for details.`
+                    );
+                    console.log("\n", chalk.red(err), "\n");
+                    app.post('/errors', function(req, res){
+                        var errorJSON = {"name" : "startProviding", "message" : "There was an error loading web3"};
+                        res.header("Content-Type", 'application/json');
+                        res.send(errorJSON);  
+                    })
+                }
+
+
+            })
+            .catch(err => {
+                console.log(String(err).slice(0, 41))
+                if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
+                {
+                    console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
+                    app.post('/errors', function(req, res){
+                        var errorJSON = {"name" : "startProviding", "message" : "This keystore account doesn't have enough Ether... Add funds or try a different account..."};
+                        res.header("Content-Type", 'application/json');
+                        res.send(errorJSON);  
+                    })
+                }
+                else{
+                    console.log(chalk.red("\n", err, "\n"))
+                    app.post('/errors', function(req, res){
+                        var errorJSON = {"name" : "startProviding", "message" : "There was an error when attempting to start providing"};
+                        res.header("Content-Type", 'application/json');
+                        res.send(errorJSON);  
+                    })
+                }
+            });
         }
-    
-        decryptedAccount.signTransaction(rawTransaction)
-        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-        .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "));
-            //console.log(receipt);
-            console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
-            prov = 1;
-            res.send(JSON.stringify({"Success":1, "Error": "None"}));
-
-        })
-        .then(() => {//Pedro put your code here for start providing
-            //call subscribe here
-
-            try{
-                web3.eth.subscribe('newBlockHeaders', (err, result) => {
-                    if(err) console.log(chalk.cyan("ERRRR", err, result));
-                    //console.log(chalk.cyan("================================================   <- updated! #", result.number);
-                    //console.log(chalk.cyan(result);
-                    //showPools();
-                    //checkEvents();
-                    checkEvents(false);
+        catch(err){
+            if (String(err).slice(0, 28) == "Error: Key derivation failed")
+            {
+                console.log(chalk.red("\nError: You have entered the wrong keystore password... Please try again...\n"))
+                app.post('/errors', function(req, res){
+                    var errorJSON = {"name" : "startProviding", "message" : "You have entered an incorrect password"};
+                    res.header("Content-Type", 'application/json');
+                    res.send(errorJSON);  
                 })
             }
-            catch(error){
-                alert(
-                    `Failed to load web3, accounts, or contract. Check console for details.`
-                );
-                console.log("\n", chalk.red(err), "\n");
-                res.send(JSON.stringify({"Success":0, "Error":String(err)}));
-            }
-
-
-        })
-        .catch(err => {
-            //console.log(String(err).slice(0, 41));
-            if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
-            {
-                console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                res.send(JSON.stringify({"Success":0, "Error": "Not enough ether"}));
-            }
-            else{
-                console.log(chalk.red("\n", err, "\n"))
-                res.send(JSON.stringify({"Success":0, "Error": String(err)}));
-            }
-        });
+        };
+        
 
     })
 
@@ -1176,37 +1193,54 @@ function listenWebsite(){
         UTCfile = filename;
         userAddress = String(req.body["Account"]);
         keystore = contents;
-        decryptedAccount = web3.eth.accounts.decrypt(keystore, String(req.body["password"]));
-        console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
-        var ABIstopProviding; //prepare abi for a function call
-        ABIstopProviding = myContract.methods.stopProviding().encodeABI();
-        const rawTransaction = {
-            "from": String(req.body["Account"]),
-            "to": addr,
-            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-            "gas": 5000000,
-            "chainId": 3,
-            "data": ABIstopProviding
+        try{
+            decryptedAccount = web3.eth.accounts.decrypt(keystore, String(req.body["password"]));
+            console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
+            var ABIstopProviding; //prepare abi for a function call
+            ABIstopProviding = myContract.methods.stopProviding().encodeABI();
+            const rawTransaction = {
+                "from": String(req.body["Account"]),
+                "to": addr,
+                "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                "gas": 5000000,
+                "chainId": 3,
+                "data": ABIstopProviding
+            }
+
+            decryptedAccount.signTransaction(rawTransaction)
+            .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+            .then(receipt => {
+                //console.log(chalk.cyan("\n\nTransaction receipt: "))
+                //console.log(receipt)
+                console.log(chalk.cyan("\n\nYou have now stopped providing...\n"))
+                prov = 0;
+
+            })
+            .catch(err => {
+                console.log("\n", chalk.red("Error: "), chalk.red(err), "\n")
+                app.post('/errors', function(req, res){
+                    var errorJSON = {"name" : "stopProviding", "message" : "There was an error when attempting to stop providing"};
+                    res.header("Content-Type", 'application/json');
+                    res.send(errorJSON);  
+                })
+
+            }); 
         }
+        catch(err){
+            if (String(err).slice(0, 28) == "Error: Key derivation failed")
+            {
+                console.log(chalk.red("\nError: You have entered the wrong keystore password... Please try again...\n"))
+                app.post('/errors', function(req, res){
+                    var errorJSON = {"name" : "startProviding", "message" : "You have entered an incorrect password"};
+                    res.header("Content-Type", 'application/json');
+                    res.send(errorJSON);  
+                })
+            }
+        };
+               
 
-        decryptedAccount.signTransaction(rawTransaction)
-        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-        .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "))
-            //console.log(receipt)
-            console.log(chalk.cyan("\n\nYou have now stopped providing...\n"))
-            prov = 0;
-            res.send(JSON.stringify({"Success":1, "Error": "None"}));
-
-        })
-        .catch(err => {
-            console.log("\n", chalk.red("Error: "), chalk.red(err), "\n")
-            res.send(JSON.stringify({"Success":0, "Error": String(err)}));
-
-        });        
-
-    })
+    });
 
 
     app.post('/updateProvider', function(req, res){
@@ -1237,11 +1271,14 @@ function listenWebsite(){
             //console.log(receipt)
             console.log(chalk.cyan("\n\nYou have updated provider settings to: max time = " + maxTime.toString() +
                 ", max target = " + maxTarget.toString() + ", and min price = " + minPrice.toString() + "...\n\n"));
-            res.send(JSON.stringify({"Success":1, "Error": "None"}));
         })
         .catch(err => {
             console.log("\n", chalk.red(err), "\n");
-            res.send(JSON.stringify({"Success":0, "Error":String(err)}));
+            app.post('/errors', function(req, res){
+                var errorJSON = {"name" : "updateProvider", "message" : "There was an error updating provider settings"};
+                res.header("Content-Type", 'application/json');
+                res.send(errorJSON);  
+            })
         });
     })
 
