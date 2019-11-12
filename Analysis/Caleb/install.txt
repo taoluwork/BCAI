@@ -2,5 +2,5 @@ Time to install, software already installed
 107 seconds
 
 Time to install, clean Ubuntu install
-
+283 seconds
 
