@@ -1,7 +1,12 @@
+#Initializing time
+start=$(date +%s%N | cut -b1-13) #time in milliseconds
 #Changing directory
-if [ $# -eq 0 ] #No argument provided, download github here
+dir=$(pwd | grep -o '[^/]*$')
+downloadgit=true
+if [ $# -eq 0 ] ;#No argument provided, install here
 then
     echo -e "\e[93mInstalling here."
+    cd ..
 else
     if [ -d "$1" ] #If directory exists
     then
@@ -21,15 +26,23 @@ then
             echo -e "\e[92mSuccessfully removed previous BCAI."
             ;;
         *)
-            echo -e "\e[91mChose not to remove, aborting installation."
-            exit
+            read -p $'\e[91mDo you just want to install software and npm packages? \e[0m[Y/N] ' remove
+            case "$remove" in
+                [yY][eE][sS]|[yY]) 
+                    echo -e "\e[92mJust installing software and npm packages."
+                    downloadgit=false
+                    ;;
+                *)
+                    echo -e "\e[91mChose not to remove, aborting installation."
+                    exit
+                    ;;
+            esac 
             ;;
-    esac
-    
+    esac  
 fi
 ###################################Installing Programs###################################
 #Install git
-if ! git --version > /dev/null 2>&1;  #git not installed
+if ! git --version > /dev/null 2>&1 ;  #git not installed
 then
     echo -e "\e[93mgit not installed, installing now.\e[0m"
     add-apt-repository ppa:git-core/ppa -y
@@ -125,14 +138,15 @@ then
 else
     echo -e "\e[92mdocker already installed."
 fi
-
 #Download repo
-echo -e "\e[93m----------------------------Downloading github repo.----------------------------\e[0m"
-if git clone https://github.com/PedroGRivera/BCAI.git ; then #if downloaded
-    echo -e "\e[92mGithub repo successfully downloaded."
-else  #problem downloading
-    echo -e "\e[91mProblem downlaoding repo. Aborting installation."
-    exit
+if [ "$downloadgit" = true ] ; then
+    echo -e "\e[93m----------------------------Downloading github repo.----------------------------\e[0m"
+    if git clone https://github.com/PedroGRivera/BCAI.git ; then #if downloaded
+        echo -e "\e[92mGithub repo successfully downloaded."
+    else  #problem downloading
+        echo -e "\e[91mProblem downlaoding repo. Aborting installation."
+        exit
+    fi
 fi
 ###################################Installing npm packages###################################
 #Install npm stuff for localuser
@@ -180,5 +194,10 @@ else  #problem installing
             ;;
     esac
 fi
+#Finishing up
 echo -e "\e[92mInstallation successful. Run startUser.bash or startWorker.bash without sudo to start the program.\e[0m"
+end=$(date +%s%N | cut -b1-13) #time in milliseconds
+difference=$((end - start)) #time from start to end
+diffsec=$((difference / 1000)) #time in seconds
+echo -e "\e[93mTotal time taken: $diffsec seconds\e[0m" #display time
 exit #finished!
