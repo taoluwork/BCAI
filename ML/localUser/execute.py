@@ -45,6 +45,10 @@ def loop():
 
             getTime("File ready")
 
+            os.system("sudo docker load -i image.tgz")
+            
+            getTime("Docker Script Loaded")
+
             statF=open("stat.txt", 'w')
             statF.close()
             statF=open("stat.txt", 'w')

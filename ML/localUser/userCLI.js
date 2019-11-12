@@ -105,7 +105,7 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start request', 'show pools', 'help','quit'],
+    choices : ['start request', 'show pools', 'create new address', 'help','quit'],
 };
 
 questions1 = {
@@ -282,7 +282,53 @@ function choiceMade(choice){
     {
         showPools();
     }
-    else if(choice == questions.choices[2])
+    else if(choice == questions.choices[2]){
+        inquirer.prompt([
+            {
+                name : 'net',
+                message: 'Enter MainNet or Ropsten: ',
+            },
+            {
+                type: 'password',
+                name : 'pass',
+                message: 'Enter your password: ',
+            },
+            {
+                type: 'password',
+                name : 'passVeri',
+                message: 'Enter your password: ',
+            }
+        ])
+        .then(settings => {
+            return [settings.net, settings.pass, settings.passVeri];
+        })
+        .then(newSettings => {
+            var net   = newSettings[0];
+            var pass  = newSettings[1];
+            var passV = newSettings[2];
+            
+            if(pass === passV){
+                if(net.toLowerCase() === 'mainnet'){
+                    newAcc(1, pass)
+                }
+                else if(net.toLowerCase() === 'ropsten')
+                    newAcc(0, pass)
+                else  {
+                    console.log("network entry not recognized");
+                    askUser();
+                }
+            }
+            if(pass !== passV){
+                console.log("entered passwords do not match");
+                askUser();
+            }
+        })
+        .catch( err => {
+            console.log("\n", chalk.red(err), "\n");
+            askUser();
+        });
+    }
+    else if(choice == questions.choices[3])
     {
         //Need to update user help
         console.log(chalk.cyan("\niChain is an application that allows users to send machine learning tasks to"))
@@ -315,7 +361,48 @@ function choiceMade(choice){
     }
 }
 
+function newAcc(mainNet, pass){
+    mess = '';
+    fs.truncate('./pass.txt', 0, function(err){
+        if (err) throw err
+    })
+    
+    if(mainNet === 1)
+        mess = 'geth account new --datadir . --password pass.txt';
+    else
+        mess = 'geth --testnet account new --datadir . --password pass.txt';
 
+    fs.appendFile('./pass.txt',  String(pass)+"\n", function (err){
+        if (err) throw err;
+        exec(mess, (err, stdout, stderr) => {
+            if (err) throw err;
+            fs.truncate('./pass.txt', 0, function(err){
+                if (err) throw err;
+                exec('cp keystore/* .',(err,stdout,stderr)=>{
+                    if(err) throw err;
+                    exec('rm -r keystore',(err,stdout,stderr)=>{
+                        if(err) throw err;
+                        console.log("Congrats! New address constructed.")
+                        console.log("To use add ether using your favorite exchange");
+                        //add new keystore to the array
+                        fs.readdir(Folder, (err, files) => {
+                            userAddresses = []
+                            files.forEach(file => {
+                                if(file[0] === 'U' && file[1] === 'T' && file[2] === 'C' )
+                                {
+                                    UTCFileArray.push(file);
+                                    userAddresses.push("0x" + file.slice(37, file.length));
+                                }
+                            })
+                            askUser();
+                        
+                        })
+                    });
+                });
+            })
+        });
+    })
+}
 
 
 function startTask(){
