@@ -105,7 +105,7 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start request', 'show pools', 'create new address', 'help','quit'],
+    choices : ['start request', 'show pools', 'create new address','show addresses',  'help','quit'],
 };
 
 questions1 = {
@@ -328,7 +328,15 @@ function choiceMade(choice){
             askUser();
         });
     }
-    else if(choice == questions.choices[3])
+    else if(choice == questions.choices[3]){
+        console.log('\n\n');
+        for(var i = 0; i < userAddresses.length; i++){
+            console.log(userAddresses[i]);
+        }
+        console.log('\n\n');
+        askUser();
+    }
+    else if(choice == questions.choices[4])
     {
         //Need to update user help
         console.log(chalk.cyan("\niChain is an application that allows users to send machine learning tasks to"))
