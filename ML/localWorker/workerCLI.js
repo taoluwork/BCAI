@@ -237,7 +237,9 @@ questions1 = {
 
 clearStat();
 clearLog();
-fs.appendFile('./log.txt', String(Date(Date.now())));
+fs.appendFile('./log.txt', String(Date(Date.now()))+'\n', function(err){
+    if(err) throw err;
+});
 console.log(chalk.cyan(" _  ____ _           _       \n(_)/ ___| |__   __ _(_)_ __  \n| | |   | '_ \\ / _` | | '_ \\ \n| | |___| | | | (_| | | | | |\n|_|\\____|_| |_|\\__,_|_|_| |_|\n\n"))
 console.log(chalk.cyan("Thank you for using iChain worker CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start providing' to get started or 'help' \nto get more information about the application.\n"))
 
