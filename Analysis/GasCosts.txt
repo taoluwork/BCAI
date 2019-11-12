@@ -1,0 +1,11 @@
+Gas Costs For Smart Contract Methods
+getProviderPool - 25868
+getPendingPool - 23397
+getValidatingPool - 23398
+getProvidingPool - 25868
+startProviding - 37150
+stopProviding - 80004
+updateProvider - 36176
+startRequest - 354214
+stopRequest - 24622
+updateRequest - 26806
