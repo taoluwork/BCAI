@@ -5,20 +5,13 @@ var addr = TaskContract.networks[NetworkID].address;        //align to const ID 
 const myContract = new Web3.eth.Contract(abi, addr);
 var account = "0xcc90abef8180d0ab5974dd0f1247623bc246eef8";
 
-var keepRunning = true;
-var start = Date.now();
-
-setTimeout(function() {
-    keepRunning = false;
-}, 60000)
-
+var count = 0;
 console.log("Begining gas estimate data collection...");
-while(keepRunning){
-    //var curTime = Date.now();
-    //console.log("Runtime: " + curTime - start)
+while(count < 100){
+    
     var gas = myContract.methods.getProviderPool.estimateGas({from: account});
     console.log("Estimated gas cost to be: " + gas + "\n"); 
 
-   // console.clear();
+    count++;
 }
-console.log("Data collection complete")
+console.log("Data collection complete");
