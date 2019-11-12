@@ -1232,7 +1232,7 @@ function listenWebsite(){
             {
                 console.log(chalk.red("\nError: You have entered the wrong keystore password... Please try again...\n"))
                 app.post('/errors', function(req, res){
-                    var errorJSON = {"name" : "startProviding", "message" : "You have entered an incorrect password"};
+                    var errorJSON = {"name" : "stopProviding", "message" : "You have entered an incorrect password"};
                     res.header("Content-Type", 'application/json');
                     res.send(errorJSON);  
                 })
