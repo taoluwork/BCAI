@@ -905,7 +905,7 @@ checkEvents = async () => {
         (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr) ){
         pastEvents.splice(0,i+1);
         if(validationAssignedFlag == 0){
-            fs.appendFile('./log.txt', String(Date(Date.now())) + " Request has been assigned to validator\n", function (err){
+            fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to validator\n", function (err){
                 if (err) throw err;
             })
             requestAssignedFlag = 1;
@@ -921,7 +921,7 @@ checkEvents = async () => {
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
         if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
             requestAssignedFlag = 0;
-            fs.appendFile('./log.txt', String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
+            fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
                 if (err) throw err;
             })
          // console.log("Awaiting validation", "You have completed a task an are waiting for validation");
@@ -936,7 +936,7 @@ checkEvents = async () => {
         // Request Assigned
         if (pastEvents[i].returnValues  && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
             if(requestAssignedFlag == 0){
-                fs.appendFile('./log.txt', String(Date(Date.now())) + " Request has been assigned to provider\n", function (err){
+                fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to provider\n", function (err){
                     if (err) throw err;
                 })
                 requestAssignedFlag = 1;
@@ -950,7 +950,7 @@ checkEvents = async () => {
         //validation complete
         if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete"){
             validationAssignedFlag = 0;
-            fs.appendFile('./log.txt', String(Date(Date.now())) + " Request has been validated\n", function (err){
+            fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been validated\n", function (err){
                 if (err) throw err;
             })
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);

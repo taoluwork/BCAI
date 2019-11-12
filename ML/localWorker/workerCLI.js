@@ -889,7 +889,7 @@ checkEvents = async (showLogs) => {
         if (pastEvents[i] && userAddress.toLowerCase() === pastEvents[i].returnValues.provAddr.toLowerCase()) {
             //if (showLogs) console.log("You Have Been Assigned A Task", "You have been chosen to complete a request for: " + pastEvents[i].returnValues.reqAddr + " The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
             if(assignedRequest == 0){
-                fs.appendFile('./log.txt', String(Date(Date.now())) + " Assigned request\n", function (err){
+                fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Assigned request\n", function (err){
                     if (err) throw err;
                 })
                 assignedRequest = 1;
@@ -906,7 +906,7 @@ checkEvents = async (showLogs) => {
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
         if (pastEvents[i] && userAddress === pastEvents[i].returnValues.provAddr) {
             assignedRequest = 0;
-            fs.appendFile('./log.txt', String(Date(Date.now())) + " Completed a request\n", function (err){
+            fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Completed a request\n", function (err){
                 if (err) throw err;
             })
             //if (showLogs) console.log("Awaiting validation", "You have completed a task an are waiting for validation");
@@ -920,7 +920,7 @@ checkEvents = async (showLogs) => {
             //if (showLogs) console.log("You are a validator", "You need to validate the task for: " + pastEvents[i].reqAddr + " as true or false. The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
             //console.log("\nIn here this is the request IP " + String(hex2ascii(pastEvents[i].returnValues.extra)) + "\n");
             if(assignedValidation == 0){
-                fs.appendFile('./log.txt', String(Date(Date.now())) + " Assigned validator\n", function (err){
+                fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Assigned validator\n", function (err){
                     if (err) throw err;
                 })
                 assignedValidation = 1;
@@ -965,7 +965,7 @@ checkEvents = async (showLogs) => {
         if (userAddress === pastEvents[i].returnValues.provAddr) {
             //if (showLogs) console.log("Work Validated!", "Your work was validated and you should receive payment soon");
             assignedValidation = 0;
-            fs.appendFile('./log.txt', String(Date(Date.now())) + " Completed a validation\n", function (err){
+            fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Completed a validation\n", function (err){
                 if (err) throw err;
             })
             mode = undefined;
