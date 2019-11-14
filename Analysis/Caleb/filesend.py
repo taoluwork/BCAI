@@ -1,6 +1,6 @@
 import time
 import gc
-from flask import Flask
+from flask import Flask, request
 import requests as r
 import json
 app = Flask(__name__)
@@ -9,8 +9,10 @@ app = Flask(__name__)
 
 gc.enable()
 
-@app.route('/file')
-def returnfile(filename): #filename from sender request
+@app.route('/file/')
+def returnfile(): #filename from sender request
+    filename = request.args.get('filename') #how to get url parameter
+    print(filename) #testing
     file = open(filename, "rb")
     f = file.read()
     file.close()
