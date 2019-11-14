@@ -41,6 +41,10 @@ fs.open('./log.txt', 'w', function(err){
     if(err) throw err;
 })
 
+fs.open('./pass.txt', 'w', function(err){
+    if(err) throw err;
+})
+
 /*fs.appendFile('./stat.txt', 'Ready', function (err){
     if (err) throw err;
 })
