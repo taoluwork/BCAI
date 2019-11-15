@@ -15,70 +15,36 @@ fs.open('./stats.txt', 'w', function(err) {
     if(err) throw err;
 })
 
-var ws = new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws/v3/aa544d081b53485fb0fa8df2c9a8437e')
-web3 = new Web3(ws);
-var TaskContract = require('../bcai_deploy/client/src/contracts/TaskContract.json');
-var abi = TaskContract.abi;
-var addr = TaskContract.networks[3].address;        //align to const ID defination on top
-const myContract = new web3.eth.Contract(abi, addr);
-var userAddress = '0x458c5617e4f549578e181f12da8f840889e3c0a8';
-decryptedAccount = web3.eth.accounts.decrypt(keystore, password);
-ABIstartProviding = myContract.methods.startProviding(100, 100, 1000).encodeABI();
-//console.log(chalk.cyan(ABIstartProviding);
-var rawTransaction = {
-    "from": userAddress,
-    "to": addr,
-    "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-    "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-    "gas": 5000000,
-    "chainId": 3,
-    "data": ABIstartProviding
-}
 
-stopwatch.start();
-
-
-console.log(chalk.green("STARTPROVIDING"));
-decryptedAccount.signTransaction(rawTransaction)
-.then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-.then(receipt => {
-    console.log(chalk.cyan("\n\nStart providing was successful... \n\n"));
-})
-.then(() =>{
-    try{
-        web3.eth.subscribe('newBlockHeaders', (err, result) => {
-            if(err) console.log(chalk.cyan("ERRRR", err, result));
-            //console.log(chalk.cyan("================================================   <- updated! #", result.number);
-            //console.log(chalk.cyan(result);
-            //showPools();
-            //checkEvents();
-        })
-    }
-    catch(error){
-        alert(
-            `Failed to load web3, accounts, or contract. Check console for details.`
-        );
-        console.log("\n", chalk.red(err), "\n");
-    }
-    saveTime("Start Providing - ");
-})
-.then(()=>{
-    ABIupdateProvider = myContract.methods.updateProvider(200, 200, 2000).encodeABI();
-    rawTransaction = {
+async function calcTime(){
+    var ws = new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws/v3/aa544d081b53485fb0fa8df2c9a8437e')
+    web3 = new Web3(ws);
+    var TaskContract = require('../bcai_deploy/client/src/contracts/TaskContract.json');
+    var abi = TaskContract.abi;
+    var addr = TaskContract.networks[3].address;        //align to const ID defination on top
+    const myContract = new web3.eth.Contract(abi, addr);
+    var userAddress = '0x458c5617e4f549578e181f12da8f840889e3c0a8';
+    decryptedAccount = web3.eth.accounts.decrypt(keystore, password);
+    ABIstartProviding = myContract.methods.startProviding(100, 100, 1000).encodeABI();
+    //console.log(chalk.cyan(ABIstartProviding);
+    var rawTransaction = {
         "from": userAddress,
         "to": addr,
         "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
         "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
         "gas": 5000000,
         "chainId": 3,
-        "data": ABIupdateProvider
+        "data": ABIstartProviding
     }
-    console.log(chalk.green("UPDATEPROVIDING"));
+
     stopwatch.start();
+
+
+    console.log(chalk.green("STARTPROVIDING"));
     decryptedAccount.signTransaction(rawTransaction)
     .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
     .then(receipt => {
-        console.log(chalk.cyan("\n\nupdate providing was successful... \n\n"));
+        console.log(chalk.cyan("\n\nStart providing was successful... \n\n"));
     })
     .then(() =>{
         try{
@@ -96,38 +62,83 @@ decryptedAccount.signTransaction(rawTransaction)
             );
             console.log("\n", chalk.red(err), "\n");
         }
-        saveTime("Update Providing - ");
+        saveTime("Start Providing - ");
     })
     .then(()=>{
-
-        ABIstopProviding = myContract.methods.stopProviding().encodeABI();
-        const rawTransaction = {
+        ABIupdateProvider = myContract.methods.updateProvider(200, 200, 2000).encodeABI();
+        rawTransaction = {
             "from": userAddress,
             "to": addr,
             "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
             "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-            "gas": 7000000,
+            "gas": 5000000,
             "chainId": 3,
-            "data": ABIstopProviding
+            "data": ABIupdateProvider
         }
-        console.log(chalk.green("STOPPROVIDING"));
+        console.log(chalk.green("UPDATEPROVIDING"));
         stopwatch.start();
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "))
-            //console.log(receipt)
-            console.log(chalk.cyan("\n\nstopped providing successful...\n"))
+            console.log(chalk.cyan("\n\nupdate providing was successful... \n\n"));
+        })
+        .then(() =>{
+            try{
+                web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                    if(err) console.log(chalk.cyan("ERRRR", err, result));
+                    //console.log(chalk.cyan("================================================   <- updated! #", result.number);
+                    //console.log(chalk.cyan(result);
+                    //showPools();
+                    //checkEvents();
+                })
+            }
+            catch(error){
+                alert(
+                    `Failed to load web3, accounts, or contract. Check console for details.`
+                );
+                console.log("\n", chalk.red(err), "\n");
+            }
+            saveTime("Update Providing - ");
         })
         .then(()=>{
-            saveTime("Stop Providing - ");
-            process.exit();
+
+            ABIstopProviding = myContract.methods.stopProviding().encodeABI();
+            const rawTransaction = {
+                "from": userAddress,
+                "to": addr,
+                "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                "gas": 7000000,
+                "chainId": 3,
+                "data": ABIstopProviding
+            }
+            console.log(chalk.green("STOPPROVIDING"));
+            stopwatch.start();
+            decryptedAccount.signTransaction(rawTransaction)
+            .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+            .then(receipt => {
+                //console.log(chalk.cyan("\n\nTransaction receipt: "))
+                //console.log(receipt)
+                console.log(chalk.cyan("\n\nstopped providing successful...\n"))
+            })
+            .then(()=>{
+                saveTime("Stop Providing - ");
+                process.exit();
+            })
         })
     })
-})
-.catch(err=>{
-    console.log("\nThere was an err: \n", err);
-})
+    .catch(err=>{
+        console.log("\nThere was an err: \n", err);
+    })
+}
+
+for(var i = 0, p = Promise.resolve(); i<=4; i++){
+    p = p.then(_ => new Promise(resolve =>
+        setTimeout(function(){calcTime()}, 10000000)
+    ));
+}
+
+call();
 //console.log("Starting timing analysis of loop with 10000 iterations");
 
 // for(j = 0; j < 100; j++) {

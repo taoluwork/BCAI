@@ -1228,7 +1228,7 @@ function listenWebsite(){
                         `Failed to load web3, accounts, or contract. Check console for details.`
                     );
                     console.log("\n", chalk.red(err), "\n");
-                    app.post('/errors', function(req, res){
+                    app.get('/errors', function(req, res){
                         var errorJSON = {"name" : "startProviding", "message" : "There was an error loading web3"};
                         res.header("Content-Type", 'application/json');
                         res.send(errorJSON);  
@@ -1242,7 +1242,7 @@ function listenWebsite(){
                 if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
                 {
                     console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                    app.post('/errors', function(req, res){
+                    app.get('/errors', function(req, res){
                         var errorJSON = {"name" : "startProviding", "message" : "This keystore account doesn't have enough Ether... Add funds or try a different account..."};
                         res.header("Content-Type", 'application/json');
                         res.send(errorJSON);  
@@ -1250,7 +1250,7 @@ function listenWebsite(){
                 }
                 else{
                     console.log(chalk.red("\n", err, "\n"))
-                    app.post('/errors', function(req, res){
+                    app.get('/errors', function(req, res){
                         var errorJSON = {"name" : "startProviding", "message" : "There was an error when attempting to start providing"};
                         res.header("Content-Type", 'application/json');
                         res.send(errorJSON);  
@@ -1262,7 +1262,7 @@ function listenWebsite(){
             if (String(err).slice(0, 28) == "Error: Key derivation failed")
             {
                 console.log(chalk.red("\nError: You have entered the wrong keystore password... Please try again...\n"))
-                app.post('/errors', function(req, res){
+                app.get('/errors', function(req, res){
                     var errorJSON = {"name" : "startProviding", "message" : "You have entered an incorrect password"};
                     res.header("Content-Type", 'application/json');
                     res.send(errorJSON);  
@@ -1315,7 +1315,7 @@ function listenWebsite(){
             })
             .catch(err => {
                 console.log("\n", chalk.red("Error: "), chalk.red(err), "\n")
-                app.post('/errors', function(req, res){
+                app.get('/errors', function(req, res){
                     var errorJSON = {"name" : "stopProviding", "message" : "There was an error when attempting to stop providing"};
                     res.header("Content-Type", 'application/json');
                     res.send(errorJSON);  
@@ -1327,7 +1327,7 @@ function listenWebsite(){
             if (String(err).slice(0, 28) == "Error: Key derivation failed")
             {
                 console.log(chalk.red("\nError: You have entered the wrong keystore password... Please try again...\n"))
-                app.post('/errors', function(req, res){
+                app.get('/errors', function(req, res){
                     var errorJSON = {"name" : "stopProviding", "message" : "You have entered an incorrect password"};
                     res.header("Content-Type", 'application/json');
                     res.send(errorJSON);  
@@ -1370,7 +1370,7 @@ function listenWebsite(){
         })
         .catch(err => {
             console.log("\n", chalk.red(err), "\n");
-            app.post('/errors', function(req, res){
+            app.get('/errors', function(req, res){
                 var errorJSON = {"name" : "updateProvider", "message" : "There was an error updating provider settings"};
                 res.header("Content-Type", 'application/json');
                 res.send(errorJSON);  

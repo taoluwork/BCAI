@@ -1179,7 +1179,7 @@ function listenWebsite(){
             if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
             {
                 console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'start request' to try again..."), "\n")
-                app.post('/errors', function(req, res){
+                app.get('/errors', function(req, res){
                     var errorJSON = {"name" : "startTask", "message" : "You must provide the task as a .zip file... Select 'start request' to try again..."};
                     res.header("Content-Type", 'application/json');
                     res.send(errorJSON);  
@@ -1259,7 +1259,7 @@ function listenWebsite(){
                                     `Failed to load web3, accounts, or contract. Check console for details.`
                                 );
                                 console.log("\n", chalk.red(err), "\n");
-                                app.post('/errors', function(req, res){
+                                app.get('/errors', function(req, res){
                                     var errorJSON = {"name" : "startTask", "message" : "Failed to load web3"};
                                     res.header("Content-Type", 'application/json');
                                     res.send(errorJSON);  
@@ -1273,7 +1273,7 @@ function listenWebsite(){
                             {
                                 console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
                                 res.send(JSON.stringify({"Success": 0, "Error":"Not enough ether"}));
-                                app.post('/errors', function(req, res){
+                                app.get('/errors', function(req, res){
                                     var errorJSON = {"name" : "startTask", "message" : "This keystore account doesn't have enough Ether... Add funds or try a different account..."};
                                     res.header("Content-Type", 'application/json');
                                     res.send(errorJSON);  
@@ -1281,7 +1281,7 @@ function listenWebsite(){
                             }
                             else{
                                 console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                                app.post('/errors', function(req, res){
+                                app.get('/errors', function(req, res){
                                     var errorJSON = {"name" : "startTask", "message" : "There was an error when attempting to start task"};
                                     res.header("Content-Type", 'application/json');
                                     res.send(errorJSON);  
@@ -1291,7 +1291,7 @@ function listenWebsite(){
                     } 
                     else{
                         console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
-                        app.post('/errors', function(req, res){
+                        app.get('/errors', function(req, res){
                             var errorJSON = {"name" : "startTask", "message" : "No file found with file path"};
                             res.header("Content-Type", 'application/json');
                             res.send(errorJSON);  
@@ -1304,7 +1304,7 @@ function listenWebsite(){
             if (String(err).slice(0, 28) == "Error: Key derivation failed")
             {
                 console.log(chalk.red("\nError: You have entered the wrong keystore password... Please try again...\n"))
-                app.post('/errors', function(req, res){
+                app.get('/errors', function(req, res){
                     var errorJSON = {"name" : "startTask", "message" : "You have entered an incorrect password"};
                     res.header("Content-Type", 'application/json');
                     res.send(errorJSON);  
@@ -1343,7 +1343,7 @@ function listenWebsite(){
             if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
             {
                 console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'start request' to try again..."), "\n")
-                app.post('/errors', function(req, res){
+                app.get('/errors', function(req, res){
                     var errorJSON = {"name" : "updateTask", "message" : "You must provide the task as a .zip file... Select 'start request' to try again..."};
                     res.header("Content-Type", 'application/json');
                     res.send(errorJSON);  
@@ -1420,7 +1420,7 @@ function listenWebsite(){
                                 alert(
                                     `Failed to load web3, accounts, or contract. Check console for details.`
                                 );
-                                app.post('/errors', function(req, res){
+                                app.get('/errors', function(req, res){
                                     var errorJSON = {"name" : "updateTask", "message" : "failed to load web3"};
                                     res.header("Content-Type", 'application/json');
                                     res.send(errorJSON);  
@@ -1434,7 +1434,7 @@ function listenWebsite(){
                             if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
                             {
                                 console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                                app.post('/errors', function(req, res){
+                                app.get('/errors', function(req, res){
                                     var errorJSON = {"name" : "updateTask", "message" : "This keystore account doesn't have enough Ether... Add funds or try a different account..."};
                                     res.header("Content-Type", 'application/json');
                                     res.send(errorJSON);  
@@ -1442,7 +1442,7 @@ function listenWebsite(){
                             }
                             else{
                                 console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                                app.post('/errors', function(req, res){
+                                app.get('/errors', function(req, res){
                                     var errorJSON = {"name" : "updateTask", "message" : "There was an error updating this task"};
                                     res.header("Content-Type", 'application/json');
                                     res.send(errorJSON);  
@@ -1452,7 +1452,7 @@ function listenWebsite(){
                     } 
                     else{
                         console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
-                        app.post('/errors', function(req, res){
+                        app.get('/errors', function(req, res){
                             var errorJSON = {"name" : "updateTask", "message" : "No file found with file path"};
                             res.header("Content-Type", 'application/json');
                             res.send(errorJSON);  
@@ -1466,7 +1466,7 @@ function listenWebsite(){
             if (String(err).slice(0, 28) == "Error: Key derivation failed")
             {
                 console.log(chalk.red("\nError: You have entered the wrong keystore password... Please try again...\n"))
-                app.post('/errors', function(req, res){
+                app.get('/errors', function(req, res){
                     var errorJSON = {"name" : "updateTask", "message" : "You have entered an incorrect password"};
                     res.header("Content-Type", 'application/json');
                     res.send(errorJSON);  
@@ -1513,7 +1513,7 @@ function listenWebsite(){
             })
             .catch(err => {
                 console.log("\n", chalk.red("Error: "), chalk.red(err), "\n")
-                app.post('/errors', function(req, res){
+                app.get('/errors', function(req, res){
                     var errorJSON = {"name" : "stopTask", "message" : "There was an error when attempting to stop this task"};
                     res.header("Content-Type", 'application/json');
                     res.send(errorJSON);  
@@ -1524,7 +1524,7 @@ function listenWebsite(){
             if (String(err).slice(0, 28) == "Error: Key derivation failed")
             {
                 console.log(chalk.red("\nError: You have entered the wrong keystore password... Please try again...\n"))
-                app.post('/errors', function(req, res){
+                app.get('/errors', function(req, res){
                     var errorJSON = {"name" : "stopTask", "message" : "You have entered an incorrect password"};
                     res.header("Content-Type", 'application/json');
                     res.send(errorJSON);  
