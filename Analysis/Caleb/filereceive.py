@@ -14,7 +14,7 @@ for j in range(0, 4):
     sum = 0
     for i in range(0, 99): #100 iterations
         start = int(round(time.time() * 1000))
-        res = r.get('http://130.39.223.54:5000/files?filename=' + filenames[j])
+        res = r.get('http://130.39.223.54:5000/file?filename=' + filenames[j])
         timetaken = int(round(time.time() * 1000)) - start
         times.append(timetaken)
     for i in range(0, 99): #make sum so we can find average
