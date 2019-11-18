@@ -1,0 +1,6 @@
+Start Providing - 13.30 s
+Update Providing - 8.45 s
+Stop Providing - 8.68 s
+Start Providing - 9.79 s
+Update Providing - 14.65 s
+Stop Providing - 10.37 s
