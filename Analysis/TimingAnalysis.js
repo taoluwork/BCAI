@@ -11,10 +11,9 @@ const Stopwatch = require('statman-stopwatch');
 const stopwatch = new Stopwatch();
 
 
-fs.open('./stats.txt', 'w', function(err) {
+fs.open('./Timing.txt', 'w', function(err) {
     if(err) throw err;
 })
-
 
 async function calcTime(){
     var ws = new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws/v3/aa544d081b53485fb0fa8df2c9a8437e')
@@ -38,7 +37,6 @@ async function calcTime(){
     }
 
     stopwatch.start();
-
 
     console.log(chalk.green("STARTPROVIDING"));
     decryptedAccount.signTransaction(rawTransaction)
@@ -132,30 +130,16 @@ async function calcTime(){
     })
 }
 
-for(var i = 0, p = Promise.resolve(); i<=4; i++){
-    p = p.then(_ => new Promise(resolve =>
-        setTimeout(function(){calcTime()}, 10000000)
-    ));
-}
-
-call();
-//console.log("Starting timing analysis of loop with 10000 iterations");
-
-// for(j = 0; j < 100; j++) {
-//     for(i = 0; i < 10000; i++){
-//         sum += 2;
-//     }
-//     sum = 0;
-//     saveTime();
-//     console.log("Value saved");
+// for(var i = 0, p = Promise.resolve(); i<=4; i++){
+//     p = p.then(_ => new Promise(resolve =>
+//         setTimeout(function(){calcTime()}, 10000000)
+//     ));
 // }
-
-
 
 function saveTime(message){
     var precision = 3; // 3 decimal places
     //var elapsed = process.hrtime(start)[1] / 1000000; // divide by a million to get nano to milli
-    fs.appendFileSync('./stats.txt', message + String((stopwatch.read()/1000).toFixed(2)) + " s\n");
+    fs.appendFileSync('./Timing.txt', message + String((stopwatch.read()/1000).toFixed(2)) + " s\n");
     stopwatch.stop();
     stopwatch.reset();
 }
