@@ -36,7 +36,7 @@ stopwatch.start();
 
 console.log(chalk.green("STARTPROVIDING"));
 decryptedAccount.signTransaction(rawTransaction)
-.then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+.then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction)) // Start Providing
 .then(receipt => {
     console.log(chalk.cyan("\n\nStart providing was successful... \n\n"));
 })
@@ -44,10 +44,6 @@ decryptedAccount.signTransaction(rawTransaction)
     try{
         web3.eth.subscribe('newBlockHeaders', (err, result) => {
             if(err) console.log(chalk.cyan("ERRRR", err, result));
-            //console.log(chalk.cyan("================================================   <- updated! #", result.number);
-            //console.log(chalk.cyan(result);
-            //showPools();
-            //checkEvents();
         })
     }
     catch(error){
@@ -56,9 +52,9 @@ decryptedAccount.signTransaction(rawTransaction)
         );
         console.log("\n", chalk.red(err), "\n");
     }
-    saveTime("StartProviding");
+    saveTime('./StartProviding.txt');
 })
-.then(()=>{
+.then(()=>{ //Update Provider
     ABIupdateProvider = myContract.methods.updateProvider(200, 200, 2000).encodeABI();
     rawTransaction = {
         "from": userAddress,
@@ -80,10 +76,6 @@ decryptedAccount.signTransaction(rawTransaction)
         try{
             web3.eth.subscribe('newBlockHeaders', (err, result) => {
                 if(err) console.log(chalk.cyan("ERRRR", err, result));
-                //console.log(chalk.cyan("================================================   <- updated! #", result.number);
-                //console.log(chalk.cyan(result);
-                //showPools();
-                //checkEvents();
             })
         }
         catch(error){
@@ -92,12 +84,11 @@ decryptedAccount.signTransaction(rawTransaction)
             );
             console.log("\n", chalk.red(err), "\n");
         }
-        saveTime("UpdateProviding");
+        saveTime('./UpdateProviding.txt');
     })
-    .then(()=>{
-
+    .then(()=>{ //Stop Providing
         ABIstopProviding = myContract.methods.stopProviding().encodeABI();
-        const rawTransaction = {
+        rawTransaction = {
             "from": userAddress,
             "to": addr,
             "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
@@ -111,13 +102,121 @@ decryptedAccount.signTransaction(rawTransaction)
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "))
-            //console.log(receipt)
             console.log(chalk.cyan("\n\nstopped providing successful...\n"))
         })
-        .then(()=>{
-            saveTime("StopProviding");
-            process.exit();
+        .then(() =>{
+            try{
+                web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                    if(err) console.log(chalk.cyan("ERRRR", err, result));
+                })
+            }
+            catch(error){
+                alert(
+                    `Failed to load web3, accounts, or contract. Check console for details.`
+                );
+                console.log("\n", chalk.red(err), "\n");
+            }
+            saveTime('./StopProviding.txt');
+        })
+        .then(()=>{ //Start Task
+            ABIstartRequest = myContract.methods.startRequest(100, 100, 1000, web3.utils.asciiToHex('216.3.128.12')).encodeABI();
+            rawTransaction = {
+                "from": userAddress,
+                "to": addr,
+                "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                "gas": 5000000,
+                "chainId": 3,
+                "data": ABIstartRequest
+            }
+            console.log(chalk.green("STARTREQUEST"));
+            stopwatch.start();
+            decryptedAccount.signTransaction(rawTransaction)
+            .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+            .then(receipt => {
+                console.log(chalk.cyan("\n\nstart request successful...\n"))
+            })
+            .then(() =>{
+                try{
+                    web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                        if(err) console.log(chalk.cyan("ERRRR", err, result));
+                    })
+                }
+                catch(error){
+                    alert(
+                        `Failed to load web3, accounts, or contract. Check console for details.`
+                    );
+                    console.log("\n", chalk.red(err), "\n");
+                }
+                saveTime('./StartRequest.txt');
+            })
+            .then(()=>{ //Update Task
+                ABIupdateRequest = myContract.methods.updateRequest(100, 100, 1000, web3.utils.asciiToHex('216.3.128.12')).encodeABI();
+                rawTransaction = {
+                    "from": userAddress,
+                    "to": addr,
+                    "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                    "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                    "gas": 5000000,
+                    "chainId": 3,
+                    "data": ABIupdateRequest
+                }
+                console.log(chalk.green("UPDATEREQUEST"));
+                stopwatch.start();
+                decryptedAccount.signTransaction(rawTransaction)
+                .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                .then(receipt => {
+                    console.log(chalk.cyan("\n\nupdate request successful...\n"))
+                })
+                .then(() =>{
+                    try{
+                        web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                            if(err) console.log(chalk.cyan("ERRRR", err, result));
+                        })
+                    }
+                    catch(error){
+                        alert(
+                            `Failed to load web3, accounts, or contract. Check console for details.`
+                        );
+                        console.log("\n", chalk.red(err), "\n");
+                    }
+                    saveTime('./UpdateRequest.txt');
+                })
+                .then(()=>{ //Start Task
+                    ABIstopRequest = myContract.methods.stopRequest().encodeABI();
+                    rawTransaction = {
+                        "from": userAddress,
+                        "to": addr,
+                        "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                        "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                        "gas": 5000000,
+                        "chainId": 3,
+                        "data": ABIstopRequest
+                    }
+                    console.log(chalk.green("STOPREQUEST"));
+                    stopwatch.start();
+                    decryptedAccount.signTransaction(rawTransaction)
+                    .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                    .then(receipt => {
+                        console.log(chalk.cyan("\n\nstop request successful...\n"))
+                    })
+                    .then(() =>{
+                        try{
+                            web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                                if(err) console.log(chalk.cyan("ERRRR", err, result));
+                            })
+                        }
+                        catch(error){
+                            alert(
+                                `Failed to load web3, accounts, or contract. Check console for details.`
+                            );
+                            console.log("\n", chalk.red(err), "\n");
+                        }
+                        saveTime('./StopRequest.txt');
+                        process.exit();
+                    })
+                })
+            })
         })
     })
 })
@@ -125,26 +224,8 @@ decryptedAccount.signTransaction(rawTransaction)
     console.log("\nThere was an err: \n", err);
 })
 
-// for(var i = 0, p = Promise.resolve(); i<=4; i++){
-//     p = p.then(_ => new Promise(resolve =>
-//         setTimeout(function(){calcTime()}, 10000000)
-//     ));
-// }
-
-function saveTime(message){
-    var precision = 3; // 3 decimal places
-    //var elapsed = process.hrtime(start)[1] / 1000000; // divide by a million to get nano to milli
-    if(message == "StartProviding"){
-        fs.appendFileSync('./StartProviding.txt', String((stopwatch.read()/1000).toFixed(2)) + "\n");
-    }
-    if(message == "UpdateProviding"){
-        fs.appendFileSync('./UpdateProviding.txt', String((stopwatch.read()/1000).toFixed(2)) + "\n");
-
-    }
-    if(message == "StopProviding"){
-        fs.appendFileSync('./StopProviding.txt', String((stopwatch.read()/1000).toFixed(2)) + "\n");
-    }
+function saveTime(file){
+    fs.appendFileSync(file, String((stopwatch.read()/1000).toFixed(2)) + "\n");
     stopwatch.stop();
     stopwatch.reset();
 }
-

@@ -112,8 +112,7 @@ contract TaskContract {
         }
     }
     // Stop a provider. Must be sent from the provider address or it will be failed.
-    function stopProviding
-    () public returns (bool) {
+    function stopProviding() public returns (bool) {
         // If the sender is currently an active provider
         if (providerList[msg.sender].available == true){               //can only stop available provider
             delete providerList[msg.sender];                           //delete from List
