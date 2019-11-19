@@ -56,7 +56,7 @@ decryptedAccount.signTransaction(rawTransaction)
         );
         console.log("\n", chalk.red(err), "\n");
     }
-    saveTime("Start Providing - ");
+    saveTime("StartProviding");
 })
 .then(()=>{
     ABIupdateProvider = myContract.methods.updateProvider(200, 200, 2000).encodeABI();
@@ -92,7 +92,7 @@ decryptedAccount.signTransaction(rawTransaction)
             );
             console.log("\n", chalk.red(err), "\n");
         }
-        saveTime("Update Providing - ");
+        saveTime("UpdateProviding");
     })
     .then(()=>{
 
@@ -116,7 +116,7 @@ decryptedAccount.signTransaction(rawTransaction)
             console.log(chalk.cyan("\n\nstopped providing successful...\n"))
         })
         .then(()=>{
-            saveTime("Stop Providing - ");
+            saveTime("StopProviding");
             process.exit();
         })
     })
@@ -134,7 +134,17 @@ decryptedAccount.signTransaction(rawTransaction)
 function saveTime(message){
     var precision = 3; // 3 decimal places
     //var elapsed = process.hrtime(start)[1] / 1000000; // divide by a million to get nano to milli
-    fs.appendFileSync('./Timing.txt', message + String((stopwatch.read()/1000).toFixed(2)) + " s\n");
+    if(message == "StartProviding"){
+        fs.appendFileSync('./StartProviding.txt', String((stopwatch.read()/1000).toFixed(2)) + "\n");
+    }
+    if(message == "UpdateProviding"){
+        fs.appendFileSync('./UpdateProviding.txt', String((stopwatch.read()/1000).toFixed(2)) + "\n");
+
+    }
+    if(message == "StopProviding"){
+        fs.appendFileSync('./StopProviding.txt', String((stopwatch.read()/1000).toFixed(2)) + "\n");
+    }
     stopwatch.stop();
     stopwatch.reset();
 }
+
