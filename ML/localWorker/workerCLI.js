@@ -236,7 +236,7 @@ questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop providing', 'update provider', 'show pools', 'quit'],
+    choices : ['stop providing', 'update provider', 'show pools', 'show balance', 'quit'],
 };
 
 clearStat();
@@ -330,7 +330,7 @@ function askUser(){
 
 //Takes choice made by prompt and controls where to go
 function choiceMade(choice){
-
+    console.log(choice);
     if(prov == 0 && choice == questions.choices[0])
     {
         startProviding();
@@ -417,13 +417,18 @@ function choiceMade(choice){
         askUser();
 
     }
-    else if (choice == questions.choices[1] || choice == questions1.choices[4])
+    else if (choice == questions.choices[1] || choice == questions1.choices[2])
     {
         showPools();
         //checkEvents(true);
     }
-    else
-    {
+    else if(choice == questions1.choices[3]){
+        web3.eth.getBalance(userAddress)
+        .then((balance) => {console.log("\n\n", web3.utils.fromWei(String(balance), 'ether'), "Ether \n")})
+        .then(()=>{askUser()})
+        .catch((err)=>{console.log(err)});
+    }
+    else{
         if(prov == 1)
         {
             stopProviding(choice);
