@@ -8,7 +8,7 @@ open('StartRequest.txt', 'w').close()
 open('UpdateRequest.txt', 'w').close()
 open('StopRequest.txt', 'w').close()
 
-for i in range(0, 300):
+for i in range(0, 10):
     print("Iteration " + str(i) + " is running...\n")
     process = subprocess.Popen("node TimingAnalysis.js", stdout = subprocess.PIPE, shell=True)
     process.wait()
