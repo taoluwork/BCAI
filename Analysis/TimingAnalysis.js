@@ -222,6 +222,7 @@ decryptedAccount.signTransaction(rawTransaction)
 })
 .catch(err=>{
     console.log("\nThere was an err: \n", err);
+    process.exit();
 })
 
 function saveTime(file){
