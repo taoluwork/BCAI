@@ -11,7 +11,6 @@ const Stopwatch = require('statman-stopwatch');
 const stopwatch = new Stopwatch();
 
 
-
 var ws = new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws/v3/aa544d081b53485fb0fa8df2c9a8437e')
 web3 = new Web3(ws);
 var TaskContract = require('../bcai_deploy/client/src/contracts/TaskContract.json');
@@ -29,6 +28,7 @@ var rawTransaction = {
     "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
     "gas": 5000000,
     "chainId": 3,
+    "nonce" : web3.eth.getTransactionCount(userAddress),
     "data": ABIstartProviding
 }
 
@@ -63,6 +63,7 @@ decryptedAccount.signTransaction(rawTransaction)
         "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
         "gas": 5000000,
         "chainId": 3,
+        "nonce" : web3.eth.getTransactionCount(userAddress),
         "data": ABIupdateProvider
     }
     console.log(chalk.green("UPDATEPROVIDING"));
@@ -95,6 +96,7 @@ decryptedAccount.signTransaction(rawTransaction)
             "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
             "gas": 7000000,
             "chainId": 3,
+            "nonce" : web3.eth.getTransactionCount(userAddress),
             "data": ABIstopProviding
         }
         console.log(chalk.green("STOPPROVIDING"));
@@ -127,6 +129,7 @@ decryptedAccount.signTransaction(rawTransaction)
                 "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
                 "gas": 5000000,
                 "chainId": 3,
+                "nonce" : web3.eth.getTransactionCount(userAddress),
                 "data": ABIstartRequest
             }
             console.log(chalk.green("STARTREQUEST"));
@@ -158,6 +161,7 @@ decryptedAccount.signTransaction(rawTransaction)
                     "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
                     "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
                     "gas": 5000000,
+                    "nonce" : web3.eth.getTransactionCount(userAddress),
                     "chainId": 3,
                     "data": ABIupdateRequest
                 }
@@ -191,6 +195,7 @@ decryptedAccount.signTransaction(rawTransaction)
                         "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
                         "gas": 5000000,
                         "chainId": 3,
+                        "nonce" : web3.eth.getTransactionCount(userAddress),
                         "data": ABIstopRequest
                     }
                     console.log(chalk.green("STOPREQUEST"));
