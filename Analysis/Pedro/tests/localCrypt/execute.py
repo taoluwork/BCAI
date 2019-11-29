@@ -103,11 +103,12 @@ start = time.time()
 cry = crypto()
 cry.generate(password)
 encrypted = cry.encrypt(sys.argv[2],sys.argv[3])
+mid = time.time()
 decrypted = cry.decrypt(encrypted, sys.argv[3] , password)
 end = time.time()
 
 f = open('../../data/localCrypt/data.csv', 'ab')
-f.write(sys.argv[4].encode() + b',' + str(start).encode() + b',' + str(end).encode() + b',' + sys.argv[2].encode() + b',' + decrypted + b'\n')
+f.write(sys.argv[4].encode() + b',' + str(start).encode() + b',' + str(mid).encode() + b',' + str(end).encode() + b',' + sys.argv[2].encode() + b',' + decrypted + b'\n')
 f.close()
 
 
