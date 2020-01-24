@@ -24,8 +24,10 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;           //enable returning self-defined type, used in helper return provider and request
                                             //do not disable, provider is returned for debuging reason.
+                                            
 
-contract TaskContract {
+    
+contract TaskContract{
     //list
     mapping (address => Provider) public providerList;   //provAddr => provider struct
     mapping (address => Request)  public requestList;    //reqAddr => request struct
@@ -35,7 +37,7 @@ contract TaskContract {
     uint256 private providerCount;                       //+1 each time
     uint256 private requestCount;
 
-    constructor() public {                               //sol 5.0 syntax
+    constructor() public payable{                               //sol 5.0 syntax
         providerCount = 0;
         requestCount = 0;
     }
@@ -550,4 +552,61 @@ contract TaskContract {
     }
 */
 
+}
+
+
+
+contract bcaiReputation {
+    
+    TaskContract bcai;
+    
+    mapping (address => reputation) public ratings; //user address -> reputation struct
+    
+    struct reputation{
+        uint128 numRatings;
+        uint128 avgRating;
+        uint128[5] lastFive;
+        bool newUser;
+    }
+    
+    constructor(address _bcaiAddress) public{
+        bcai = TaskContract(_bcaiAddress);
+    }
+    
+    function checkRequestPool() public view returns (address payable[] memory result){
+        return bcai.getProviderPool();
+    }
+    
+    function addRating (address user, uint128 rating) public {
+        if(ratings[user].numRatings != 0){
+            ratings[user].avgRating = (rating + (ratings[user].numRatings * ratings[user].avgRating)) / (ratings[user].numRatings + 1);
+            ratings[user].numRatings++;
+            for(uint8 i = 4; i != 0; i--){//shift the array so we can add newest rating
+                ratings[user].lastFive[i] = ratings[user].lastFive[i - 1];
+            }
+            ratings[user].lastFive[0] = rating;
+            
+            if(ratings[user].numRatings == 5){
+                ratings[user].newUser = false;
+            }
+        }
+        else {//this is their first rating, simpler logic
+            ratings[user].avgRating = rating;
+            ratings[user].lastFive[0] = rating;
+            ratings[user].numRatings++;
+        }
+    }
+    
+    function getNumRatings (address user) public view returns(uint128){
+        return ratings[user].numRatings;
+    }
+    
+    function getAvgRating (address user) public view returns(uint128){
+        return ratings[user].avgRating;
+    }
+    
+    function getLastFive (address user) public view returns(uint128[5] memory) {
+        return ratings[user].lastFive;
+    }
+    
 }

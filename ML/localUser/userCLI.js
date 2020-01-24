@@ -94,7 +94,7 @@ var ws = new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws/v3/aa5
 web3 = new Web3(ws);
 var TaskContract = require('../../bcai_deploy/client/src/contracts/TaskContract.json');
 var abi = TaskContract.abi;
-var addr = TaskContract.networks[NetworkID].address;        //align to const ID defination on top
+var addr = TaskContract.networks[NetworkID].address;       //align to const ID defination on top
 const myContract = new web3.eth.Contract(abi, addr);
 
 //test user account addr : 0x458C5617e4f549578E181F12dA8f840889E3C0A8 and password : localtest
