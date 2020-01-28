@@ -4,7 +4,6 @@ var reputation = artifacts.require("bcaiReputation");
 
 module.exports = function(deployer) {
     // deployment steps
+    deployer.deploy(reputation);
     deployer.deploy(BCAI);
-    deployer.deploy(reputation, BCAI.address);
-    
 }

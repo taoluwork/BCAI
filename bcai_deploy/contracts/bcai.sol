@@ -21,13 +21,58 @@
 //      , no matter their status (being processed or pending), because sometimes, one will stuck in the pool.
 ////////////////////////////////////////////////////////////////////////////////////
 
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.1;
 pragma experimental ABIEncoderV2;           //enable returning self-defined type, used in helper return provider and request
                                             //do not disable, provider is returned for debuging reason.
-                                            
+contract bcaiReputation {
 
-    
-contract TaskContract{
+    mapping (address => reputation) public ratings; //user address -> reputation struct
+
+    struct reputation{
+        uint128 numRatings;
+        uint128 avgRating;
+        uint128[5] lastFive;
+        bool newUser;
+    }
+
+    function addRating (address user, uint128 rating) internal {
+        if(ratings[user].numRatings != 0){
+            ratings[user].avgRating = (rating + (ratings[user].numRatings * ratings[user].avgRating)) / (ratings[user].numRatings + 1);
+            ratings[user].numRatings++;
+            for(uint8 i = 4; i != 0; i--){//shift the array so we can add newest rating
+                ratings[user].lastFive[i] = ratings[user].lastFive[i - 1];
+            }
+            ratings[user].lastFive[0] = rating;
+
+            if(ratings[user].numRatings == 5){
+                ratings[user].newUser = false;
+            }
+        }
+        else {//this is their first rating, simpler logic
+            ratings[user].avgRating = rating;
+            ratings[user].lastFive[0] = rating;
+            ratings[user].numRatings++;
+        }
+    }
+
+    function getNumRatings (address user) public view returns(uint128){
+        return ratings[user].numRatings;
+    }
+
+    function getAvgRating (address user) public view returns(uint128){
+        return ratings[user].avgRating;
+    }
+
+    function getLastFive (address user) public view returns(uint128[5] memory) {
+        return ratings[user].lastFive;
+    }
+
+}
+
+contract TaskContract is bcaiReputation{
+
+    //bcaiReputation rep;
+
     //list
     mapping (address => Provider) public providerList;   //provAddr => provider struct
     mapping (address => Request)  public requestList;    //reqAddr => request struct
@@ -40,6 +85,7 @@ contract TaskContract{
     constructor() public payable{                               //sol 5.0 syntax
         providerCount = 0;
         requestCount = 0;
+        //rep = bcaiReputation(_reputationAddr);
     }
 
     struct Request {
@@ -85,6 +131,12 @@ contract TaskContract{
     address payable[] providingPool;       //reqAddr
     address payable[] validatingPool;      //reqAddr
     /////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    function testRep() public returns (uint128){
+        addRating(0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C, 100);
+        return getAvgRating(0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C);
+    }
 
 
     // Function called to become a provider. Add address on List, and Pool if not instantly assigned.
@@ -93,12 +145,12 @@ contract TaskContract{
     function startProviding(uint64 maxTime, uint16 maxTarget, uint64 minPrice) public returns (bool) {
         if(providerList[msg.sender].blockNumber == 0){                  //if this is new
             // register a new provider object in the List and map
-            providerList[msg.sender].provID         = providerCount;    //cost 50k per item edit
-            providerList[msg.sender].blockNumber    = block.number;
-            providerList[msg.sender].maxTime        = maxTime;
-            providerList[msg.sender].maxTarget      = maxTarget;
-            providerList[msg.sender].minPrice       = minPrice;
-            providerList[msg.sender].available      = true;             //turn on the flag at LAST in case error
+            providerList[msg.sender].provID = providerCount;    //cost 50k per item edit
+            providerList[msg.sender].blockNumber = block.number;
+            providerList[msg.sender].maxTime = maxTime;
+            providerList[msg.sender].maxTarget = maxTarget;
+            providerList[msg.sender].minPrice = minPrice;
+            providerList[msg.sender].available = true;             //turn on the flag at LAST in case error
             // ready for the next
             providerPool.push(msg.sender);
             emit SystemInfo (msg.sender, "Provider Added");
@@ -129,10 +181,10 @@ contract TaskContract{
     //update a provider, you must know the provID and must sent from right addr
     function updateProvider(uint64 maxTime, uint16 maxTarget, uint64 minPrice) public returns (bool) {
         if(providerList[msg.sender].available == true){                //can only modify available provider
-            providerList[msg.sender].blockNumber    = block.number;
-            providerList[msg.sender].maxTime        = maxTime;
-            providerList[msg.sender].maxTarget      = maxTarget;
-            providerList[msg.sender].minPrice       = minPrice;
+            providerList[msg.sender].blockNumber = block.number;
+            providerList[msg.sender].maxTime = maxTime;
+            providerList[msg.sender].maxTarget = maxTarget;
+            providerList[msg.sender].minPrice = minPrice;
             emit SystemInfo(msg.sender,'Provider Updated');
             assignProvider(msg.sender);
             return true;
@@ -148,13 +200,13 @@ contract TaskContract{
     function startRequest(uint64 time, uint16 target, uint64 price, bytes memory dataID) public payable returns (bool) {
         if(requestList[msg.sender].blockNumber == 0){   //never submitted before
             //register on List
-            requestList[msg.sender].reqID         = requestCount;
-            requestList[msg.sender].blockNumber   = block.number;
-            requestList[msg.sender].provider      = address(0);
-            requestList[msg.sender].time          = time;
-            requestList[msg.sender].target        = target;
-            requestList[msg.sender].price         = price;
-            requestList[msg.sender].dataID        = dataID;
+            requestList[msg.sender].reqID = requestCount;
+            requestList[msg.sender].blockNumber = block.number;
+            requestList[msg.sender].provider = address(0);
+            requestList[msg.sender].time = time;
+            requestList[msg.sender].target = target;
+            requestList[msg.sender].price = price;
+            requestList[msg.sender].dataID = dataID;
             requestList[msg.sender].numValidations = 1;//fixed 3 for testing reasons >> TL: changed this to demo settings
             requestList[msg.sender].status = '0';       //pending = 0x30, is in ascii not number 0
             pendingPool.push(msg.sender);
@@ -180,11 +232,11 @@ contract TaskContract{
     }
     function updateRequest(uint64 time, uint16 target, uint64 price, bytes memory dataID) public payable returns (bool) {
         if(requestList[msg.sender].status == '0' ){                   //can only update pending request
-            requestList[msg.sender].blockNumber    = block.number;
-            requestList[msg.sender].time        = time;
-            requestList[msg.sender].target      = target;
-            requestList[msg.sender].price       = price;
-            requestList[msg.sender].dataID      = dataID;
+            requestList[msg.sender].blockNumber = block.number;
+            requestList[msg.sender].time = time;
+            requestList[msg.sender].target = target;
+            requestList[msg.sender].price = price;
+            requestList[msg.sender].dataID = dataID;
             emit SystemInfo(msg.sender, 'Request Updated');
             return true;
         }
@@ -332,7 +384,6 @@ contract TaskContract{
                 // Arraypop will always fill the hole with the last item, thus decrease i immediately will check the freshly swapped item.
                 // This works for now, but it hurts the priority. The last item jumped the queue. The sequence in list does not reflect priority.
 
-
             } else continue;    //skip the provider/computer itself
             //check whether got enough validator
             if(validatorsFound < numValidatorsNeeded){
@@ -461,7 +512,7 @@ contract TaskContract{
             if (array[i] == target) {
                 array[i] = array[array.length-1];   //swap last element with hole
                 delete array[array.length-1];       //delete last item
-                array.length -= 1;                  //decrease size
+                //array.length -= 1;                  //decrease size
                 return true;
             }
         }
@@ -480,18 +531,18 @@ contract TaskContract{
     //NOTE: these helpers will use up the code space, (in Ethereum code lenght is limited)
     //      can be removed in future to free up space.
 
-    function getProvider(address payable ID) public view returns(Provider memory){
-        return providerList[ID];
-    }
-    function getRequest(address payable ID) public view returns (Request memory){
-	    return requestList[ID];
-    }
-    function getProviderCount() public view returns (uint256){
-        return providerCount;
-    }
-    function getRequestCount() public view returns (uint256){
-        return requestCount;
-    }
+    // function getProvider(address payable ID) public view returns(Provider memory){
+    //     return providerList[ID];
+    // }
+    // function getRequest(address payable ID) public view returns (Request memory){
+	//     return requestList[ID];
+    // }
+    // function getProviderCount() public view returns (uint256){
+    //     return providerCount;
+    // }
+    // function getRequestCount() public view returns (uint256){
+    //     return requestCount;
+    // }
 
     function getProviderPool() public view returns (address payable[] memory){
         return providerPool;
@@ -506,12 +557,12 @@ contract TaskContract{
         return providingPool;
     }
 
-    function getProviderPoolSize() public view returns (uint256){
-        return providerPool.length;
-    }
-    function getRequestPoolSize() public view returns (uint256){
-        return pendingPool.length;
-    }
+    // function getProviderPoolSize() public view returns (uint256){
+    //     return providerPool.length;
+    // }
+    // function getRequestPoolSize() public view returns (uint256){
+    //     return pendingPool.length;
+    // }
 
 
     //function getBalance(address addr) public view returns (uint256){
@@ -552,61 +603,4 @@ contract TaskContract{
     }
 */
 
-}
-
-
-
-contract bcaiReputation {
-    
-    TaskContract bcai;
-    
-    mapping (address => reputation) public ratings; //user address -> reputation struct
-    
-    struct reputation{
-        uint128 numRatings;
-        uint128 avgRating;
-        uint128[5] lastFive;
-        bool newUser;
-    }
-    
-    constructor(address _bcaiAddress) public{
-        bcai = TaskContract(_bcaiAddress);
-    }
-    
-    function checkRequestPool() public view returns (address payable[] memory result){
-        return bcai.getProviderPool();
-    }
-    
-    function addRating (address user, uint128 rating) public {
-        if(ratings[user].numRatings != 0){
-            ratings[user].avgRating = (rating + (ratings[user].numRatings * ratings[user].avgRating)) / (ratings[user].numRatings + 1);
-            ratings[user].numRatings++;
-            for(uint8 i = 4; i != 0; i--){//shift the array so we can add newest rating
-                ratings[user].lastFive[i] = ratings[user].lastFive[i - 1];
-            }
-            ratings[user].lastFive[0] = rating;
-            
-            if(ratings[user].numRatings == 5){
-                ratings[user].newUser = false;
-            }
-        }
-        else {//this is their first rating, simpler logic
-            ratings[user].avgRating = rating;
-            ratings[user].lastFive[0] = rating;
-            ratings[user].numRatings++;
-        }
-    }
-    
-    function getNumRatings (address user) public view returns(uint128){
-        return ratings[user].numRatings;
-    }
-    
-    function getAvgRating (address user) public view returns(uint128){
-        return ratings[user].avgRating;
-    }
-    
-    function getLastFive (address user) public view returns(uint128[5] memory) {
-        return ratings[user].lastFive;
-    }
-    
 }
