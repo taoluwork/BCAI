@@ -71,8 +71,6 @@ contract bcaiReputation {
 
 contract TaskContract is bcaiReputation{
 
-    //bcaiReputation rep;
-
     //list
     mapping (address => Provider) public providerList;   //provAddr => provider struct
     mapping (address => Request)  public requestList;    //reqAddr => request struct
@@ -85,7 +83,6 @@ contract TaskContract is bcaiReputation{
     constructor() public payable{                               //sol 5.0 syntax
         providerCount = 0;
         requestCount = 0;
-        //rep = bcaiReputation(_reputationAddr);
     }
 
     struct Request {
@@ -131,13 +128,6 @@ contract TaskContract is bcaiReputation{
     address payable[] providingPool;       //reqAddr
     address payable[] validatingPool;      //reqAddr
     /////////////////////////////////////////////////////////////////////////////////////
-    
-    
-    function testRep() public returns (uint128){
-        addRating(0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C, 100);
-        return getAvgRating(0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C);
-    }
-
 
     // Function called to become a provider. Add address on List, and Pool if not instantly assigned.
     // TIPS on gas cost: don't create local copy and write back, modify the storage directly.
@@ -443,7 +433,6 @@ contract TaskContract is bcaiReputation{
             requestList[reqAddr].isValid = true; // Task was successfully completed!
             emit IPFSInfo(reqAddr, 'Validation Complete', requestList[reqAddr].resultID);
             //flag = ArrayPop(validatingPool, reqAddr);
-            finalizeRequest(reqAddr);
         }
         /*
         // otherwise, work was invalid, the providers payment goes back to requester
@@ -488,21 +477,26 @@ contract TaskContract is bcaiReputation{
     }
 
     // finalize the completed result, move everything out of current pools
-    // TODO: handle any potential payment
-    function finalizeRequest(address payable reqAddr) private returns (bool) {
-        ArrayPop(validatingPool, reqAddr);
-        //delete related record
-        requestList[reqAddr].blockNumber = 0;
-
-//these lines are used in attempt to empty the validators and signatures arrays for a given request
-//there is some buggy behavior regarding this section so it will be commented out for now
-//TODO: find a safe way for the validators and signatures to be cleared out
-/*        for(uint64 i = 2 ; i >= 0 ; i--){
-          delete requestList[reqAddr].validators[i];
-          requestList[reqAddr].signatures[i] = false;
-        }*/
-// by TaoLU: good comments, but I don't know how to fix for now.
+    function finalizeRequest(address payable reqAddr, bool toRate, uint8 rating) public returns (bool) {
+        if(requestList[reqAddr].isValid){
+            ArrayPop(validatingPool, reqAddr);
+            //delete related record
+            requestList[reqAddr].blockNumber = 0;
+            if(toRate){ //If user wishes to, let them rate the provider
+                addRating(requestList[reqAddr].provider, rating);
+            }
+        }
+        //these lines are used in attempt to empty the validators and signatures arrays for a given request
+        //there is some buggy behavior regarding this section so it will be commented out for now
+        //TODO: find a safe way for the validators and signatures to be cleared out
+        /*        for(uint64 i = 2 ; i >= 0 ; i--){
+                delete requestList[reqAddr].validators[i];
+                requestList[reqAddr].signatures[i] = false;
+                }*/
+        // by TaoLU: good comments, but I don't know how to fix for now.
     }
+
+
 /////////////////////////////////////////////////////////////////////
     // Used to dynamically remove elements from array of open provider spaces.
     // Using a swap and delete method, search for the desired addr throughout the whole array
