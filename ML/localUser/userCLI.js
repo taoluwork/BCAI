@@ -34,6 +34,7 @@ var buffer = [];
 var webpageUp = 0;
 var executing = false;
 var finished  = false;
+var canRate = false;
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
@@ -183,14 +184,85 @@ function cliOrSite(){
     })
 }
 
+
 //////////////////////////////////////////////////////CLI FUNCTIONS//////////////////////////////////////////////////////////////////
+
+//Asks for reputation rating
+
+function validateRating(rating){
+    return rating >= 1 && rating <= 100;
+}
+
+function giveRating(){
+    canRate = false;
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'askToRate',
+            choices: ['Yes', 'No'],
+            message: 'Would you like to give a rating for your provider?'
+        }
+    ])
+    .then (answers =>{
+        if(answers.askToRate == 'Yes'){
+            console.log("\nYou have chosen to give a rating\n");
+            //finalize request function
+
+            inquirer.prompt([
+                {
+                    type: 'number',
+                    name: 'rating',
+                    message: 'Give a rating between 1 and 100',
+                    validate: validateRating 
+                }
+            ])
+            .then(answers =>{
+                var ABIfinalizeRequest; //prepare abi for a function call
+                ABIfinalizeRequest = myContract.methods.finalizeRequest(userAddress, answers.rating).encodeABI();
+                const rawTransaction = {
+                    "from": userAddress,
+                    "to": addr,
+                    "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                    "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                    "gas": 5000000,
+                    "chainId": 3,
+                    "data": ABIfinalizeRequest
+                }
+
+                decryptedAccount.signTransaction(rawTransaction)
+                .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                .then(receipt => {
+                    //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
+                    console.log(chalk.cyan("\n\nYour rating has gone through...\n"))
+                })
+                .then(()=>{
+                    askUser();
+                })
+            })
+        }
+        else{
+            console.log("\nUser doesn't want to give rating\n");
+            //go back to main menu
+            askUser();
+        }
+    })
+}
+
+
+
+
 
 //Gives the user a starting menu of choices
 function askUser(){
-    if(prov == 0)
-        inquirer.prompt([questions]).then(answers => {choiceMade(answers.whatToDo)});
-    else
-        inquirer.prompt([questions1]).then(answers => {choiceMade(answers.whatToDo1)});
+    if(canRate == true){
+        giveRating();
+    }
+    else{
+        if(prov == 0)
+            inquirer.prompt([questions]).then(answers => {choiceMade(answers.whatToDo)});
+        else
+            inquirer.prompt([questions1]).then(answers => {choiceMade(answers.whatToDo1)});
+    }
 }
 
 
@@ -999,6 +1071,10 @@ checkEvents = async () => {
       if((pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr) || 
         (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr) ){
         pastEvents.splice(0,i+1);
+        if(pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr){
+            //validation is complete and now can ask for rating
+            canRate = true;
+        }
         if(validationAssignedFlag == 0){
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to validator\n", function (err){
                 if (err) throw err;

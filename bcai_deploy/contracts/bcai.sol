@@ -21,7 +21,7 @@
 //      , no matter their status (being processed or pending), because sometimes, one will stuck in the pool.
 ////////////////////////////////////////////////////////////////////////////////////
 
-pragma solidity ^0.6.1;
+pragma solidity >=0.5.1;
 pragma experimental ABIEncoderV2;           //enable returning self-defined type, used in helper return provider and request
                                             //do not disable, provider is returned for debuging reason.
 contract bcaiReputation {
