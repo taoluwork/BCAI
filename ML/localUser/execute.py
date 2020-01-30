@@ -1,13 +1,10 @@
+
 import os
 from flask import Flask
 import requests as r
 import time
 import threading
 from datetime import datetime
-
-t1 = threading.Thread(target=loop)
-t2 = threading.Thread(target=startshare)
-address = ""
 
 def getTime(mess):
     now = datetime.now()
@@ -23,19 +20,18 @@ def loop():
         time.sleep(5)
         ##check file##
         statF=open("stat.txt", "r")
-        status = statF.readline().rstrip()
+        reqIp = statF.readline().rstrip()
         statF.close()
-        #if file ready to be received from worker. Status will hold the .onion address
-        if status != '' and status != 'Executing' and status != 'Ready':
-            getTime("Requesting Files")
-            #res = r.get('http://' + reqIp + '/files')
-            #onionshare GET
-            session = r.session()
-            session.proxies = {}
-            session.proxies['http'] = 'socks5h://localhost:9050'
-            session.proxies['https'] = 'socks5h://localhost:9050'
+        if reqIp != '' and reqIp != 'Executing' and reqIp != 'Ready':
+            statF=open("stat.txt", 'w')
+            statF.close()
+            statF=open("stat.txt", 'w')
+            statF.write("Executing")
+            statF.close()
 
-            res = session.get(status + '/image.zip')
+            getTime("Requesting Files")
+
+            res = r.get('http://' + reqIp + '/files')
 
             getTime("Image Files Recieved")
 
@@ -59,57 +55,24 @@ def loop():
             statF=open("stat.txt", 'w')
             statF.write("Ready")
             statF.close()
-        elif status == "": #file not yet received
-            onionshareLog = open("onionshare.txt", 'r')
-            lines = onionshareLog.readlines()
-            while lines != "":
-                if (lines[0:4] == "http" and address == ""): #found address
-                    address = lines
-                    statF=open("stat.txt", 'w')
-                    statF.close()
-                    statF=open("stat.txt", 'w')
-                    statF.write(lines)
-                    statF.close()
-                elif ("GET" in lines): #file has been received
-                    t2._stop() #kill thread
-                    statF=open("onionaddr.txt", 'w')
-                    statF.close()
-                    statF=open("onionaddr.txt", 'w')
-                    statF.write("Executing")
-                    statF.close()
-                lines = onionshareLog.readlines()
-
-def startshare():
-    #start onionshare server to host file
-    os.system("~/onionshare/dev_scripts/onionshare --website image.zip > onionshare.txt")
 
 #########file server###########
-# app = Flask(__name__)
+app = Flask(__name__)
 
-# @app.route('/')
-# def hello():
-#     return "Hello World!"
+@app.route('/')
+def hello():
+    return "Hello World!"
 
-# @app.route('/getaddress')
-# def getAddress():
-#     return address
-
-# @app.route('/setaddress')
-# def setAddress():
-#     #address = parameter
-
-# @app.route('/files')
-# def fileRead():
-#     if os.path.isfile('image.zip'):
-#         f = open('image.zip' , 'rb') 
-#         getTime("File Requested")
-#         return f.read()
-#     else:
-#         return b'err'
+@app.route('/files')
+def fileRead():
+    if os.path.isfile('image.zip'):
+        f = open('image.zip' , 'rb') 
+        getTime("File Requested")
+        return f.read()
+    else:
+        return b'err'
 
 if __name__ == '__main__':
-
+    t1 = threading.Thread(target=loop)
     t1.start()
-    t2.start()
-    #app.run(host='0.0.0.0', threaded=False)
-    
+    app.run(host='0.0.0.0', threaded=False)
