@@ -34,7 +34,7 @@ var buffer = [];
 var webpageUp = 0;
 var executing = false;
 var finished  = false;
-
+var onionaddr = 'onionaddr.txt'
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
 fs.open('./stat.txt', 'w', function(err){
@@ -46,15 +46,25 @@ fs.open('./log.txt', 'w', function(err){
 })
 
 var getIp = (async() => {
-    await publicIp.v4().then(val => {ip4 = val});
-    await publicIp.v6().then(val => {ip6 = val});
+    //await publicIp.v4().then(val => {ip4 = val});
+    //await publicIp.v6().then(val => {ip6 = val});
+        fs.readFile('./' + onionaddr, function read(err, data){
+            if (err) throw err;
+            fileContent = data;
+            if(fileContent.toString('utf8').search('.onion') !== -1)
+            {
+                ip = fileContent.toString('utf8');
+                console.log(ip)
+            }
+        })
+
 })
   
   //this calls the IP generating file and then depending on the option that is given it will create the server
   //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
-getIp().then(() => {
+getIp() //.then(() => {
     //allow for manual choice (defaults to IPv4)
-    if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
+    /*if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
         ip = process.argv[3] + ":" + serverPort;
     }
     else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
@@ -66,9 +76,9 @@ getIp().then(() => {
     }
     else{
       ip = ip4 + ":5000";
-    }
-    //console.log(ip);
-});
+    }*/
+
+
 
 var UTCFileArray = [];
 var UTCfile;
