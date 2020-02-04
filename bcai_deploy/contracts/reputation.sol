@@ -1,4 +1,4 @@
-ragma solidity >=0.4.22 <0.6.0;
+pragma solidity >=0.4.22 <0.6.0;
 pragma experimental ABIEncoderV2;
 //IDEAS
 //Date - could keep track of the date/time of their last job
