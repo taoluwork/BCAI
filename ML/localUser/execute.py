@@ -67,10 +67,9 @@ def loop():
             statF.close()
         elif status == "": #file not yet received
             onionshareLog = open("onionshare.txt", 'r')
-            lines = onionshareLog.readlines()
+            lines = onionshareLog.readline()
             while lines != "":
-                if (lines[0:4] == "http" and address == ""): #found address
-                    address = lines
+                if (lines[0:17] == "http://onionshare"): #found address
                     statF=open("onionaddr.txt", 'w')
                     statF.close()
                     statF=open("onionaddr.txt", 'w')
@@ -83,11 +82,11 @@ def loop():
                     statF=open("stat.txt", 'w')
                     statF.write("Executing")
                     statF.close()
-                lines = onionshareLog.readlines()
+                lines = onionshareLog.readline()
 
 def startshare():
-    #start onionshare server to host file
-    os.system("~/onionshare/dev_scripts/onionshare --website image.zip > onionshare.txt")
+    #start onionshare server to host file, pipe output into onionshare.txt
+    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website image.zip\" -f onionshare.txt")
 
 t1 = threading.Thread(target=loop)
 t2 = threading.Thread(target=startshare)
