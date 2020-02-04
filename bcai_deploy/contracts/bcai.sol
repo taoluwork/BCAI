@@ -80,7 +80,7 @@ contract TaskContract is bcaiReputation{
     uint256 private providerCount;                       //+1 each time
     uint256 private requestCount;
 
-    constructor() public payable{                               //sol 5.0 syntax
+    constructor() public{                               //sol 5.0 syntax
         providerCount = 0;
         requestCount = 0;
     }
@@ -506,7 +506,7 @@ contract TaskContract is bcaiReputation{
             if (array[i] == target) {
                 array[i] = array[array.length-1];   //swap last element with hole
                 delete array[array.length-1];       //delete last item
-                //array.length -= 1;                  //decrease size
+                array.length -= 1;                  //decrease size
                 return true;
             }
         }
