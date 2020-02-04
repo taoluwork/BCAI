@@ -56,9 +56,9 @@ def fileRead():
 #3) Once execution completed, start onionshare thread, wait until address printed to onionshare.txt
 ### Write "Ready" to stat.txt
 #4) Once address printed (onionshare started) write to onionaddr.txt, wait for GET
-#5) Once GET request in onionshare.txt, user has downloaded file, kill onionshare thread
+#5) Once GET request in onionshare.txt, user has started downloading file
 ### Write "Received" to stat.txt
-
+#6) When /finish called to onionshare usre finished downloading file, can kill thread
 
 def startshare():
     #start onionshare server to host file
@@ -84,7 +84,8 @@ def executeDocker(onionaddr, mode):
     session.proxies['http'] = 'socks5h://localhost:9050'
     session.proxies['https'] = 'socks5h://localhost:9050'
 
-    res = session.get(onionaddr + '/image.zip')
+    res = session.get(onionaddr + '/image.zip') #download file
+    session.get(onionaddr + '/finish') #tell server finished downloading
 
     os.system("sudo rm -rf image.*")
     open('image.zip', 'wb').write(res.content)
@@ -144,6 +145,8 @@ def executeDocker(onionaddr, mode):
                 statF=open("stat.txt", 'w')
                 statF.write("Received")
                 statF.close()
+            elif("/finish" in lines): #user finished downloading file, can kill thread
+                t2._stop() #kill thread
             lines = onionshareLog.readline()
 
 

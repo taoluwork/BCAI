@@ -17,22 +17,30 @@ def getTime(mess):
 #Overall flow:
 #1) Start loop thread and onionshare thread, wait for onionshare.txt to contain address
 #2) Once onionshare.txt contains address onionshare has started, write address to onionaddr.txt
-#3) Wait for a GET request in onionshare.txt, means worker has received file
+#3) Wait for a GET request in onionshare.txt, means worker has started downloading file
 ### Write "Executing" to stat.txt
-#4) Wait for stat.txt to contain an onion address, means worker has completed execution, 
-## and result file is being hosted at that address. Make TOR get request
-#5) Download completed result file
+#4) When worker sends /finish to onionshare, file finished downloading, onionshare thread can be killed
+#5) Wait for stat.txt to contain an onion address, means worker has completed execution, 
+## and result file is being hosted at that address. Make TOR get request to worker's onionshare
+#6) Download the completed result file
 ### Write "Ready" to stat.txt
+
+
+def startshare():
+    #start onionshare server to host file, pipe output into onionshare.txt
+    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website image.zip\" -f onionshare.txt")
+
+t2 = threading.Thread(target=startshare)
 
 def loop():
     while True:
         time.sleep(5)
         ##check file##
         statF=open("stat.txt", "r")
-        status = statF.readline().rstrip()
+        onionaddr = statF.readline().rstrip()
         statF.close()
-        #if file ready to be received from worker. Status will hold the .onion address
-        if status != '' and status != 'Executing' and status != 'Ready':
+        #if file ready to be received from worker. onionaddr will hold the .onion address
+        if onionaddr != '' and onionaddr != 'Executing' and onionaddr != 'Ready':
             getTime("Requesting Files")
             #res = r.get('http://' + reqIp + '/files')
             #onionshare GET
@@ -41,7 +49,8 @@ def loop():
             session.proxies['http'] = 'socks5h://localhost:9050'
             session.proxies['https'] = 'socks5h://localhost:9050'
 
-            res = session.get(status + '/image.zip')
+            res = session.get(onionaddr + '/image.zip') #download file
+            session.get(onionaddr + '/finish') #tell server finished downloading
 
             getTime("Image Files Recieved")
 
@@ -65,7 +74,7 @@ def loop():
             statF=open("stat.txt", 'w')
             statF.write("Ready")
             statF.close()
-        elif status == "": #file not yet received
+        elif onionaddr == "": #file not yet received
             onionshareLog = open("onionshare.txt", 'r')
             lines = onionshareLog.readline()
             while lines != "":
@@ -76,20 +85,17 @@ def loop():
                     statF.write(lines)
                     statF.close()
                 elif ("GET" in lines): #file has been received
-                    t2._stop() #kill thread
                     statF=open("stat.txt", 'w')
                     statF.close()
                     statF=open("stat.txt", 'w')
                     statF.write("Executing")
                     statF.close()
+                elif("/finish" in lines): #provider finished downloading file, can kill thread
+                    t2._stop() #kill thread
                 lines = onionshareLog.readline()
 
-def startshare():
-    #start onionshare server to host file, pipe output into onionshare.txt
-    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website image.zip\" -f onionshare.txt")
 
 t1 = threading.Thread(target=loop)
-t2 = threading.Thread(target=startshare)
 
 #########file server###########
 # app = Flask(__name__)
