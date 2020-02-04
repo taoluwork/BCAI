@@ -51,10 +51,12 @@ var getIp = (async() => {
         fs.readFile('./' + onionaddr, function read(err, data){
             if (err) throw err;
             fileContent = data;
-            if(fileContent.toString('utf8').search('.onion') !== -1)
-            {
+            if(fileContent.toString('utf8').search('.onion') !== -1){
                 ip = fileContent.toString('utf8');
                 console.log(ip)
+            }
+            else{
+                getIp();
             }
         })
 
@@ -62,7 +64,7 @@ var getIp = (async() => {
   
   //this calls the IP generating file and then depending on the option that is given it will create the server
   //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
-getIp() //.then(() => {
+//getIp() //.then(() => {
     //allow for manual choice (defaults to IPv4)
     /*if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
         ip = process.argv[3] + ":" + serverPort;
@@ -511,6 +513,10 @@ function startTask(){
                             askUser();
                         }
                         else{
+                            //give the path to the file so python file can get it
+                            fs.writeFile('./path.txt', filePath, function (err){
+                                if (err) throw err;
+                            })
                             fs.open(filePath, 'r', (err, fd)=>{
                                 //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                                 if(fd != undefined){
@@ -523,7 +529,8 @@ function startTask(){
                                                 fs.close(fd, function(err){
                                                     //if(err){console.log("\n", chalk.red(err), "\n");}
                                                 });
-                                                return;
+                                                getIp();
+                                                //return;
                                             }
                                             if(nread < chunkSize){
                                                 try{
@@ -543,6 +550,11 @@ function startTask(){
                                     } 
                                     readChunk();
                                     //console.log(buffer);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                                     ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
                                     //console.log(ABIstartRequest);
                                     const rawTransaction = {
@@ -659,6 +671,10 @@ function startTask(){
                     askUser();
                 }
                 else{
+                    //give the path to the file so python file can get it
+                    fs.writeFile('./path.txt', filePath, function (err){
+                        if (err) throw err;
+                    });
                     fs.open(filePath, 'r', (err, fd)=>{
                         //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                         if(fd != undefined){
@@ -691,6 +707,11 @@ function startTask(){
                             } 
                             readChunk();
                             //console.log(buffer);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                             ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
                             //console.log(ABIstartRequest);
                             const rawTransaction = {
@@ -1196,6 +1217,10 @@ function listenWebsite(){
                 })
             }
             else{
+                //give the path to the file so python file can get it
+                fs.writeFile('./path.txt', filePath, function (err){
+                    if (err) throw err;
+                });
                 fs.open(filePath, 'r', (err, fd)=>{
                     //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                     if(fd != undefined){
@@ -1229,6 +1254,10 @@ function listenWebsite(){
                         readChunk();
 
                         console.log(chalk.cyan("\nmaxtime: " + maxTime + "\nmaxTarget: " + maxTarget + "\nminPrice: " + minPrice));
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
                         //console.log(ABIstartRequest);
@@ -1360,6 +1389,10 @@ function listenWebsite(){
                 })
             }
             else{
+                //give the path to the file so python file can get it
+                fs.writeFile('./path.txt', filePath, function (err){
+                    if (err) throw err;
+                });
                 fs.open(filePath, 'r', (err, fd)=>{
                     //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                     if(fd != undefined){
@@ -1392,6 +1425,11 @@ function listenWebsite(){
                         } 
                         readChunk();
                         //console.log(buffer);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                         ABIstartRequest = myContract.methods.updateRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
                         //console.log(ABIstartRequest);
                         const rawTransaction = {
