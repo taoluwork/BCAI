@@ -5,9 +5,6 @@ import time
 import threading
 from datetime import datetime
 
-t1 = threading.Thread(target=loop)
-t2 = threading.Thread(target=startshare)
-
 def getTime(mess):
     now = datetime.now()
     end = open('log.txt', 'r').readline().rstrip()[24:]
@@ -91,6 +88,9 @@ def loop():
 def startshare():
     #start onionshare server to host file
     os.system("~/onionshare/dev_scripts/onionshare --website image.zip > onionshare.txt")
+
+t1 = threading.Thread(target=loop)
+t2 = threading.Thread(target=startshare)
 
 #########file server###########
 # app = Flask(__name__)
