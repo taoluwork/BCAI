@@ -19,7 +19,6 @@ from datetime import datetime
 #print('FILE PROCESS BEGINNING')
 
 #t1 = threading.Thread(target=loop)
-t2 = threading.Thread(target=startshare)
 
 def getTime(mess):
     now = datetime.now()
@@ -60,6 +59,10 @@ def fileRead():
 #5) Once GET request in onionshare.txt, user has downloaded file, kill onionshare thread
 ### Write "Received" to stat.txt
 
+
+def startshare():
+    #start onionshare server to host file
+    os.system("~/onionshare/dev_scripts/onionshare --website image.zip > onionshare.txt")
 
 #@app.route('/execute')
 def executeDocker(onionaddr, mode):
@@ -158,10 +161,6 @@ def loop():
                 #print(mode)
                 statF.close()
                 executeDocker(onionaddr, mode) #send to execute function
-
-def startshare():
-    #start onionshare server to host file
-    os.system("~/onionshare/dev_scripts/onionshare --website image.zip > onionshare.txt")
             
 if __name__ == '__main__':
     t1 = threading.Thread(target=loop)
