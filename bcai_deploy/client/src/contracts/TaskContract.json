@@ -44105,8 +44105,8 @@
         }
       },
       "links": {},
-      "address": "0x3d52A17f2D5EF8aC433E7F5310C7eE0cB827ea3B",
-      "transactionHash": "0x2ee514394f2327b4d5ce3d84c7b5f416944ea7e90ca5d1ce7bb542a6c017899d"
+      "address": "0x0163329E2Cf763e9A76A1805972D0B43EcaF1CA8",
+      "transactionHash": "0xabe5664d8855f415d38c9bb08e06e2eabdd0ddc1868612531cf7ad9bd56fa496"
     },
     "512": {
       "events": {
@@ -44209,7 +44209,7 @@
     }
   },
   "schemaVersion": "3.0.22",
-  "updatedAt": "2020-02-04T16:26:13.334Z",
+  "updatedAt": "2020-02-04T16:43:36.318Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
