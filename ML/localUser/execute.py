@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+#from flask import Flask
 import requests as r
 import time
 import threading
@@ -7,7 +7,6 @@ from datetime import datetime
 
 t1 = threading.Thread(target=loop)
 t2 = threading.Thread(target=startshare)
-address = ""
 
 def getTime(mess):
     now = datetime.now()
@@ -17,6 +16,16 @@ def getTime(mess):
     f = open('log.txt', 'a')
     f.write(time + " "+ mess)
     f.close()
+
+#Overall flow:
+#1) Start loop thread and onionshare thread, wait for onionshare.txt to contain address
+#2) Once onionshare.txt contains address onionshare has started, write address to onionaddr.txt
+#3) Wait for a GET request in onionshare.txt, means worker has received file
+### Write "Executing" to stat.txt
+#4) Wait for stat.txt to contain an onion address, means worker has completed execution, 
+## and result file is being hosted at that address. Make TOR get request
+#5) Download completed result file
+### Write "Ready" to stat.txt
 
 def loop():
     while True:
@@ -65,16 +74,16 @@ def loop():
             while lines != "":
                 if (lines[0:4] == "http" and address == ""): #found address
                     address = lines
-                    statF=open("stat.txt", 'w')
+                    statF=open("onionaddr.txt", 'w')
                     statF.close()
-                    statF=open("stat.txt", 'w')
+                    statF=open("onionaddr.txt", 'w')
                     statF.write(lines)
                     statF.close()
                 elif ("GET" in lines): #file has been received
                     t2._stop() #kill thread
-                    statF=open("onionaddr.txt", 'w')
+                    statF=open("stat.txt", 'w')
                     statF.close()
-                    statF=open("onionaddr.txt", 'w')
+                    statF=open("stat.txt", 'w')
                     statF.write("Executing")
                     statF.close()
                 lines = onionshareLog.readlines()
