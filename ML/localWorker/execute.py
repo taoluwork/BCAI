@@ -62,7 +62,7 @@ def fileRead():
 
 def startshare():
     #start onionshare server to host file
-    os.system("~/onionshare/dev_scripts/onionshare --website image.zip > onionshare.txt")
+    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website image.zip\" -f onionshare.txt")
 
 #@app.route('/execute')
 def executeDocker(onionaddr, mode):
@@ -129,10 +129,9 @@ def executeDocker(onionaddr, mode):
     statF.close()
     while True:
         onionshareLog = open("onionshare.txt", 'r')
-        lines = onionshareLog.readlines()
+        lines = onionshareLog.readline()
         while lines != "":
-            if (lines[0:4] == "http" and address == ""): #found address
-                address = lines
+            if (lines[0:17] == "http://onionshare"): #found address
                 statF=open("onionaddr.txt", 'w')
                 statF.close()
                 statF=open("onionaddr.txt", 'w')
@@ -145,7 +144,7 @@ def executeDocker(onionaddr, mode):
                 statF=open("stat.txt", 'w')
                 statF.write("Received")
                 statF.close()
-            lines = onionshareLog.readlines()
+            lines = onionshareLog.readline()
 
 
 def loop():
