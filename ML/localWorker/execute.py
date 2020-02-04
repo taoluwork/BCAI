@@ -152,7 +152,7 @@ def loop():
         if os.stat("stat.txt").st_size > 0: #if file is not empty
             statF = open("stat.txt", "r")
             onionaddr = statF.readline().rstrip() #first line: ip
-            if(onionaddr != "Ready" and onionaddr != "Executing" and oniondd != "Received"): #make sure it's not reading ready or executing 
+            if(onionaddr != "Ready" and onionaddr != "Executing" and onionaddr != "Received"): #make sure it's not reading ready or executing 
                 #print(ip)
                 mode = statF.readline().rstrip() #second line: mode
                 #print(mode)
