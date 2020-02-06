@@ -250,6 +250,8 @@ function giveRating(){
 
 
 
+
+
 //Gives the user a starting menu of choices
 function askUser(){
     if(canRate == true){
@@ -268,6 +270,7 @@ function receiveResult(){
     /*if(!executing) {
         executing = true;
         exec('python3 execute.py ' + '0 ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
+
             if(err){
             console.log(err);
             return;
@@ -320,6 +323,7 @@ function clearLog(){
         executing = true;
         exec('python3 execute.py ' + '0 ' + requestIP + ' image.zip ' + ip4, (err,stdout,stderr)=>{
             if(err){
+
             console.log(err);
             return;
             }
@@ -1143,6 +1147,7 @@ function listenWebsite(){
     console.log(chalk.cyan('\nWebpage is now open check your default browser...\n'))
     /*exec('sensible-browser https://localhost:3000', (err,stdout,stderr)=>{
         if(err){
+
           console.log(err);
           return;
         }
@@ -1604,4 +1609,3 @@ function listenWebsite(){
         }
     })
 }
-
