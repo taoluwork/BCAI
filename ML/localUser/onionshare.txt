@@ -1,0 +1,22 @@
+Script started on 2020-02-04 12:51:52-0600
+OnionShare 2.2 | https://onionshare.org/
+Connecting to the Tor network: 20% - Asking for networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 40% - Loading authority key certs[KConnecting to the Tor network: 45% - Asking for relay descriptors[KConnecting to the Tor network: 45% - Asking for relay descriptors[KConnecting to the Tor network: 45% - Asking for relay descriptors[KConnecting to the Tor network: 45% - Asking for relay descriptors[KConnecting to the Tor network: 45% - Asking for relay descriptors[KConnecting to the Tor network: 50% - Loading relay descriptors[KConnecting to the Tor network: 50% - Loading relay descriptors[KConnecting to the Tor network: 50% - Loading relay descriptors[KConnecting to the Tor network: 50% - Loading relay descriptors[KConnecting to the Tor network: 50% - Loading relay descriptors[KConnecting to the Tor network: 52% - Loading relay descriptors[KConnecting to the Tor network: 54% - Loading relay descriptors[KConnecting to the Tor network: 80% - Connecting to the Tor network[KConnecting to the Tor network: 80% - Connecting to the Tor network[KConnecting to the Tor network: 80% - Connecting to the Tor network[KConnecting to the Tor network: 80% - Connecting to the Tor network[KConnecting to the Tor network: 80% - Connecting to the Tor network[KConnecting to the Tor network: 85% - Finishing handshake with first hop[KConnecting to the Tor network: 85% - Finishing handshake with first hop[KConnecting to the Tor network: 90% - Establishing a Tor circuit[KConnecting to the Tor network: 90% - Establishing a Tor circuit[KConnecting to the Tor network: 90% - Establishing a Tor circuit[KConnecting to the Tor network: 100% - Done[K
+Setting up onion service on port 17647.
+ * Running on http://127.0.0.1:17647/ (Press CTRL+C to quit)
+
+Give this address to the recipient:
+http://onionshare:glamour-linked@y56sdpm7wa5puogy.onion
+
+Press Ctrl+C to stop the server
+127.0.0.1 - - [04/Feb/2020 12:59:15] "[1m[31mGET //image.zip HTTP/1.1[0m" 401 -
+^C127.0.0.1 - - [04/Feb/2020 13:03:06] "[37mGET /pt7z2gp6kk56uprd7kqd53ewty/shutdown HTTP/1.1[0m" 200 -
+^CTraceback (most recent call last):
+  File "/home/tiger/onionshare/dev_scripts/onionshare", line 28, in <module>
+    onionshare.main()
+  File "/home/tiger/onionshare/onionshare/__init__.py", line 384, in main
+    onion.cleanup()
+  File "/home/tiger/onionshare/onionshare/onion.py", line 762, in cleanup
+    time.sleep(0.2)
+KeyboardInterrupt
+
+Script done on 2020-02-04 13:03:06-0600
