@@ -106,14 +106,14 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start request', 'show pools', 'create new address','show addresses',  'help','quit'],
+    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider rating', 'quit'],
 };
 
 questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop request', 'update request', 'show pools', 'quit'],
+    choices : ['stop request', 'update request', 'show pools', 'finalize request', 'show provider rating', 'quit'],
 };
 
 clearStat();
@@ -218,7 +218,7 @@ function giveRating(){
             ])
             .then(answers =>{
                 var ABIfinalizeRequest; //prepare abi for a function call
-                ABIfinalizeRequest = myContract.methods.finalizeRequest(userAddress, answers.rating).encodeABI();
+                ABIfinalizeRequest = myContract.methods.finalizeRequest(userAddress, true, answers.rating).encodeABI();
                 const rawTransaction = {
                     "from": userAddress,
                     "to": addr,
@@ -243,6 +243,27 @@ function giveRating(){
         else{
             console.log("\nUser doesn't want to give rating\n");
             //go back to main menu
+            var ABIfinalizeRequest; //prepare abi for a function call
+            ABIfinalizeRequest = myContract.methods.finalizeRequest(userAddress, false, 0).encodeABI();
+            const rawTransaction = {
+                "from": userAddress,
+                "to": addr,
+                "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                "gas": 5000000,
+                "chainId": 3,
+                "data": ABIfinalizeRequest
+            }
+
+            decryptedAccount.signTransaction(rawTransaction)
+            .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+            .then(receipt => {
+                //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
+                console.log(chalk.cyan("\n\nYour request has gone through...\n"))
+            })
+            .then(()=>{
+                askUser();
+            })
             askUser();
         }
     })
@@ -250,7 +271,23 @@ function giveRating(){
 
 
 
-
+function viewProviderRating(providerAddress){
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'address',
+            message: 'Choose an address to view rating'
+        }
+    ])
+    .then (answers => {
+        
+        return myContract.methods.getAvgRating(answers.address).call().then(function(rating){
+            console.log("\nThe rating is ", rating, " for this provider\n");
+            return rating;
+        })
+        .then(()=>askUser())
+    })
+}
 
 //Gives the user a starting menu of choices
 function askUser(){
@@ -354,6 +391,9 @@ function choiceMade(choice){
     {
         showPools();
     }
+    else if(choice == questions1.choices[3]){
+        giveRating();
+    }
     else if(choice == questions.choices[2]){
         inquirer.prompt([
             {
@@ -401,7 +441,8 @@ function choiceMade(choice){
         });
     }
     else if(choice == questions.choices[3]){
-        console.log('\n\n');
+        console.log('\n\n');                console.log("\n")
+
         for(var i = 0; i < userAddresses.length; i++){
             console.log(userAddresses[i]);
         }
@@ -428,6 +469,9 @@ function choiceMade(choice){
         console.log(chalk.cyan("while for your request to be assigned you may want to consider changing your "))
         console.log(chalk.cyan("user input settings. Thank you for using iChain!\n\n"))
         askUser();
+    }
+    else if(choice == questions.choices[5] || choice == questions1.choices[4]){
+        viewProviderRating();
     }
     else
     {
