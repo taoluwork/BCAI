@@ -84,8 +84,8 @@ def executeDocker(onionaddr, mode):
     session.proxies['http'] = 'socks5h://localhost:9050'
     session.proxies['https'] = 'socks5h://localhost:9050'
 
-    res = session.get(onionaddr + '/image.zip') #download file
-    session.get(onionaddr + '/finish') #tell server finished downloading
+    res = session.get(onionaddr + 'image.zip') #download file
+    session.get(onionaddr + 'finish') #tell server finished downloading
 
     os.system("sudo rm -rf image.*")
     open('image.zip', 'wb').write(res.content)
@@ -146,7 +146,7 @@ def executeDocker(onionaddr, mode):
                 statF.write("Received")
                 statF.close()
             elif("/finish" in lines): #user finished downloading file, can kill thread
-                t2._stop() #kill thread
+                t2._delete() #kill thread
             lines = onionshareLog.readline()
 
 

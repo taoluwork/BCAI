@@ -49,8 +49,8 @@ def loop():
             session.proxies['http'] = 'socks5h://localhost:9050'
             session.proxies['https'] = 'socks5h://localhost:9050'
 
-            res = session.get(onionaddr + '/image.zip') #download file
-            session.get(onionaddr + '/finish') #tell server finished downloading
+            res = session.get(onionaddr + 'image.zip') #download file
+            session.get(onionaddr + 'finish') #tell server finished downloading
 
             getTime("Image Files Recieved")
 
@@ -91,7 +91,7 @@ def loop():
                     statF.write("Executing")
                     statF.close()
                 elif("/finish" in lines): #provider finished downloading file, can kill thread
-                    t2._stop() #kill thread
+                    t2._delete() #kill thread
                 lines = onionshareLog.readline()
 
 
