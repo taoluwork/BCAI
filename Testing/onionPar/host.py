@@ -55,7 +55,7 @@ def createThreads():
     f.close()
     j = 0
     for i in order:
-        t=threading.Thread(target=startShare,args=[i.strip('\n'),j]) 
+        t=threading.Thread(target=startShare,args=[i.strip('\n'),j])
         threadL.append(t)
         j += 1
 def runThreads():
