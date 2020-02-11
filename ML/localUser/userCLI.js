@@ -11,6 +11,8 @@ const Folder = './';
 var publicIp = require("public-ip");
 var hex2ascii= require("hex2ascii")
 var express = require('express');
+var Table = require('cli-table');
+
 require('events').EventEmitter.prototype._maxListeners = 100;
 
 var now = new Date();
@@ -272,21 +274,58 @@ function giveRating(){
 
 
 function viewProviderRating(providerAddress){
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'address',
-            message: 'Choose an address to view rating'
-        }
-    ])
-    .then (answers => {
-        
-        return myContract.methods.getAvgRating(answers.address).call().then(function(rating){
-            console.log("\nThe rating is ", rating, " for this provider\n");
-            return rating;
-        })
-        .then(()=>askUser())
+
+    myContract.methods.getProviderPool().call().then(function(provPool){
+        return provPool
+		//return provPool;
     })
+    .then((provPool) => {
+        var pos = 0;
+        var ratingsTable = new Table({
+            chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+                   , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+                   , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+                   , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+        });
+        ratingsTable.push(["Rating", "Provider"])
+        provPool.forEach(prov =>{
+            pos+=1;
+            myContract.methods.getAvgRating(prov).call().then(function(rating){
+                return rating;
+            })
+            .then((rating) => {
+                //console.log("\nThe rating is ", rating, " for provider", prov, "\n")
+                ratingsTable.push([rating.toString(), prov.toString()]);
+            })
+            .then(() => {
+                if(pos == provPool.length){
+                    console.log("\n");
+                    console.log(ratingsTable.toString(), "\n\n")
+                    askUser();
+                }
+            })
+        })
+    })
+    //.then(() => askUser())
+    .catch((err) => console.log(err));
+    
+    
+    
+    // inquirer.prompt([
+    //     {
+    //         type: 'input',
+    //         name: 'address',
+    //         message: 'Choose an address to view rating'
+    //     }
+    // ])
+    // .then (answers => {
+        
+    //     return myContract.methods.getAvgRating(answers.address).call().then(function(rating){
+    //         console.log("\nThe rating is ", rating, " for this provider\n");
+    //         return rating;
+    //     })
+    //     .then(()=>askUser())
+    // })
 }
 
 //Gives the user a starting menu of choices
