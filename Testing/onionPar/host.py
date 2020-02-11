@@ -8,15 +8,15 @@ from signal import signal, SIGINT
 import threading
 from datetime import datetime
 
-threads = 4
+threads = 30
 threadL = []
 orderAddr = []
 def shareOrder():
     os.system("script -c \"~/onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt")
 def startShare(file, iter):
-    print(file + ":" + str(iter))
+    #print(file + ":" + str(iter))
     #start onionshare server to host file
-    #os.system("script -c \"~/onionshare/dev_scripts/onionshare --website " + file + "\" -f onionshare" + iter + ".txt")
+    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website " + file + "\" -f onionshare" + str(iter) + ".txt")
 
 def splitFile(file):
     f       = open(file,'r')
@@ -40,46 +40,46 @@ def splitFile(file):
     f.close()
 
 def cleanFiles():
-    f = open("order.txt" , 'r')
-    order = f.readlines()
-    f.close()
-    for i in order:
-        os.system("rm " + i.strip('\n'))
+    os.system('rm onionshare*.txt')
+    os.system('rm hello.txt*.txt')
     os.system('rm order.txt')
 
 def createThreads():
-    #t1 = threading.Thread(target=shareOrder)
-    #t1.start()
     f = open("order.txt" , 'r')
     order = f.readlines()
     f.close()
     j = 0
     for i in order:
-        t=threading.Thread(target=startShare,args=[i.strip('\n'),j])
+        t=threading.Thread(target=startShare,args=[i.strip('\n'),j]) 
         threadL.append(t)
         j += 1
+
 def runThreads():
     for i in threadL:
         i.start()
 
 def getAddrs():
-    f = open("order.txt" , 'r')
-    order = f.readlines()
-    f.close()
     while len(orderAddr) != threads:
-        for i in order:
-            f = open(i.strip('\n'), 'r')
-            lines = f.readlines()
-            f.close()
-            for j in lines:
-                if (j[0:17] == "http://onionshare"): #found address
-                    orderAddr.append(j.strip('/n'))
+        print(len(orderAddr))
+        for i in range(0,threads):
+            if os.path.isfile('onionshare'+str(i)+'.txt'):
+                f = open('onionshare'+str(i)+'.txt', 'r')
+                lines = f.readlines()
+                f.close()
+                for j in lines:
+                    if (j.find("http://onionshare") >= 0): #found address
+                        orderAddr.append(j.strip('/n'))
+        time.sleep(5)
+    print(orderAddr)
     f = open('totalOrder.txt', 'w')
     for i in orderAddr:
         f.write(i + '\n')
     f.close()
 
-
-splitFile("hello.txt")
-createThreads()
-runThreads()
+cleanFiles()
+# splitFile("hello.txt")
+# createThreads()
+# runThreads()
+# getAddrs()
+# bigThread = threading.Thread(target=shareOrder)
+# bigThread.start()
