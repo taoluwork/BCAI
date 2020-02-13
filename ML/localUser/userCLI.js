@@ -108,7 +108,7 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider rating', 'quit'],
+    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'choose provider', 'quit'],
 };
 
 questions1 = {
@@ -271,16 +271,17 @@ function giveRating(){
     })
 }
 
+var pos = 0;
 
 
-function viewProviderRating(providerAddress){
+
+function viewProviderRating(){
 
     myContract.methods.getProviderPool().call().then(function(provPool){
         return provPool
 		//return provPool;
     })
     .then((provPool) => {
-        var pos = 0;
         var ratingsTable = new Table({
             chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
                    , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
@@ -289,17 +290,18 @@ function viewProviderRating(providerAddress){
         });
         ratingsTable.push(["Rating", "Provider"])
         provPool.forEach(prov =>{
-            pos+=1;
             myContract.methods.getAvgRating(prov).call().then(function(rating){
-                return rating;
+                pos+=1;
+                return [rating, pos, prov];
             })
-            .then((rating) => {
+            .then((arr) => {
                 //console.log("\nThe rating is ", rating, " for provider", prov, "\n")
-                ratingsTable.push([rating.toString(), prov.toString()]);
+                ratingsTable.push([arr[0].toString(), arr[2].toString()]);
+                return arr[1];
             })
-            .then(() => {
+            .then((pos) => {
+
                 if(pos == provPool.length){
-                    console.log("\n");
                     console.log(ratingsTable.toString(), "\n\n")
                     askUser();
                 }
@@ -309,23 +311,31 @@ function viewProviderRating(providerAddress){
     //.then(() => askUser())
     .catch((err) => console.log(err));
     
+}
+
+
+function promptProviderChoices(){
+    
+    myContract.methods.getProviderPool().call().then(function(provPool){
+        return provPool
+		//return provPool;
+    })
+    .then((provPool)=>{
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'provChoice',
+                choices: provPool,
+                message: 'Choose provider:'
+            }
+        ])
+        .then(choice => {
+            console.log(choice.provChoice)
+            askUser();
+        })
+    })
     
     
-    // inquirer.prompt([
-    //     {
-    //         type: 'input',
-    //         name: 'address',
-    //         message: 'Choose an address to view rating'
-    //     }
-    // ])
-    // .then (answers => {
-        
-    //     return myContract.methods.getAvgRating(answers.address).call().then(function(rating){
-    //         console.log("\nThe rating is ", rating, " for this provider\n");
-    //         return rating;
-    //     })
-    //     .then(()=>askUser())
-    // })
 }
 
 //Gives the user a starting menu of choices
@@ -511,6 +521,10 @@ function choiceMade(choice){
     }
     else if(choice == questions.choices[5] || choice == questions1.choices[4]){
         viewProviderRating();
+    }
+    else if(choice == questions.choices[6]){
+        console.log("\nYou would like to choose a provider\n")
+        promptProviderChoices();
     }
     else
     {
