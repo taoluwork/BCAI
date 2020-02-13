@@ -118,14 +118,14 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'choose provider', 'quit'],
+    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'quit'],
 };
 
 questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop request', 'update request', 'show pools', 'finalize request', 'show provider rating', 'quit'],
+    choices : ['stop request', 'update request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'quit'],
 };
 
 clearStat();
@@ -329,7 +329,6 @@ function promptProviderChoices(){
         console.log(chalk.cyan("\nYou have choosen ", choice.provChoice, " as your provider\n"));
         //address is chars 0-41
         var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
-        console.log(chooseProvAddr);
         var ABIChooseProvider; //prepare abi for a function call
         ABIChooseProvider = myContract.methods.chooseProvider(chooseProvAddr).encodeABI();
         const rawTransaction = {
@@ -543,7 +542,7 @@ function choiceMade(choice){
         console.log(ratingsTable.toString(), "\n\n")
         askUser();
     }
-    else if(choice == questions.choices[6]){
+    else if(choice == questions1.choices[5]){
         promptProviderChoices();
     }
     else
