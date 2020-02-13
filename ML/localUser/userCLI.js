@@ -40,6 +40,7 @@ var canRate = false;
 var pos = 0;
 var ratings = [];
 var rateProvs = [];
+var validationSelectFlag = false;
 var ratingsTable = new Table({
     chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
            , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
@@ -200,6 +201,14 @@ function cliOrSite(){
 
 
 function setRatingVars(){
+    ratings = [];
+    provs = [];
+    ratingsTable = new Table({
+        chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+               , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+               , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+               , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+    });
     myContract.methods.getProviderPool().call().then(function(provPool){
         return provPool
 		//return provPool;
@@ -311,6 +320,7 @@ function giveRating(){
 
 
 function promptProviderChoices(){
+    setRatingVars();
     var displayProvList = [];
     var displayString = "";
     for(var i = 0; i<rateProvs.length; i++){
@@ -356,10 +366,59 @@ function promptProviderChoices(){
     
 }
 
+function chooseValidator(){
+    setRatingVars();
+    var displayValidatorList = [];
+    var displayString = "";
+    for(var i = 0; i<rateProvs.length; i++){
+        displayString = rateProvs[i] + "- Rating: " + ratings[i];
+        displayValidatorList.push(displayString);
+    }
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'provChoice',
+            choices: displayValidatorList,
+            message: 'Choose validator:'
+        }
+    ])
+    .then(choice => {
+        console.log(chalk.cyan("\nYou have choosen ", choice.provChoice, " as your validator\n"));
+        //address is chars 0-41
+        var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
+        var ABIChooseProvider; //prepare abi for a function call
+        ABIChooseProvider = myContract.methods.chooseProvider(chooseProvAddr).encodeABI();
+        const rawTransaction = {
+            "from": userAddress,
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIChooseProvider
+        }
+
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
+            console.log(chalk.cyan("\n\nYour request has been submitted for validation... \n\n"));
+            prov = 1;
+        })
+        .then(()=>{
+            validationSelectFlag = false;
+            askUser();
+        })
+    })
+}
+
 //Gives the user a starting menu of choices
 function askUser(){
     if(canRate == true){
         giveRating();
+    }
+    if(validationSelectFlag == true){
+        chooseValidator();
     }
     else{
         if(prov == 0)
@@ -1208,6 +1267,7 @@ checkEvents = async () => {
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
         if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
             requestAssignedFlag = 0;
+            validationSelectFlag = true;
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
                 if (err) throw err;
             })
