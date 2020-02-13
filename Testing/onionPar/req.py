@@ -22,6 +22,8 @@ def getShare(address, iter):
 
     res = session.get(address) #download file
     content[iter] = res.content #append this slice's content to total content list
+    #This thread unneeded now, can safely kill it
+    killMe(iter)
 
 #Get a file from an onionshare address, for totalOrder.txt
 def getShareWithoutIter(address):
@@ -51,6 +53,7 @@ def createThreads():
                 j += 1
         #Every slot in content has been written to (Step 3)
         elif not (0 in content):
+            print(content)
             #Tell session it has finished
             statF = open("stat.txt", 'r')
             onionaddr = statF.readline().rstrip()
@@ -64,6 +67,7 @@ def createThreads():
             session.get(onionaddr + 'finish') #tell server finished downloading
             #Write total content to image.zip
             open("image.zip", "wb").write(content)
+            reset()
         #totalOrder.txt not yet received (Step 1)
         else: 
             statF = open("stat.txt", 'r')
@@ -82,5 +86,9 @@ def reset():
         i._delete()
     threadL = []
     os.remove("totalOrder.txt")
+
+#kill specified thread
+def killMe(iter):
+    threadL[iter]._delete()
 
 createThreads()
