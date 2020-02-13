@@ -37,6 +37,15 @@ var webpageUp = 0;
 var executing = false;
 var finished  = false;
 var canRate = false;
+var pos = 0;
+var ratings = [];
+var rateProvs = [];
+var ratingsTable = new Table({
+    chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+           , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+           , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+           , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+});
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
@@ -63,6 +72,7 @@ getIp().then(() => {
     else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
       ip = ip4 + ":" + serverPort;
     }
+
     else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
       ip = "[" + ip6 + "]:" + serverPort;console.log(chalk.cyan("Thank you for using iChain worker CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start providing' to get started or 'help' \nto get more information about the application.\n"))
 
@@ -163,7 +173,7 @@ process.on('SIGINT', async () => {
     }
 });
 
-
+setRatingVars();
 cliOrSite();
 
 function cliOrSite(){
@@ -187,6 +197,34 @@ function cliOrSite(){
 }
 
 
+
+
+function setRatingVars(){
+    myContract.methods.getProviderPool().call().then(function(provPool){
+        return provPool
+		//return provPool;
+    })
+    .then((provPool) => {
+        ratingsTable.push(["Rating", "Provider"])
+        provPool.forEach(prov =>{
+            myContract.methods.getAvgRating(prov).call().then(function(rating){
+                pos+=1;
+                ratings.push(rating);
+                rateProvs.push(prov);
+                return [rating, pos, prov];
+            })
+            .then((arr) => {
+                //console.log("\nThe rating is ", rating, " for provider", prov, "\n")
+                ratingsTable.push([arr[0].toString(), arr[2].toString()]);
+                return arr[1];
+            })
+        })
+    })
+    //.then(() => askUser())
+    .catch((err) => console.log(err));
+}
+
+
 //////////////////////////////////////////////////////CLI FUNCTIONS//////////////////////////////////////////////////////////////////
 
 //Asks for reputation rating
@@ -207,7 +245,7 @@ function giveRating(){
     ])
     .then (answers =>{
         if(answers.askToRate == 'Yes'){
-            console.log("\nYou have chosen to give a rating\n");
+            console.log(chalk.cyan("\nYou have chosen to give a rating\n"));
             //finalize request function
 
             inquirer.prompt([
@@ -243,7 +281,7 @@ function giveRating(){
             })
         }
         else{
-            console.log("\nUser doesn't want to give rating\n");
+            console.log(chalk.cyan("\nYou have elected to not give rating\n"));
             //go back to main menu
             var ABIfinalizeRequest; //prepare abi for a function call
             ABIfinalizeRequest = myContract.methods.finalizeRequest(userAddress, false, 0).encodeABI();
@@ -266,71 +304,52 @@ function giveRating(){
             .then(()=>{
                 askUser();
             })
-            askUser();
         }
     })
 }
 
-var pos = 0;
-
-
-
-function viewProviderRating(){
-
-    myContract.methods.getProviderPool().call().then(function(provPool){
-        return provPool
-		//return provPool;
-    })
-    .then((provPool) => {
-        var ratingsTable = new Table({
-            chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
-                   , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
-                   , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
-                   , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
-        });
-        ratingsTable.push(["Rating", "Provider"])
-        provPool.forEach(prov =>{
-            myContract.methods.getAvgRating(prov).call().then(function(rating){
-                pos+=1;
-                return [rating, pos, prov];
-            })
-            .then((arr) => {
-                //console.log("\nThe rating is ", rating, " for provider", prov, "\n")
-                ratingsTable.push([arr[0].toString(), arr[2].toString()]);
-                return arr[1];
-            })
-            .then((pos) => {
-
-                if(pos == provPool.length){
-                    console.log(ratingsTable.toString(), "\n\n")
-                    askUser();
-                }
-            })
-        })
-    })
-    //.then(() => askUser())
-    .catch((err) => console.log(err));
-    
-}
 
 
 function promptProviderChoices(){
-    
-    myContract.methods.getProviderPool().call().then(function(provPool){
-        return provPool
-		//return provPool;
-    })
-    .then((provPool)=>{
-        inquirer.prompt([
-            {
-                type: 'list',
-                name: 'provChoice',
-                choices: provPool,
-                message: 'Choose provider:'
-            }
-        ])
-        .then(choice => {
-            console.log(choice.provChoice)
+    var displayProvList = [];
+    var displayString = "";
+    for(var i = 0; i<rateProvs.length; i++){
+        displayString = rateProvs[i] + "- Rating: " + ratings[i];
+        displayProvList.push(displayString);
+    }
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'provChoice',
+            choices: displayProvList,
+            message: 'Choose provider:'
+        }
+    ])
+    .then(choice => {
+        console.log(chalk.cyan("\nYou have choosen ", choice.provChoice, " as your provider\n"));
+        //address is chars 0-41
+        var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
+        console.log(chooseProvAddr);
+        var ABIChooseProvider; //prepare abi for a function call
+        ABIChooseProvider = myContract.methods.chooseProvider(chooseProvAddr).encodeABI();
+        const rawTransaction = {
+            "from": userAddress,
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIChooseProvider
+        }
+
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
+            console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+            prov = 1;
+        })
+        .then(()=>{
             askUser();
         })
     })
@@ -520,10 +539,11 @@ function choiceMade(choice){
         askUser();
     }
     else if(choice == questions.choices[5] || choice == questions1.choices[4]){
-        viewProviderRating();
+        
+        console.log(ratingsTable.toString(), "\n\n")
+        askUser();
     }
     else if(choice == questions.choices[6]){
-        console.log("\nYou would like to choose a provider\n")
         promptProviderChoices();
     }
     else
