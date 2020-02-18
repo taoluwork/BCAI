@@ -1,4 +1,0 @@
-http://onionshare:sudoku-brittle@b4o2jkj2qpeek2tl.onion/hello.txt0.txt
-http://onionshare:king-bobsled@nwx33corggrlsldz.onion/hello.txt1.txt
-http://onionshare:dotted-gluten@746gygbr5lk3lnpn.onion/hello.txt2.txt
-http://onionshare:exhume-evolve@iylarlhkzb4q3r5t.onion/hello.txt3.txt
