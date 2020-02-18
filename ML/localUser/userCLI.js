@@ -198,11 +198,7 @@ function cliOrSite(){
 }
 
 
-
-
 function setRatingVars(){
-    ratings = [];
-    provs = [];
     ratingsTable = new Table({
         chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
                , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
@@ -218,8 +214,11 @@ function setRatingVars(){
         provPool.forEach(prov =>{
             myContract.methods.getAvgRating(prov).call().then(function(rating){
                 pos+=1;
+                ratings.length = 0;
+                rateProvs.length = 0;
                 ratings.push(rating);
                 rateProvs.push(prov);
+
                 return [rating, pos, prov];
             })
             .then((arr) => {
@@ -231,6 +230,7 @@ function setRatingVars(){
     })
     //.then(() => askUser())
     .catch((err) => console.log(err));
+
 }
 
 
@@ -414,6 +414,7 @@ function chooseValidator(){
 
 //Gives the user a starting menu of choices
 function askUser(){
+    setRatingVars();
     if(canRate == true){
         giveRating();
     }
@@ -598,6 +599,7 @@ function choiceMade(choice){
     }
     else if(choice == questions.choices[5] || choice == questions1.choices[4]){
         
+        console.log("\n");
         console.log(ratingsTable.toString(), "\n\n")
         askUser();
     }
