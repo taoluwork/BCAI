@@ -287,7 +287,8 @@ def dockerExe():
 
 def getMode():
     global mode
-    while True:
+    flag = True
+    while flag:
         time.sleep(5)
         if os.stat("stat.txt").st_size > 0: 
             statF = open("stat.txt", "r")
@@ -295,16 +296,17 @@ def getMode():
             if(curLine != "Ready" and curLine != "Executing" and curLine != "Received"):  
                 mode = statF.readline().rstrip() #second line: mode
                 statF.close()
+                flag = False
 
 
 if __name__ == '__main__':
-    
-    if mode == 'user':
-        hostController('image.zip')
-        reqController()
-    else:
-        getMode()
-        reqController()
-        dockerExe()
-        hostController('image.zip')
+    while True:    
+        if mode == 'user':
+            hostController('image.zip')
+            reqController()
+        else:
+            getMode()
+            reqController()
+            dockerExe()
+            hostController('image.zip')
     
