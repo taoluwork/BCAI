@@ -17,7 +17,7 @@ orderAddr = []
 order   = []
 startTimes = []
 content = [0] * threads #inits list with threads number of 0s
-
+mode = '' #user, provider, or validator
 
 #######################################################################################################################################
 ###########################################################host########################################################################
@@ -90,6 +90,22 @@ def getAddrs():
         f.write(i + '\n')
     f.close()
 
+def watchMainThread():
+    flag = True
+    while flag:
+        if os.path.isfile('onionshareOrder.txt'):
+            f = open('onionshareOrder.txt', 'r')
+            line = f.readline()
+            while line != '':
+                if "/finish" in line :
+                    flag = False
+                line = f.readline()
+            f.close()
+    resetHost()
+        
+
+
+
 def threadRestarter():
     while(True):
         for i in range(0,threads):
@@ -113,10 +129,13 @@ def resetHost():
     global orderAddr
     global order
     global startTimes
+    for i in threadL:
+        i._delete()
     threadL = []
     orderAddr = []
     order   = []
     startTimes = []
+    os.remove("totalOrder.txt")
 
 
 #######################################################################################################################################
@@ -144,7 +163,8 @@ def getShareWithoutIter(address):
     open("totalOrder.txt", 'wb').write(res.content)
     
 def createThreadsReq():
-    while True:
+    flag = True
+    while flag:
         time.sleep(5)
         #Addresses written to file (Step 2)
         if os.path.isfile("totalOrder.txt"):
@@ -175,6 +195,7 @@ def createThreadsReq():
             #Write total content to image.zip
             open("image.zip", "wb").write(content)
             resetReq()
+            flag = False
         #totalOrder.txt not yet received (Step 1)
         else: 
             statF = open("stat.txt", 'r')
@@ -193,6 +214,7 @@ def resetReq():
         i._delete()
     threadL = []
     os.remove("totalOrder.txt")
+
 
 #kill specified thread
 def killMe(iter):
@@ -218,8 +240,21 @@ def hostController(file):
     errCorr = threading.Thread(target=threadRestarter)
     errCorr.start()
     getAddrs()
-    mainThread = threading.Thread(target=threadRestarter)
+    mainThread = threading.Thread(target=shareOrder)
     mainThread.start()
+    flag = True
+    while flag:
+        if os.path.isfile('onionshareOrder.txt'):
+            f = open('onionshareOrder.txt', 'r')
+            line = f.readline()
+            while line != '':
+                if "/finish" in line :
+                    flag = False
+                    errCorr._delete()
+                    mainThread._delete()
+                line = f.readline()
+            f.close()
+    resetHost()
 
 def reqController():
     createThreadsReq()
@@ -250,12 +285,26 @@ def dockerExe():
 
     getTime('Image Unloaded and Ready For Transmission')
 
-def dockerPrep():
-
-
-
-def mainLoop():
+def getMode():
+    global mode
     while True:
         time.sleep(5)
-        pass
+        if os.stat("stat.txt").st_size > 0: 
+            statF = open("stat.txt", "r")
+            curLine = statF.readline().rstrip() 
+            if(curLine != "Ready" and curLine != "Executing" and curLine != "Received"):  
+                mode = statF.readline().rstrip() #second line: mode
+                statF.close()
 
+
+if __name__ == '__main__':
+    
+    if mode == 'user':
+        hostController('image.zip')
+        reqController()
+    else:
+        getMode()
+        reqController()
+        dockerExe()
+        hostController('image.zip')
+    
