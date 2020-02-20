@@ -30,15 +30,15 @@ def startShare(file, iter):
     os.system("script -c \"~/onionshare/dev_scripts/onionshare --website " + file + "\" -f onionshare" + str(iter) + ".txt")
 
 def splitFile(file):
-    f       = open(file,'r')
+    f       = open(file,'rb')
     lines   = f.readlines()
     lineLen = len(lines)
     pos     = 0
 
-    print(lines)
+    #print(lines)
     print(lineLen)
     for i in range(0, threads):
-        fw = open(file+str(i)+'.txt' ,'w')
+        fw = open(file+str(i)+'.txt' ,'wb')
         lo = int((i)*(lineLen/threads))
         hi = int((i+1)*(lineLen/threads))
         print("lo:" + str(lo) + " hi:" + str(hi))
@@ -125,7 +125,7 @@ def threadRestarter():
         time.sleep(5)
 
 def resetHost():
-    global thredL
+    global threadL
     global orderAddr
     global order
     global startTimes
@@ -164,10 +164,12 @@ def getShareWithoutIter(address):
     
 def createThreadsReq():
     flag = True
+    flagTwo = True
     while flag:
         time.sleep(5)
         #Addresses written to file (Step 2)
-        if os.path.isfile("totalOrder.txt"):
+        if os.path.isfile("totalOrder.txt") and flagTwo:
+            flagTwo = False
             #Need to make a thread for each address
             f = open("totalOrder.txt", 'r')
             lines = f.readlines()
@@ -290,8 +292,8 @@ def getMode():
     flag = True
     while flag:
         time.sleep(5)
-        if os.stat("stat.txt").st_size > 0: 
-            statF = open("stat.txt", "r")
+        if os.stat("mode.txt").st_size > 0: 
+            statF = open("mode.txt", "r")
             curLine = statF.readline().rstrip() 
             if(curLine != "Ready" and curLine != "Executing" and curLine != "Received"):  
                 mode = statF.readline().rstrip() #second line: mode
