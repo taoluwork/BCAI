@@ -2,12 +2,14 @@ var Web3 = require('web3');
 var ws = new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws/v3/aa544d081b53485fb0fa8df2c9a8437e')
 web3 = new Web3(ws);
 const fs = require('fs');
-var TaskContract = require('../bcai_deploy/client/src/contracts/TaskContract.json');
+var TaskContract = require('../../bcai_deploy/client/src/contracts/TaskContract.json');
 var abi = TaskContract.abi;
 var addr = TaskContract.networks[3].address;        //align to const ID defination on top
 const myContract = new web3.eth.Contract(abi, addr);
 var account = "0xcc90abef8180d0ab5974dd0f1247623bc246eef8";
-var account2 = "0x"
+var keystore = fs.readFileSync('UTC--2019-09-16T20-22-39.327891999Z--458c5617e4f549578e181f12da8f840889e3c0a8', 'utf8');
+var password = "localtest";
+var chalk = require('chalk');
 
 fs.open('./GasCosts.txt', 'w', function(err) {
     if(err) throw err;
@@ -20,10 +22,8 @@ fs.appendFileSync('./GasCosts.txt', 'Gas Costs For Smart Contract Methods\n');
 
 var ws = new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws/v3/aa544d081b53485fb0fa8df2c9a8437e')
 web3 = new Web3(ws);
-var TaskContract = require('../bcai_deploy/client/src/contracts/TaskContract.json');
 var abi = TaskContract.abi;
 var addr = TaskContract.networks[3].address;        //align to const ID defination on top
-const myContract = new web3.eth.Contract(abi, addr);
 var userAddress = '0x458c5617e4f549578e181f12da8f840889e3c0a8';
 decryptedAccount = web3.eth.accounts.decrypt(keystore, password);
 ABIstartProviding = myContract.methods.startProviding(100, 100, 1000).encodeABI();
@@ -97,7 +97,6 @@ myContract.methods.getProviderPool().estimateGas({from: account})
     myContract.methods.updateRequest(100, 100, 1000, web3.utils.asciiToHex('216.3.128.12')).estimateGas({from: account})
     .then(gas => {
         fs.appendFileSync('./GasCosts.txt', 'updateRequest - ' + gas + "\n");
-        process.exit();
     })
 })
 .then(() => {
@@ -144,7 +143,6 @@ myContract.methods.getProviderPool().estimateGas({from: account})
                 "data": ABIstopProviding
             }
             console.log(chalk.green("STOPPROVIDING"));
-            stopwatch.start();
             decryptedAccount.signTransaction(rawTransaction)
             .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
             .then(receipt => {
@@ -162,6 +160,7 @@ myContract.methods.getProviderPool().estimateGas({from: account})
                     );
                     console.log("\n", chalk.red(err), "\n");
                 }
+            })
     })
 })
 .catch(err => {

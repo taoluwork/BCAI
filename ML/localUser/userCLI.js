@@ -415,6 +415,8 @@ function chooseValidator(){
 //Gives the user a starting menu of choices
 function askUser(){
     setRatingVars();
+    console.log("\nValidation flag is ", validationSelectFlag, " in check events\n");
+
     if(canRate == true){
         giveRating();
     }
@@ -1270,6 +1272,7 @@ checkEvents = async () => {
         if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
             requestAssignedFlag = 0;
             validationSelectFlag = true;
+            console.log("\nValidation flag is ", validationSelectFlag, " in check events\n");
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
                 if (err) throw err;
             })
