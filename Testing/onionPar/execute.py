@@ -18,6 +18,7 @@ order   = []
 startTimes = []
 content = [0] * threads #inits list with threads number of 0s
 mode = '' #user, provider, or validator
+fileName = ''
 
 #######################################################################################################################################
 ###########################################################host########################################################################
@@ -30,6 +31,7 @@ def startShare(file, iter):
     os.system("script -c \"~/onionshare/dev_scripts/onionshare --website " + file + "\" -f onionshare" + str(iter) + ".txt")
 
 def splitFile(file):
+    fileName = file
     f       = open(file,'rb')
     lines   = f.readlines()
     lineLen = len(lines)
@@ -90,22 +92,6 @@ def getAddrs():
         f.write(i + '\n')
     f.close()
 
-def watchMainThread():
-    flag = True
-    while flag:
-        if os.path.isfile('onionshareOrder.txt'):
-            f = open('onionshareOrder.txt', 'r')
-            line = f.readline()
-            while line != '':
-                if "/finish" in line :
-                    flag = False
-                line = f.readline()
-            f.close()
-    resetHost()
-        
-
-
-
 def threadRestarter():
     while(True):
         for i in range(0,threads):
@@ -129,13 +115,21 @@ def resetHost():
     global orderAddr
     global order
     global startTimes
+    global mode
+    global fileName
     for i in threadL:
         i._delete()
     threadL = []
     orderAddr = []
     order   = []
     startTimes = []
+    mode = ''
+    fileName = ''
     os.remove("totalOrder.txt")
+    os.remove('onionShareOrder.txt')
+    os.remove('onionshare*.txt')
+    os.remove('order.txt')
+    os.remove(fileName + '*.txt')
 
 
 #######################################################################################################################################
@@ -165,6 +159,7 @@ def getShareWithoutIter(address):
 def createThreadsReq():
     flag = True
     flagTwo = True
+    flagThree = True
     while flag:
         time.sleep(5)
         #Addresses written to file (Step 2)
@@ -204,18 +199,22 @@ def createThreadsReq():
             onionaddr = statF.readline().rstrip()
             statF.close()
             #if file ready to be received from worker. onionaddr will hold the .onion address
-            if onionaddr != '' and onionaddr != 'Executing' and onionaddr != 'Ready':
+            if onionaddr != '' and onionaddr != 'Executing' and onionaddr != 'Ready' and flagThree:
+                flagThree = False
                 getShareWithoutIter(onionaddr) #download totalOrder.txt
 
 def resetReq():
     global content
     global threadL
+    global mode
     content = [0] * threads
     #kill all threads before resetting
     for i in threadL:
         i._delete()
     threadL = []
     os.remove("totalOrder.txt")
+    mode = ''
+    os.remove('onionShareOrder.txt')
 
 
 #kill specified thread
@@ -292,23 +291,28 @@ def getMode():
     flag = True
     while flag:
         time.sleep(5)
-        if os.stat("mode.txt").st_size > 0: 
-            statF = open("mode.txt", "r")
-            curLine = statF.readline().rstrip() 
-            if(curLine != "Ready" and curLine != "Executing" and curLine != "Received"):  
-                mode = statF.readline().rstrip() #second line: mode
-                statF.close()
+        if os.path.isfile('mode.txt'): 
+            f = open("mode.txt", "r")
+            curLine = f.readline().rstrip()
+            f.close() 
+            if(curLine == "provider" or curLine == 'validator' or curLine == "user"):  
+                mode = curLine
                 flag = False
+                f = open('mode.txt', 'w')
+                f.close()
+
 
 
 if __name__ == '__main__':
-    while True:    
+    while True:
+        getMode()    
         if mode == 'user':
             hostController('image.zip')
             reqController()
         else:
-            getMode()
             reqController()
             dockerExe()
             hostController('image.zip')
+        
+
     
