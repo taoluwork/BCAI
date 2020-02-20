@@ -1269,7 +1269,7 @@ checkEvents = async () => {
       //console.log(hex2ascii(pastEvents[i].returnValues.info))
       // Request Computation Complete
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
-        if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
+        if (userAddress === pastEvents[i].returnValues.reqAddr) {
             requestAssignedFlag = 0;
             validationSelectFlag = true;
             console.log("\nValidation flag is ", validationSelectFlag, " in check events\n");
