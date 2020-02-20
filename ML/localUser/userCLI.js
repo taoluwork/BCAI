@@ -126,7 +126,7 @@ questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop request', 'update request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'quit'],
+    choices : ['stop request', 'update request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'choose validator', 'quit'],
 };
 
 clearStat();
@@ -415,7 +415,6 @@ function chooseValidator(){
 //Gives the user a starting menu of choices
 function askUser(){
     setRatingVars();
-    console.log("\nValidation flag is ", validationSelectFlag, " in check events\n");
 
     if(canRate == true){
         giveRating();
@@ -607,6 +606,15 @@ function choiceMade(choice){
     }
     else if(choice == questions1.choices[5]){
         promptProviderChoices();
+    }
+    else if(choice == questions1.choices[6]){
+        if(validationSelectFlag == true){
+            chooseValidator();
+        }
+        else{
+            console.log(chalk.cyan("\nRequest has not been completed yet. You are unable to select a validator.\n"))
+            askUser();
+        }
     }
     else
     {
@@ -1269,10 +1277,12 @@ checkEvents = async () => {
       //console.log(hex2ascii(pastEvents[i].returnValues.info))
       // Request Computation Complete
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
-        if (userAddress === pastEvents[i].returnValues.reqAddr) {
+          //console.log("\nIn complete block\n");
+          //console.log("\nuser address is ", userAddress, "\n");
+          //console.log(pastEvents[i].returnValues;
+        if (userAddress === pastEvents[i].returnValues.reqAddr.toLowerCase()) {
             requestAssignedFlag = 0;
             validationSelectFlag = true;
-            console.log("\nValidation flag is ", validationSelectFlag, " in check events\n");
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
                 if (err) throw err;
             })
