@@ -7,17 +7,17 @@ import json
 from signal import signal, SIGINT
 import threading
 from datetime import datetime
-
+import numpy as np
 
 
 ##globals##
-threads = 4
+threads = 8
 threadL = []
 orderAddr = []
 order   = []
 startTimes = []
 content = [0] * threads #inits list with threads number of 0s
-mode = '' #user, provider, or validator
+mode = 'user' #user, provider, or validator
 fileName = ''
 
 #######################################################################################################################################
@@ -177,7 +177,7 @@ def createThreadsReq():
                 j += 1
         #Every slot in content has been written to (Step 3)
         elif not (0 in content):
-            print(content)
+            #print(content)
             #Tell session it has finished
             statF = open("stat.txt", 'r')
             onionaddr = statF.readline().rstrip()
@@ -188,9 +188,17 @@ def createThreadsReq():
             session.proxies['http'] = 'socks5h://localhost:9050'
             session.proxies['https'] = 'socks5h://localhost:9050'
 
-            session.get(onionaddr + 'finish') #tell server finished downloading
+            session.get(onionaddr + '/finish') #tell server finished downloading
+
             #Write total content to image.zip
-            open("image.zip", "wb").write(content)
+            #content is a list of lists of bytes, but saved value must be a simple list of bytes
+            #This is what I came up with to convert it to a list of bytes
+            content2 = []
+            for i in range (0, threads):
+                for j in range(0, len(content[i])):
+                    content2.append(content[i][j])
+            #And now it can be saved with a join
+            open("image.zip", "wb").write(b''.join(content2))
             resetReq()
             flag = False
         #totalOrder.txt not yet received (Step 1)
