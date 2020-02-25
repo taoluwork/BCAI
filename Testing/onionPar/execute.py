@@ -106,14 +106,14 @@ def threadRestarter():
                 threadL[i].start()
                 startTimes[i] = time.time()
                 f = open('restart.txt', 'a')
-                f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + '\n')
+                f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + ' due to time issue\n')
                 f.close()
-            elif orderAddr[i] != 0:
-                f = open('onionshare' + str(i) +  '.txt')
+        for i in range(0,threads):
+            if os.path.isfile('onionshare' + str(i) + '.txt' ):
+                f = open('onionshare' + str(i) + '.txt' )
                 lines = f.readlines()
-                f.close()
                 for line in lines:
-                    if line.find('in use'):
+                    if line.find('in use') >= 0:
                         os.system('rm onionshare' + str(i) + '.txt')
                         threadL[i]._delete()
                         f = open("order.txt" , 'r')
@@ -124,9 +124,8 @@ def threadRestarter():
                         threadL[i].start()
                         startTimes[i] = time.time()
                         f = open('restart.txt', 'a')
-                        f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + '\n')
+                        f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + ' due to address error\n')
                         f.close()
-
 
         time.sleep(5)
 
