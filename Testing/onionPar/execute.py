@@ -11,7 +11,7 @@ import numpy as np
 
 
 ##globals##
-threads = 8
+threads = 16
 threadL = []
 orderAddr = []
 order   = []
@@ -108,6 +108,26 @@ def threadRestarter():
                 f = open('restart.txt', 'a')
                 f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + '\n')
                 f.close()
+            elif orderAddr[i] != 0:
+                f = open('onionshare' + str(i) +  '.txt')
+                lines = f.readlines()
+                f.close()
+                for line in lines:
+                    if line.find('in use'):
+                        os.system('rm onionshare' + str(i) + '.txt')
+                        threadL[i]._delete()
+                        f = open("order.txt" , 'r')
+                        lines = f.readlines()
+                        f.close()
+                        t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i]) 
+                        threadL[i] = t
+                        threadL[i].start()
+                        startTimes[i] = time.time()
+                        f = open('restart.txt', 'a')
+                        f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + '\n')
+                        f.close()
+
+
         time.sleep(5)
 
 def resetHost():
