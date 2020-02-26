@@ -129,6 +129,43 @@ def threadRestarter():
 
         time.sleep(5)
 
+def hostReqFail():
+    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website reqFails.txt" + "\" -f reqFailLog.txt")
+def reqFail():
+    failThread = threading.Thread(target=hostReqFail)
+    threadOn = False
+    global threads
+    reqMade = [0]*threads
+    callSum = 0
+    while True:
+        time.sleep(120)
+        for i in range(0,threads):
+            if os.path.isfile('onionshare' + str(i) + '.txt'):
+                f = open('onionshare' + str(i) + '.txt')
+                lines = f.readlines()
+                f.close()
+                for line in lines:
+                    if reqMade[i] == 0 and line.find('get') >= 0:
+                        reqMade[i] = 1
+                        callSum += 1
+        if callSum >= (threads/2) and callSum != threads:
+            f = open('reqFails.txt', 'w')
+            for i in range(0,threads):
+                if reqMade[i] == 0:
+                    f.write(str(i)+'\n')
+            if threadOn:
+                failThread._delete()
+                failThread = threading.Thread(target=hostReqFail)
+                failThread.start()
+                threadOn = True
+            else:
+                failThread.start()
+                threadOn = True
+        if callSum == threads:
+            failThread._delete()
+            threadOn = False
+            
+
 def resetHost():
     global threadL
     global orderAddr
@@ -244,6 +281,35 @@ def resetReq():
     os.remove('onionShareOrder.txt')
 
 
+def failingCheck():
+    global threadL
+    while True:
+        time.sleep(120)
+        positions = []
+        try:
+
+            session = r.session()
+            session.proxies = {}
+            session.proxies['http'] = 'socks5h://localhost:9050'
+            session.proxies['https'] = 'socks5h://localhost:9050'
+
+            fails = session.get(onionaddr + '/reqFails.txt')
+            f = open('reqFails.txt', 'wb').write(fails.contetn)
+            f.close()
+            f = open('reqFails.txt', 'r')
+            lines = f.readlines()
+            f.close()
+            for line in lines:
+                positions.append(int(line).rstrip())
+            f = open('totalOrder.txt', 'r')
+            lines = f.readlines()
+            for pos in positions:
+                threadL[pos]._delete()
+                threadL[pos] = threading.Thread(target=getShare,args=[lines[pos].rstrip(),pos])
+                threadL[pos].start()
+        except:
+            pass
+
 #kill specified thread
 def killMe(iter):
     threadL[iter]._delete()
@@ -268,6 +334,8 @@ def hostController(file):
     errCorr = threading.Thread(target=threadRestarter)
     errCorr.start()
     getAddrs()
+    failThread = threading.Thread(target=reqFail)
+    failThread.start()
     mainThread = threading.Thread(target=shareOrder)
     mainThread.start()
     flag = True
@@ -282,10 +350,14 @@ def hostController(file):
                     mainThread._delete()
                 line = f.readline()
             f.close()
+    failThread._delete()
     resetHost()
 
 def reqController():
+    failThread = threading.Thread(target=failingCheck)
+    failThread.start()
     createThreadsReq()
+    failThread._delete()
 
 def dockerExe():
     #this will load the image back into docker
