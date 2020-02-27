@@ -234,14 +234,14 @@ contract TaskContract is bcaiReputation{
                 return '1';
             }
         }
-        // else if(requestList[msg.sender].status == '2' && requestList[msg.sender].validator == address(0)){
-        //     providerList[provAddr].available = false;
-        //     ArrayPop(providerPool, provAddr);
+        else if(requestList[msg.sender].status == '2' && requestList[msg.sender].validator == address(0)){
+            providerList[provAddr].available = false;
+            ArrayPop(providerPool, provAddr);
 
-        //     requestList[msg.sender].validator = provAddr;
-        //     emit PairingInfoLong(msg.sender, provAddr, 'Validation Assigned to Provider', requestList[msg.sender].resultID);
+            requestList[msg.sender].validator = provAddr;
+            emit PairingInfoLong(msg.sender, provAddr, 'Validation Assigned to Provider', requestList[msg.sender].resultID);
             
-        // }
+        }
         else{
             if(requestList[msg.sender].status == '1'){
                 emit SystemInfo(msg.sender, 'Your request already has a provider assigned');

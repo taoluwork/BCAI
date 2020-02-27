@@ -207,18 +207,19 @@ function setRatingVars(){
     });
     myContract.methods.getProviderPool().call().then(function(provPool){
         return provPool
-		//return provPool;
+        //return provPool;
+        //console.log(provPool);
     })
     .then((provPool) => {
         ratingsTable.push(["Rating", "Provider"])
+        ratings.length = 0;
+        rateProvs.length = 0;
         provPool.forEach(prov =>{
             myContract.methods.getAvgRating(prov).call().then(function(rating){
                 pos+=1;
-                ratings.length = 0;
-                rateProvs.length = 0;
+
                 ratings.push(rating);
                 rateProvs.push(prov);
-
                 return [rating, pos, prov];
             })
             .then((arr) => {
@@ -323,6 +324,7 @@ function promptProviderChoices(){
     setRatingVars();
     var displayProvList = [];
     var displayString = "";
+    console.log(rateProvs);
     for(var i = 0; i<rateProvs.length; i++){
         displayString = rateProvs[i] + "- Rating: " + ratings[i];
         displayProvList.push(displayString);
