@@ -234,11 +234,11 @@ contract TaskContract is bcaiReputation{
                 return '1';
             }
         }
-        else if(requestList[msg.sender].status == '2' && requestList[msg.sender].validator == address(0) && requestList[msg.sender].provider != provAddr){
+        else if(requestList[msg.sender].status == '2' && requestList[msg.sender].validators[0] == address(0) && requestList[msg.sender].provider != provAddr){
             providerList[provAddr].available = false;
             ArrayPop(providerPool, provAddr);
 
-            requestList[msg.sender].validator = provAddr;
+            requestList[msg.sender].validators[0] = provAddr;
             emit PairingInfoLong(msg.sender, provAddr, 'Validation Assigned to Provider', requestList[msg.sender].resultID);
             
         }
