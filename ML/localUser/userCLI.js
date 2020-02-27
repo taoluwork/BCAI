@@ -338,7 +338,7 @@ function promptProviderChoices(){
         }
     ])
     .then(choice => {
-        console.log(chalk.cyan("\nYou have choosen ", choice.provChoice, " as your provider\n"));
+        console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your provider\n"));
         //address is chars 0-41
         var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
         var ABIChooseProvider; //prepare abi for a function call
@@ -385,7 +385,7 @@ function chooseValidator(){
         }
     ])
     .then(choice => {
-        console.log(chalk.cyan("\nYou have choosen ", choice.provChoice, " as your validator\n"));
+        console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your validator\n"));
         //address is chars 0-41
         var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
         var ABIChooseProvider; //prepare abi for a function call
@@ -653,7 +653,8 @@ function newAcc(mainNet, pass){
                         if(err) throw err;
                         console.log("Congrats! New address constructed.")
                         console.log("To use add ether using your favorite exchange");
-                        //add new keystore to the array
+                        //add new keystore to the arrayUnhandledPromiseRejectionWarning: Error: Transaction has been reverted by the EVM:
+
                         fs.readdir(Folder, (err, files) => {
                             userAddresses = []
                             files.forEach(file => {
