@@ -11,11 +11,14 @@ import numpy as np
 
 
 ##globals##
-threads = 16
+threads = 8
 threadL = []
 orderAddr = []
 order   = []
 startTimes = []
+mainThread = None
+totalAddr = None
+totalStartTime = 0
 content = [0] * threads #inits list with threads number of 0s
 mode = 'user' #user, provider, or validator
 fileName = ''
@@ -24,6 +27,8 @@ fileName = ''
 ###########################################################host########################################################################
 #######################################################################################################################################
 def shareOrder():
+    global totalStartTime
+    totalStartTime = time.time()
     os.system("script -c \"~/onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt")
 def startShare(file, iter):
     #print(file + ":" + str(iter))
@@ -92,6 +97,24 @@ def getAddrs():
         f.write(i + '\n')
     f.close()
 
+def getTotalAddr():
+    global totalAddr
+    flag = True
+    while(flag):
+        if os.path.isfile('onionshareOrder.txt'):
+            f = open('onionshareOrder.txt', 'r')
+            lines = f.readlines()
+            f.close()
+            for j in lines:
+                if (j.find("http://onionshare") >= 0): #found address
+                    totalAddr = j.strip('\n') + "/totalOrder.txt"
+                    flag = False 
+        time.sleep(5)
+    #Write address to file
+    f = open('totalOrderAddress.txt', 'w')
+    f.write(totalAddr)
+    f.close()
+
 def threadRestarter():
     while(True):
         for i in range(0,threads):
@@ -129,42 +152,22 @@ def threadRestarter():
 
         time.sleep(5)
 
-def hostReqFail():
-    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website reqFails.txt" + "\" -f reqFailLog.txt")
-def reqFail():
-    failThread = threading.Thread(target=hostReqFail)
-    threadOn = False
-    global threads
-    reqMade = [0]*threads
-    callSum = 0
-    while True:
-        time.sleep(120)
-        for i in range(0,threads):
-            if os.path.isfile('onionshare' + str(i) + '.txt'):
-                f = open('onionshare' + str(i) + '.txt')
-                lines = f.readlines()
-                f.close()
-                for line in lines:
-                    if reqMade[i] == 0 and line.find('get') >= 0:
-                        reqMade[i] = 1
-                        callSum += 1
-        if callSum >= (threads/2) and callSum != threads:
-            f = open('reqFails.txt', 'w')
-            for i in range(0,threads):
-                if reqMade[i] == 0:
-                    f.write(str(i)+'\n')
-            if threadOn:
-                failThread._delete()
-                failThread = threading.Thread(target=hostReqFail)
-                failThread.start()
-                threadOn = True
-            else:
-                failThread.start()
-                threadOn = True
-        if callSum == threads:
-            failThread._delete()
-            threadOn = False
-            
+def totalThreadRestarter():
+    global totalStartTime
+    global totalAddr
+    global mainThread
+    while (True):
+        if time.time() > totalStartTime + 120 and totalAddr == 0:
+            os.system('rm onionshareOrder.txt')
+            #restart thread
+            mainThread._delete()
+            t = threading.Thread(target=shareOrder)
+            mainThread = t
+            mainThread.start()
+            totalStartTime = time.time()
+            f = open('restart.txt', 'a')
+            f.write("thread: for toalOrder has been restarted at:" + str(time.time()) + ' due to time issue\n')
+            f.close()
 
 def resetHost():
     global threadL
@@ -271,44 +274,19 @@ def resetReq():
     global content
     global threadL
     global mode
+    global mainThread
+    global totalAddr
     content = [0] * threads
     #kill all threads before resetting
     for i in threadL:
         i._delete()
     threadL = []
+    mainThread = None
+    totalAddr = None
     os.remove("totalOrder.txt")
     mode = ''
     os.remove('onionShareOrder.txt')
 
-
-def failingCheck():
-    global threadL
-    while True:
-        time.sleep(120)
-        positions = []
-        try:
-
-            session = r.session()
-            session.proxies = {}
-            session.proxies['http'] = 'socks5h://localhost:9050'
-            session.proxies['https'] = 'socks5h://localhost:9050'
-
-            fails = session.get(onionaddr + '/reqFails.txt')
-            f = open('reqFails.txt', 'wb').write(fails.contetn)
-            f.close()
-            f = open('reqFails.txt', 'r')
-            lines = f.readlines()
-            f.close()
-            for line in lines:
-                positions.append(int(line).rstrip())
-            f = open('totalOrder.txt', 'r')
-            lines = f.readlines()
-            for pos in positions:
-                threadL[pos]._delete()
-                threadL[pos] = threading.Thread(target=getShare,args=[lines[pos].rstrip(),pos])
-                threadL[pos].start()
-        except:
-            pass
 
 #kill specified thread
 def killMe(iter):
@@ -331,13 +309,18 @@ def hostController(file):
     splitFile(file)
     createThreadsHost()
     runThreads()
+    #Restarter for threads
     errCorr = threading.Thread(target=threadRestarter)
     errCorr.start()
     getAddrs()
-    failThread = threading.Thread(target=reqFail)
-    failThread.start()
+    #Total share
+    global mainThread
     mainThread = threading.Thread(target=shareOrder)
     mainThread.start()
+    #Restarter for total share
+    errCorrMain = threading.Thread(target=totalThreadRestarter)
+    errCorrMain.start()
+    getTotalAddr()
     flag = True
     while flag:
         if os.path.isfile('onionshareOrder.txt'):
@@ -350,14 +333,10 @@ def hostController(file):
                     mainThread._delete()
                 line = f.readline()
             f.close()
-    failThread._delete()
     resetHost()
 
 def reqController():
-    failThread = threading.Thread(target=failingCheck)
-    failThread.start()
     createThreadsReq()
-    failThread._delete()
 
 def dockerExe():
     #this will load the image back into docker
