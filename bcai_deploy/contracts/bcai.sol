@@ -234,7 +234,7 @@ contract TaskContract is bcaiReputation{
                 return '1';
             }
         }
-        else if(requestList[msg.sender].status == '2' && requestList[msg.sender].validator == address(0)){
+        else if(requestList[msg.sender].status == '2' && requestList[msg.sender].validator == address(0) && requestList[msg.sender].provider != provAddr){
             providerList[provAddr].available = false;
             ArrayPop(providerPool, provAddr);
 
