@@ -422,6 +422,7 @@ function askUser(){
         giveRating();
     }
     if(validationSelectFlag == true){
+        checkEvents();
         chooseValidator();
     }
     else{

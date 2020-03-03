@@ -239,6 +239,7 @@ contract TaskContract is bcaiReputation{
             ArrayPop(providerPool, provAddr);
 
             requestList[msg.sender].validators.push(provAddr);
+            requestList[msg.sender].signatures.push(false);
             emit PairingInfoLong(msg.sender, provAddr, 'Validation Assigned to Provider', requestList[msg.sender].resultID);
             return '0';
         }
