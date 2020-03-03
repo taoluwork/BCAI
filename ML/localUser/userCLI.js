@@ -1263,7 +1263,12 @@ checkEvents = async () => {
         pastEvents.splice(0,i+1);
         if(pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr){
             //validation is complete and now can ask for rating
+            console.log("\n validation complete move into ask for rating \n");
+
             canRate = true;
+        }
+        if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr){
+            console.log("\n validator signed \n");
         }
         if(validationAssignedFlag == 0){
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to validator\n", function (err){
