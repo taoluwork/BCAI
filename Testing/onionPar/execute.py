@@ -8,7 +8,7 @@ from signal import signal, SIGINT
 import threading
 from datetime import datetime
 import numpy as np
-
+import math
 
 ##globals##
 threads = 8
@@ -324,7 +324,15 @@ def createThreadsReq():
                 for j in range(0, len(content[i])):
                     content2.append(content[i][j])
             #And now it can be saved with a join
-            open("image.zip", "wb").write(b''.join(content2))
+            #open("image.zip", "wb").write(b''.join(content2))
+            fileWrite = open('image.zip', 'w')
+            fileWrite.close()
+            fileWrite = open('image.zip', 'ab')
+            stepsize = 1000000
+            for i in range(0, math.floor(len(content2)/stepsize)-1 ) :
+                fileWrite.write(b''.join(content2[i:i+stepsize]))
+            fileWrite.write(b''.join(content2[(len(content2)/stepsize)+stepsize : len(content2)]))
+            fileWrite.close()
             resetReq()
             flag = False
         #totalOrder.txt not yet received (Step 1)
