@@ -213,6 +213,7 @@ def resetHost():
     global startTimes
     global mode
     global fileName
+    global totalAddr
     for i in threadL:
         i._delete()
     threadL = []
@@ -221,6 +222,7 @@ def resetHost():
     startTimes = []
     mode = ''
     fileName = ''
+    totalAddr = ''
     os.remove("totalOrder.txt")
     os.remove('onionShareOrder.txt')
     os.remove('onionshare*.txt')
@@ -239,7 +241,7 @@ def failingCheck():
             session.proxies['http'] = 'socks5h://localhost:9050'
             session.proxies['https'] = 'socks5h://localhost:9050'
 
-            fails = session.get(onionaddr + '/reqFails.txt')
+            fails = session.get(totalAddr + '/reqFails.txt')
             f = open('reqFails.txt', 'wb').write(fails.contetn)
             f.close()
             f = open('reqFails.txt', 'r')
@@ -283,6 +285,7 @@ def getShareWithoutIter(address):
     open("totalOrder.txt", 'wb').write(res.content)
     
 def createThreadsReq():
+    global totalAddr
     flag = True
     flagTwo = True
     flagThree = True
@@ -305,16 +308,13 @@ def createThreadsReq():
         elif not (0 in content):
             #print(content)
             #Tell session it has finished
-            statF = open("stat.txt", 'r')
-            onionaddr = statF.readline().rstrip()
-            statF.close()
 
             session = r.session()
             session.proxies = {}
             session.proxies['http'] = 'socks5h://localhost:9050'
             session.proxies['https'] = 'socks5h://localhost:9050'
 
-            session.get(onionaddr + '/finish') #tell server finished downloading
+            session.get(totalAddr + '/finish') #tell server finished downloading
 
             #Write total content to image.zip
             #content is a list of lists of bytes, but saved value must be a simple list of bytes
@@ -330,12 +330,12 @@ def createThreadsReq():
         #totalOrder.txt not yet received (Step 1)
         else: 
             statF = open("stat.txt", 'r')
-            onionaddr = statF.readline().rstrip()
+            totalAddr = statF.readline().rstrip()
             statF.close()
-            #if file ready to be received from worker. onionaddr will hold the .onion address
-            if onionaddr != '' and onionaddr != 'Executing' and onionaddr != 'Ready' and flagThree:
+            #if file ready to be received from worker. totalAddr will hold the .onion address
+            if totalAddr != '' and totalAddr != 'Executing' and totalAddr != 'Ready' and flagThree:
                 flagThree = False
-                getShareWithoutIter(onionaddr) #download totalOrder.txt
+                getShareWithoutIter(totalAddr) #download totalOrder.txt
 
 def resetReq():
     global content
@@ -380,8 +380,8 @@ def hostController(file):
     errCorr = threading.Thread(target=threadRestarter)
     errCorr.start()
     getAddrs()
-    failThread = threading.Thread(taget=reqFail)
-    failthread.start()
+    failThread = threading.Thread(target=reqFail)
+    failThread.start()
     #Total share
     global mainThread
     mainThread = threading.Thread(target=shareOrder)
