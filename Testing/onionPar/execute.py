@@ -316,24 +316,11 @@ def createThreadsReq():
 
             session.get(totalAddr + '/finish') #tell server finished downloading
 
-            #Write total content to image.zip
-            #content is a list of lists of bytes, but saved value must be a simple list of bytes
-            #This is what I came up with to convert it to a list of bytes
-            content2 = []
-            for i in range (0, threads):
-                for j in range(0, len(content[i])):
-                    content2.append(bytes(content[i][j]))
-            #And now it can be saved with a join
-            open("image.zip", "wb").write(b''.join(content2))   
-            
-            # fileWrite = open('image.zip', 'w')
-            # fileWrite.close()
-            # fileWrite = open('image.zip', 'ab')
-            # stepsize = 1000000
-            # for i in range (0,  math.floor(len(content2)/stepsize)):
-            #     fileWrite.write(b''.join(content2[i*stepsize:(i+1)*stepsize]))
-            # fileWrite.write(b''.join(content2[ math.floor(len(content2)/stepsize)*stepsize:len(content2)]))
-            # fileWrite.close()   
+            #Save in chunks, converting to bytes
+            with open("image.zip", "wb") as f:
+                for i in range(threads):
+                    for chunk in content[i]:
+                        f.write(bytes(chunk))  
 
             resetReq()
             flag = False
