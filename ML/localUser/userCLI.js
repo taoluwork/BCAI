@@ -11,6 +11,8 @@ const Folder = './';
 var publicIp = require("public-ip");
 var hex2ascii= require("hex2ascii")
 var express = require('express');
+var Table = require('cli-table');
+
 require('events').EventEmitter.prototype._maxListeners = 100;
 
 var now = new Date();
@@ -35,6 +37,16 @@ var webpageUp = 0;
 var executing = false;
 var finished  = false;
 var canRate = false;
+var pos = 0;
+var ratings = [];
+var rateProvs = [];
+var validationSelectFlag = false;
+var ratingsTable = new Table({
+    chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+           , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+           , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+           , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+});
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
@@ -61,6 +73,7 @@ getIp().then(() => {
     else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
       ip = ip4 + ":" + serverPort;
     }
+
     else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
       ip = "[" + ip6 + "]:" + serverPort;console.log(chalk.cyan("Thank you for using iChain worker CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start providing' to get started or 'help' \nto get more information about the application.\n"))
 
@@ -106,14 +119,14 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider rating', 'quit'],
+    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'quit'],
 };
 
 questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop request', 'update request', 'show pools', 'finalize request', 'show provider rating', 'quit'],
+    choices : ['stop request', 'update request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'choose validator', 'quit'],
 };
 
 clearStat();
@@ -161,7 +174,7 @@ process.on('SIGINT', async () => {
     }
 });
 
-
+setRatingVars();
 cliOrSite();
 
 function cliOrSite(){
@@ -185,6 +198,43 @@ function cliOrSite(){
 }
 
 
+function setRatingVars(){
+    ratingsTable = new Table({
+        chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+               , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+               , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+               , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+    });
+    myContract.methods.getProviderPool().call().then(function(provPool){
+        return provPool
+        //return provPool;
+        //console.log(provPool);
+    })
+    .then((provPool) => {
+        ratingsTable.push(["Rating", "Provider"])
+        ratings.length = 0;
+        rateProvs.length = 0;
+        provPool.forEach(prov =>{
+            myContract.methods.getAvgRating(prov).call().then(function(rating){
+                pos+=1;
+
+                ratings.push(rating);
+                rateProvs.push(prov);
+                return [rating, pos, prov];
+            })
+            .then((arr) => {
+                //console.log("\nThe rating is ", rating, " for provider", prov, "\n")
+                ratingsTable.push([arr[0].toString(), arr[2].toString()]);
+                return arr[1];
+            })
+        })
+    })
+    //.then(() => askUser())
+    .catch((err) => console.log(err));
+
+}
+
+
 //////////////////////////////////////////////////////CLI FUNCTIONS//////////////////////////////////////////////////////////////////
 
 //Asks for reputation rating
@@ -205,7 +255,7 @@ function giveRating(){
     ])
     .then (answers =>{
         if(answers.askToRate == 'Yes'){
-            console.log("\nYou have chosen to give a rating\n");
+            console.log(chalk.cyan("\nYou have chosen to give a rating\n"));
             //finalize request function
 
             inquirer.prompt([
@@ -241,7 +291,7 @@ function giveRating(){
             })
         }
         else{
-            console.log("\nUser doesn't want to give rating\n");
+            console.log(chalk.cyan("\nYou have elected to not give rating\n"));
             //go back to main menu
             var ABIfinalizeRequest; //prepare abi for a function call
             ABIfinalizeRequest = myContract.methods.finalizeRequest(userAddress, false, 0).encodeABI();
@@ -264,35 +314,116 @@ function giveRating(){
             .then(()=>{
                 askUser();
             })
-            askUser();
         }
     })
 }
 
 
 
-function viewProviderRating(providerAddress){
+function promptProviderChoices(){
+    setRatingVars();
+    var displayProvList = [];
+    var displayString = "";
+    console.log(rateProvs);
+    for(var i = 0; i<rateProvs.length; i++){
+        displayString = rateProvs[i] + "- Rating: " + ratings[i];
+        displayProvList.push(displayString);
+    }
     inquirer.prompt([
         {
-            type: 'input',
-            name: 'address',
-            message: 'Choose an address to view rating'
+            type: 'list',
+            name: 'provChoice',
+            choices: displayProvList,
+            message: 'Choose provider:'
         }
     ])
-    .then (answers => {
-        
-        return myContract.methods.getAvgRating(answers.address).call().then(function(rating){
-            console.log("\nThe rating is ", rating, " for this provider\n");
-            return rating;
+    .then(choice => {
+        console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your provider\n"));
+        //address is chars 0-41
+        var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
+        var ABIChooseProvider; //prepare abi for a function call
+        ABIChooseProvider = myContract.methods.chooseProvider(chooseProvAddr).encodeABI();
+        const rawTransaction = {
+            "from": userAddress,
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIChooseProvider
+        }
+
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
+            console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+            prov = 1;
         })
-        .then(()=>askUser())
+        .then(()=>{
+            askUser();
+        })
+    })
+    
+    
+}
+
+function chooseValidator(){
+    setRatingVars();
+    var displayValidatorList = [];
+    var displayString = "";
+    for(var i = 0; i<rateProvs.length; i++){
+        displayString = rateProvs[i] + "- Rating: " + ratings[i];
+        displayValidatorList.push(displayString);
+    }
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'provChoice',
+            choices: displayValidatorList,
+            message: 'Choose validator:'
+        }
+    ])
+    .then(choice => {
+        console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your validator\n"));
+        //address is chars 0-41
+        var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
+        var ABIChooseProvider; //prepare abi for a function call
+        ABIChooseProvider = myContract.methods.chooseProvider(chooseProvAddr).encodeABI();
+        const rawTransaction = {
+            "from": userAddress,
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIChooseProvider
+        }
+
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
+            console.log(chalk.cyan("\n\nYour request has been submitted for validation... \n\n"));
+            prov = 1;
+        })
+        .then(()=>{
+            validationSelectFlag = false;
+            askUser();
+        })
     })
 }
 
 //Gives the user a starting menu of choices
 function askUser(){
+    setRatingVars();
+
     if(canRate == true){
         giveRating();
+    }
+    if(validationSelectFlag == true){
+        checkEvents();
+        chooseValidator();
     }
     else{
         if(prov == 0)
@@ -471,7 +602,22 @@ function choiceMade(choice){
         askUser();
     }
     else if(choice == questions.choices[5] || choice == questions1.choices[4]){
-        viewProviderRating();
+        
+        console.log("\n");
+        console.log(ratingsTable.toString(), "\n\n")
+        askUser();
+    }
+    else if(choice == questions1.choices[5]){
+        promptProviderChoices();
+    }
+    else if(choice == questions1.choices[6]){
+        if(validationSelectFlag == true){
+            chooseValidator();
+        }
+        else{
+            console.log(chalk.cyan("\nRequest has not been completed yet. You are unable to select a validator.\n"))
+            askUser();
+        }
     }
     else
     {
@@ -508,7 +654,8 @@ function newAcc(mainNet, pass){
                         if(err) throw err;
                         console.log("Congrats! New address constructed.")
                         console.log("To use add ether using your favorite exchange");
-                        //add new keystore to the array
+                        //add new keystore to the arrayUnhandledPromiseRejectionWarning: Error: Transaction has been reverted by the EVM:
+
                         fs.readdir(Folder, (err, files) => {
                             userAddresses = []
                             files.forEach(file => {
@@ -1117,7 +1264,12 @@ checkEvents = async () => {
         pastEvents.splice(0,i+1);
         if(pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr){
             //validation is complete and now can ask for rating
+            console.log("\n validation complete move into ask for rating \n");
+
             canRate = true;
+        }
+        if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr){
+            console.log("\n validator signed \n");
         }
         if(validationAssignedFlag == 0){
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to validator\n", function (err){
@@ -1134,8 +1286,12 @@ checkEvents = async () => {
       //console.log(hex2ascii(pastEvents[i].returnValues.info))
       // Request Computation Complete
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
-        if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
+          //console.log("\nIn complete block\n");
+          //console.log("\nuser address is ", userAddress, "\n");
+          //console.log(pastEvents[i].returnValues;
+        if (userAddress === pastEvents[i].returnValues.reqAddr.toLowerCase()) {
             requestAssignedFlag = 0;
+            validationSelectFlag = true;
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
                 if (err) throw err;
             })
