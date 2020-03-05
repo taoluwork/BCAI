@@ -58,6 +58,16 @@ fs.open('./log.txt', 'w', function(err){
     if (err) throw err;
 })
 
+fs.open('./mode.txt', 'w', function(err){
+    if (err) throw err;
+    fs.truncate('./stat.txt', 0, function(err){
+        if (err) throw err
+    })
+    fs.appendFile('./mode.txt',  "user", function (err){
+        if (err) throw err;
+    })   
+})
+
 var getIp = (async() => {
     await publicIp.v4().then(val => {ip4 = val});
     await publicIp.v6().then(val => {ip6 = val});
