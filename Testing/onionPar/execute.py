@@ -408,7 +408,8 @@ def reqController():
     createThreadsReq()
     failThread._delete()
 
-def dockerExe(mode):
+def dockerExe():
+    global mode
     #this will load the image back into docker
     os.system("sudo docker load -i image.tgz")
     #this will start the container in a bash
@@ -461,5 +462,5 @@ if __name__ == '__main__':
             reqController()
         else:
             reqController()
-            dockerExe('provider')
+            dockerExe()
             hostController('image.zip')

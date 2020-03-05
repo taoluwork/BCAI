@@ -1,3 +1,4 @@
+
 import os
 import sys
 from flask import Flask
@@ -18,8 +19,6 @@ from datetime import datetime
 #myIp = sys.argv[4] 
 #print('FILE PROCESS BEGINNING')
 
-#t1 = threading.Thread(target=loop)
-
 def getTime(mess):
     now = datetime.now()
     end = open('log.txt', 'r').readline().rstrip()[24:]
@@ -29,14 +28,14 @@ def getTime(mess):
     f.write(time + " "+ mess)
     f.close()
 
-#app = Flask(__name__)
+app = Flask(__name__)
 #f = open(file , 'rb')
 
-#@app.route('/')
+@app.route('/')
 def hello():
     return "Hello World!"
 
-#@app.route('/files')
+@app.route('/files')
 def fileRead():
     if os.path.isfile("image.zip"):
         #open("stat.txt", "w").writelines("Sending File")
@@ -48,45 +47,20 @@ def fileRead():
     else:
         return "Not Ready"
 
-#Overall flow:
-#1) Start loop function, wait for user onion address written to stat file
-#2) Once onion address written (the address of the user's image.zip),
-## start executeDocker function, make Tor GET request, receive file
-### Write "Executing" to stat.txt
-#3) Once execution completed, start onionshare thread, wait until address printed to onionshare.txt
-### Write "Ready" to stat.txt
-#4) Once address printed (onionshare started) write to onionaddr.txt, wait for GET
-#5) Once GET request in onionshare.txt, user has started downloading file
-### Write "Received" to stat.txt
-#6) When /finish called to onionshare usre finished downloading file, can kill thread
-
-def startshare():
-    #start onionshare server to host file
-    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website image.zip\" -f onionshare.txt")
 
 #@app.route('/execute')
-def executeDocker(onionaddr, mode):
-    statF = open("stat.txt", "w")
-    statF.close() #empties file
-    statF = open("stat.txt", "w")
-    statF.writelines("Executing") #write executing so .js knows status
-    statF.close()
+def executeDocker(ip, mode):
+    ipfile = open("stat.txt", "w")
+    ipfile.close() #empties file
+    ipfile = open("stat.txt", "w")
+    ipfile.writelines("Executing") #write executing so .js knows status
+    ipfile.close()
 
     getTime('Requesting file for Execution')
 
     #print('requesting files from: ' + ip)
-    #res = r.get('http://' + ip + '/files')
+    res = r.get('http://' + ip + '/files')
     ##removes file
-
-    #Tor GET request
-    session = r.session()
-    session.proxies = {}
-    session.proxies['http'] = 'socks5h://localhost:9050'
-    session.proxies['https'] = 'socks5h://localhost:9050'
-
-    res = session.get(onionaddr + 'image.zip') #download file
-    session.get(onionaddr + 'finish') #tell server finished downloading
-
     os.system("sudo rm -rf image.*")
     open('image.zip', 'wb').write(res.content)
     #res = r.put('http://' + ip + '/exit')
@@ -120,51 +94,27 @@ def executeDocker(onionaddr, mode):
 
     getTime('Image Unloaded and Ready For Transmission')
 
-    #start sharing file on onionshare
-    t2 = threading.Thread(target=startshare)
-    t2.start()
-    statF = open("stat.txt", "w")
-    statF.close() #empties file
-    statF = open("stat.txt", "w")
-    statF.writelines("Ready") #write read so .js knows status
-    statF.close()
-    while True:
-        onionshareLog = open("onionshare.txt", 'r')
-        lines = onionshareLog.readline()
-        while lines != "":
-            if (lines[0:17] == "http://onionshare"): #found address
-                statF=open("onionaddr.txt", 'w')
-                statF.close()
-                statF=open("onionaddr.txt", 'w')
-                statF.write(lines)
-                statF.close()
-            elif ("GET" in lines): #file has been received
-                t2._stop() #kill thread
-                statF=open("stat.txt", 'w')
-                statF.close()
-                statF=open("stat.txt", 'w')
-                statF.write("Received")
-                statF.close()
-            elif("/finish" in lines): #user finished downloading file, can kill thread
-                t2._delete() #kill thread
-            lines = onionshareLog.readline()
-
+    ipfile = open("stat.txt", "w")
+    ipfile.close() #empties file
+    ipfile = open("stat.txt", "w")
+    ipfile.writelines("Ready") #write read so .js knows status
+    ipfile.close()
 
 def loop():
     while True:
         time.sleep(5)
         #print("hello")
         if os.stat("stat.txt").st_size > 0: #if file is not empty
-            statF = open("stat.txt", "r")
-            onionaddr = statF.readline().rstrip() #first line: ip
-            if(onionaddr != "Ready" and onionaddr != "Executing" and onionaddr != "Received"): #make sure it's not reading ready or executing 
+            ipfile = open("stat.txt", "r")
+            ip = ipfile.readline().rstrip() #first line: ip
+            if(ip != "Ready" and ip != "Executing"): #make sure it's not reading ready or executing 
                 #print(ip)
-                mode = statF.readline().rstrip() #second line: mode
+                mode = ipfile.readline().rstrip() #second line: mode
                 #print(mode)
-                statF.close()
-                executeDocker(onionaddr, mode) #send to execute function
+                ipfile.close()
+                executeDocker(ip, mode) #send to execute function
             
 if __name__ == '__main__':
     t1 = threading.Thread(target=loop)
     t1.start()
-    #app.run(host='0.0.0.0',threaded=False)
+    app.run(host='0.0.0.0',threaded=False)

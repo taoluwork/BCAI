@@ -1,3 +1,3 @@
 cd ML/localUser
-nohup sudo python3 execute.py &>/dev/null &
+sudo python3 execute.py 
 node userCLI.js #start CLI, can start web page from here

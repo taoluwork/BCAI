@@ -11,6 +11,8 @@ const Folder = './';
 var publicIp = require("public-ip");
 var hex2ascii= require("hex2ascii")
 var express = require('express');
+var Table = require('cli-table');
+
 require('events').EventEmitter.prototype._maxListeners = 100;
 
 var now = new Date();
@@ -34,7 +36,18 @@ var buffer = [];
 var webpageUp = 0;
 var executing = false;
 var finished  = false;
-var onionaddr = 'onionaddr.txt'
+var canRate = false;
+var pos = 0;
+var ratings = [];
+var rateProvs = [];
+var validationSelectFlag = false;
+var ratingsTable = new Table({
+    chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+           , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+           , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+           , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+});
+
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
 fs.open('./stat.txt', 'w', function(err){
@@ -45,41 +58,31 @@ fs.open('./log.txt', 'w', function(err){
     if (err) throw err;
 })
 
-var getAddr = setInterval(() => {
-    //await publicIp.v4().then(val => {ip4 = val});
-    //await publicIp.v6().then(val => {ip6 = val});
-        fs.readFile('./' + onionaddr, function read(err, data){
-            if (err) throw err;
-            fileContent = data;
-            if(fileContent.toString('utf8').search('.onion') !== -1){
-                ip = fileContent.toString('utf8');
-                console.log("yup")
-                clearInterval(getAddr);
-
-            }
-            console.log("nope")
-        })
-
-    }, 1000);
+var getIp = (async() => {
+    await publicIp.v4().then(val => {ip4 = val});
+    await publicIp.v6().then(val => {ip6 = val});
+})
+  
   //this calls the IP generating file and then depending on the option that is given it will create the server
   //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
-//getIp().then(() => {
+getIp().then(() => {
     //allow for manual choice (defaults to IPv4)
-    /*if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
+    if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
         ip = process.argv[3] + ":" + serverPort;
     }
     else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
       ip = ip4 + ":" + serverPort;
     }
+
     else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
       ip = "[" + ip6 + "]:" + serverPort;console.log(chalk.cyan("Thank you for using iChain worker CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start providing' to get started or 'help' \nto get more information about the application.\n"))
 
     }
     else{
       ip = ip4 + ":5000";
-    }*/
-
-
+    }
+    //console.log(ip);
+});
 
 var UTCFileArray = [];
 var UTCfile;
@@ -105,7 +108,7 @@ var ws = new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws/v3/aa5
 web3 = new Web3(ws);
 var TaskContract = require('../../bcai_deploy/client/src/contracts/TaskContract.json');
 var abi = TaskContract.abi;
-var addr = TaskContract.networks[NetworkID].address;        //align to const ID defination on top
+var addr = TaskContract.networks[NetworkID].address;       //align to const ID defination on top
 const myContract = new web3.eth.Contract(abi, addr);
 
 //test user account addr : 0x458C5617e4f549578E181F12dA8f840889E3C0A8 and password : localtest
@@ -116,14 +119,14 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start request', 'show pools', 'create new address','show addresses',  'help','quit'],
+    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'quit'],
 };
 
 questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop request', 'update request', 'show pools', 'quit'],
+    choices : ['stop request', 'update request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'choose validator', 'quit'],
 };
 
 clearStat();
@@ -171,7 +174,7 @@ process.on('SIGINT', async () => {
     }
 });
 
-
+setRatingVars();
 cliOrSite();
 
 function cliOrSite(){
@@ -194,14 +197,240 @@ function cliOrSite(){
     })
 }
 
+
+function setRatingVars(){
+    ratingsTable = new Table({
+        chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+               , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+               , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+               , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+    });
+    myContract.methods.getProviderPool().call().then(function(provPool){
+        return provPool
+        //return provPool;
+        //console.log(provPool);
+    })
+    .then((provPool) => {
+        ratingsTable.push(["Rating", "Provider"])
+        ratings.length = 0;
+        rateProvs.length = 0;
+        provPool.forEach(prov =>{
+            myContract.methods.getAvgRating(prov).call().then(function(rating){
+                pos+=1;
+
+                ratings.push(rating);
+                rateProvs.push(prov);
+                return [rating, pos, prov];
+            })
+            .then((arr) => {
+                //console.log("\nThe rating is ", rating, " for provider", prov, "\n")
+                ratingsTable.push([arr[0].toString(), arr[2].toString()]);
+                return arr[1];
+            })
+        })
+    })
+    //.then(() => askUser())
+    .catch((err) => console.log(err));
+
+}
+
+
 //////////////////////////////////////////////////////CLI FUNCTIONS//////////////////////////////////////////////////////////////////
+
+//Asks for reputation rating
+
+function validateRating(rating){
+    return rating >= 1 && rating <= 100;
+}
+
+function giveRating(){
+    canRate = false;
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'askToRate',
+            choices: ['Yes', 'No'],
+            message: 'Would you like to give a rating for your provider?'
+        }
+    ])
+    .then (answers =>{
+        if(answers.askToRate == 'Yes'){
+            console.log(chalk.cyan("\nYou have chosen to give a rating\n"));
+            //finalize request function
+
+            inquirer.prompt([
+                {
+                    type: 'number',
+                    name: 'rating',
+                    message: 'Give a rating between 1 and 100',
+                    validate: validateRating 
+                }
+            ])
+            .then(answers =>{
+                var ABIfinalizeRequest; //prepare abi for a function call
+                ABIfinalizeRequest = myContract.methods.finalizeRequest(userAddress, true, answers.rating).encodeABI();
+                const rawTransaction = {
+                    "from": userAddress,
+                    "to": addr,
+                    "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                    "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                    "gas": 5000000,
+                    "chainId": 3,
+                    "data": ABIfinalizeRequest
+                }
+
+                decryptedAccount.signTransaction(rawTransaction)
+                .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                .then(receipt => {
+                    //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
+                    console.log(chalk.cyan("\n\nYour rating has gone through...\n"))
+                })
+                .then(()=>{
+                    askUser();
+                })
+            })
+        }
+        else{
+            console.log(chalk.cyan("\nYou have elected to not give rating\n"));
+            //go back to main menu
+            var ABIfinalizeRequest; //prepare abi for a function call
+            ABIfinalizeRequest = myContract.methods.finalizeRequest(userAddress, false, 0).encodeABI();
+            const rawTransaction = {
+                "from": userAddress,
+                "to": addr,
+                "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                "gas": 5000000,
+                "chainId": 3,
+                "data": ABIfinalizeRequest
+            }
+
+            decryptedAccount.signTransaction(rawTransaction)
+            .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+            .then(receipt => {
+                //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
+                console.log(chalk.cyan("\n\nYour request has gone through...\n"))
+            })
+            .then(()=>{
+                askUser();
+            })
+        }
+    })
+}
+
+
+
+function promptProviderChoices(){
+    setRatingVars();
+    var displayProvList = [];
+    var displayString = "";
+    console.log(rateProvs);
+    for(var i = 0; i<rateProvs.length; i++){
+        displayString = rateProvs[i] + "- Rating: " + ratings[i];
+        displayProvList.push(displayString);
+    }
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'provChoice',
+            choices: displayProvList,
+            message: 'Choose provider:'
+        }
+    ])
+    .then(choice => {
+        console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your provider\n"));
+        //address is chars 0-41
+        var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
+        var ABIChooseProvider; //prepare abi for a function call
+        ABIChooseProvider = myContract.methods.chooseProvider(chooseProvAddr).encodeABI();
+        const rawTransaction = {
+            "from": userAddress,
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIChooseProvider
+        }
+
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
+            console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+            prov = 1;
+        })
+        .then(()=>{
+            askUser();
+        })
+    })
+    
+    
+}
+
+function chooseValidator(){
+    setRatingVars();
+    var displayValidatorList = [];
+    var displayString = "";
+    for(var i = 0; i<rateProvs.length; i++){
+        displayString = rateProvs[i] + "- Rating: " + ratings[i];
+        displayValidatorList.push(displayString);
+    }
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'provChoice',
+            choices: displayValidatorList,
+            message: 'Choose validator:'
+        }
+    ])
+    .then(choice => {
+        console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your validator\n"));
+        //address is chars 0-41
+        var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
+        var ABIChooseProvider; //prepare abi for a function call
+        ABIChooseProvider = myContract.methods.chooseProvider(chooseProvAddr).encodeABI();
+        const rawTransaction = {
+            "from": userAddress,
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIChooseProvider
+        }
+
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
+            console.log(chalk.cyan("\n\nYour request has been submitted for validation... \n\n"));
+            prov = 1;
+        })
+        .then(()=>{
+            validationSelectFlag = false;
+            askUser();
+        })
+    })
+}
 
 //Gives the user a starting menu of choices
 function askUser(){
-    if(prov == 0)
-        inquirer.prompt([questions]).then(answers => {choiceMade(answers.whatToDo)});
-    else
-        inquirer.prompt([questions1]).then(answers => {choiceMade(answers.whatToDo1)});
+    setRatingVars();
+
+    if(canRate == true){
+        giveRating();
+    }
+    if(validationSelectFlag == true){
+        checkEvents();
+        chooseValidator();
+    }
+    else{
+        if(prov == 0)
+            inquirer.prompt([questions]).then(answers => {choiceMade(answers.whatToDo)});
+        else
+            inquirer.prompt([questions1]).then(answers => {choiceMade(answers.whatToDo1)});
+    }
 }
 
 
@@ -293,6 +522,9 @@ function choiceMade(choice){
     {
         showPools();
     }
+    else if(choice == questions1.choices[3]){
+        giveRating();
+    }
     else if(choice == questions.choices[2]){
         inquirer.prompt([
             {
@@ -340,7 +572,8 @@ function choiceMade(choice){
         });
     }
     else if(choice == questions.choices[3]){
-        console.log('\n\n');
+        console.log('\n\n');                console.log("\n")
+
         for(var i = 0; i < userAddresses.length; i++){
             console.log(userAddresses[i]);
         }
@@ -367,6 +600,24 @@ function choiceMade(choice){
         console.log(chalk.cyan("while for your request to be assigned you may want to consider changing your "))
         console.log(chalk.cyan("user input settings. Thank you for using iChain!\n\n"))
         askUser();
+    }
+    else if(choice == questions.choices[5] || choice == questions1.choices[4]){
+        
+        console.log("\n");
+        console.log(ratingsTable.toString(), "\n\n")
+        askUser();
+    }
+    else if(choice == questions1.choices[5]){
+        promptProviderChoices();
+    }
+    else if(choice == questions1.choices[6]){
+        if(validationSelectFlag == true){
+            chooseValidator();
+        }
+        else{
+            console.log(chalk.cyan("\nRequest has not been completed yet. You are unable to select a validator.\n"))
+            askUser();
+        }
     }
     else
     {
@@ -403,7 +654,8 @@ function newAcc(mainNet, pass){
                         if(err) throw err;
                         console.log("Congrats! New address constructed.")
                         console.log("To use add ether using your favorite exchange");
-                        //add new keystore to the array
+                        //add new keystore to the arrayUnhandledPromiseRejectionWarning: Error: Transaction has been reverted by the EVM:
+
                         fs.readdir(Folder, (err, files) => {
                             userAddresses = []
                             files.forEach(file => {
@@ -512,10 +764,6 @@ function startTask(){
                             askUser();
                         }
                         else{
-                            //give the path to the file so python file can get it
-                            fs.writeFile('./path.txt', filePath, function (err){
-                                if (err) throw err;
-                            })
                             fs.open(filePath, 'r', (err, fd)=>{
                                 //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                                 if(fd != undefined){
@@ -548,69 +796,59 @@ function startTask(){
                                     } 
                                     readChunk();
                                     //console.log(buffer);
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                    var f = 0;
-                                    while(f === 0){
-                                        if(ip !== undefined){
-                                            f = 1;
-                                            ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
-                                            //console.log(ABIstartRequest);
-                                            const rawTransaction = {
-                                                "from": userAddress,
-                                                "to": addr,
-                                                "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-                                                "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-                                                "gas": 5000000,
-                                                "chainId": 3,
-                                                "data": ABIstartRequest
-                                            }
-                                        
-                                            decryptedAccount.signTransaction(rawTransaction)
-                                            .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-                                            .then(receipt => {
-                                                //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                                                //console.log(receipt);
-                                                console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
-                                                prov = 1;
-                                            })
-                                            .then(() => {//Pedro put your code here for start providing
-                                                askUser();
-                                                //call subscribe here
-
-                                                try{
-                                                    web3.eth.subscribe('newBlockHeaders', (err, result) => {
-                                                        if(err) console.log(chalk.red(err), result);
-                                                        //console.log("================================================   <- updated! #", result.number);
-                                                        //console.log(result);
-                                                        //showPools();
-                                                        checkEvents();
-                                                    })
-                                                }
-                                                catch(error){
-                                                    alert(
-                                                        `Failed to load web3, accounts, or contract. Check console for details.`
-                                                    );
-                                                    console.log("\n", chalk.red(err), "\n");
-                                                }
-
-
-                                            })
-                                            .catch(err => {
-                                                if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
-                                                {
-                                                    console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                                                    askUser();
-                                                }
-                                                else{
-                                                    console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                                                    askUser();
-                                                }
-                                            });
-                                        }
+                                    ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                                    //console.log(ABIstartRequest);
+                                    const rawTransaction = {
+                                        "from": userAddress,
+                                        "to": addr,
+                                        "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                                        "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                                        "gas": 5000000,
+                                        "chainId": 3,
+                                        "data": ABIstartRequest
                                     }
+                                
+                                    decryptedAccount.signTransaction(rawTransaction)
+                                    .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                                    .then(receipt => {
+                                        //console.log(chalk.cyan("\n\nTransaction receipt: "));
+                                        //console.log(receipt);
+                                        console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+                                        prov = 1;
+                                    })
+                                    .then(() => {//Pedro put your code here for start providing
+                                        askUser();
+                                        //call subscribe here
+
+                                        try{
+                                            web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                                                if(err) console.log(chalk.red(err), result);
+                                                //console.log("================================================   <- updated! #", result.number);
+                                                //console.log(result);
+                                                //showPools();
+                                                checkEvents();
+                                            })
+                                        }
+                                        catch(error){
+                                            alert(
+                                                `Failed to load web3, accounts, or contract. Check console for details.`
+                                            );
+                                            console.log("\n", chalk.red(err), "\n");
+                                        }
+
+
+                                    })
+                                    .catch(err => {
+                                        if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
+                                        {
+                                            console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
+                                            askUser();
+                                        }
+                                        else{
+                                            console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
+                                            askUser();
+                                        }
+                                    });
                                 } 
                                 else{
                                     console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
@@ -674,10 +912,6 @@ function startTask(){
                     askUser();
                 }
                 else{
-                    //give the path to the file so python file can get it
-                    fs.writeFile('./path.txt', filePath, function (err){
-                        if (err) throw err;
-                    });
                     fs.open(filePath, 'r', (err, fd)=>{
                         //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                         if(fd != undefined){
@@ -710,69 +944,59 @@ function startTask(){
                             } 
                             readChunk();
                             //console.log(buffer);
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            var f = 0;
-                            while(f === 0){
-                                if(ip !== undefined){
-                                    f = 1;
-                                    ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
-                                    //console.log(ABIstartRequest);
-                                    const rawTransaction = {
-                                        "from": userAddress,
-                                        "to": addr,
-                                        "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-                                        "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-                                        "gas": 5000000,
-                                        "chainId": 3,
-                                        "data": ABIstartRequest
-                                    }
-                                
-                                    decryptedAccount.signTransaction(rawTransaction)
-                                    .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-                                    .then(receipt => {
-                                        //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                                        //console.log(receipt);
-                                        console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
-                                        prov = 1;
-                                    })
-                                    .then(() => {//Pedro put your code here for start providing
-                                        askUser();
-                                        //call subscribe here
-
-                                        try{
-                                            web3.eth.subscribe('newBlockHeaders', (err, result) => {
-                                                if(err) console.log(chalk.red(err), result);
-                                                //console.log("================================================   <- updated! #", result.number);
-                                                //console.log(result);
-                                                //showPools();
-                                                checkEvents();
-                                            })
-                                        }
-                                        catch(error){
-                                            alert(
-                                                `Failed to load web3, accounts, or contract. Check console for details.`
-                                            );
-                                            console.log("\n", chalk.red(err), "\n");
-                                        }
-
-
-                                    })
-                                    .catch(err => {
-                                        if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
-                                        {
-                                            console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                                            askUser();
-                                        }
-                                        else{
-                                            console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                                            askUser();
-                                        }
-                                    });
-                                }
+                            ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                            //console.log(ABIstartRequest);
+                            const rawTransaction = {
+                                "from": userAddress,
+                                "to": addr,
+                                "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                                "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                                "gas": 5000000,
+                                "chainId": 3,
+                                "data": ABIstartRequest
                             }
+                        
+                            decryptedAccount.signTransaction(rawTransaction)
+                            .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                            .then(receipt => {
+                                //console.log(chalk.cyan("\n\nTransaction receipt: "));
+                                //console.log(receipt);
+                                console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+                                prov = 1;
+                            })
+                            .then(() => {//Pedro put your code here for start providing
+                                askUser();
+                                //call subscribe here
+
+                                try{
+                                    web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                                        if(err) console.log(chalk.red(err), result);
+                                        //console.log("================================================   <- updated! #", result.number);
+                                        //console.log(result);
+                                        //showPools();
+                                        checkEvents();
+                                    })
+                                }
+                                catch(error){
+                                    alert(
+                                        `Failed to load web3, accounts, or contract. Check console for details.`
+                                    );
+                                    console.log("\n", chalk.red(err), "\n");
+                                }
+
+
+                            })
+                            .catch(err => {
+                                if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
+                                {
+                                    console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
+                                    askUser();
+                                }
+                                else{
+                                    console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
+                                    askUser();
+                                }
+                            });
                         } 
                         else{
                             console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
@@ -1038,6 +1262,15 @@ checkEvents = async () => {
       if((pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr) || 
         (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr) ){
         pastEvents.splice(0,i+1);
+        if(pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr){
+            //validation is complete and now can ask for rating
+            console.log("\n validation complete move into ask for rating \n");
+
+            canRate = true;
+        }
+        if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr){
+            console.log("\n validator signed \n");
+        }
         if(validationAssignedFlag == 0){
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to validator\n", function (err){
                 if (err) throw err;
@@ -1053,8 +1286,12 @@ checkEvents = async () => {
       //console.log(hex2ascii(pastEvents[i].returnValues.info))
       // Request Computation Complete
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
-        if (pastEvents[i] && userAddress === pastEvents[i].returnValues.reqAddr) {
+          //console.log("\nIn complete block\n");
+          //console.log("\nuser address is ", userAddress, "\n");
+          //console.log(pastEvents[i].returnValues;
+        if (userAddress === pastEvents[i].returnValues.reqAddr.toLowerCase()) {
             requestAssignedFlag = 0;
+            validationSelectFlag = true;
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
                 if (err) throw err;
             })
@@ -1095,9 +1332,7 @@ checkEvents = async () => {
 
 
 ////////////////////////////////////////////////////////////////////////////WEBSITE FUNCTIONS///////////////////////////////////////////////////////////
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
-//                                          The check to make sure that address is collected has not been added below just copy the above parts       //
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+
 function listenWebsite(){
     console.log(chalk.cyan("Now listening for webpage...\n"))
     exec('xdg-open ./WebPage/UI.html', (err,stdout,stderr)=>{
@@ -1227,10 +1462,6 @@ function listenWebsite(){
                 })
             }
             else{
-                //give the path to the file so python file can get it
-                fs.writeFile('./path.txt', filePath, function (err){
-                    if (err) throw err;
-                });
                 fs.open(filePath, 'r', (err, fd)=>{
                     //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                     if(fd != undefined){
@@ -1264,10 +1495,6 @@ function listenWebsite(){
                         readChunk();
 
                         console.log(chalk.cyan("\nmaxtime: " + maxTime + "\nmaxTarget: " + maxTarget + "\nminPrice: " + minPrice));
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
                         //console.log(ABIstartRequest);
@@ -1399,10 +1626,6 @@ function listenWebsite(){
                 })
             }
             else{
-                //give the path to the file so python file can get it
-                fs.writeFile('./path.txt', filePath, function (err){
-                    if (err) throw err;
-                });
                 fs.open(filePath, 'r', (err, fd)=>{
                     //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                     if(fd != undefined){
@@ -1435,11 +1658,6 @@ function listenWebsite(){
                         } 
                         readChunk();
                         //console.log(buffer);
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
                         ABIstartRequest = myContract.methods.updateRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
                         //console.log(ABIstartRequest);
                         const rawTransaction = {
