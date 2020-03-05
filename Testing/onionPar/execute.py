@@ -20,7 +20,7 @@ mainThread = None
 totalAddr = None
 totalStartTime = 0
 content = [0] * threads #inits list with threads number of 0s
-mode = 'user' #user, provider, or validator
+mode = '' #user, provider, or validator
 fileName = ''
 
 #######################################################################################################################################
@@ -408,7 +408,7 @@ def reqController():
     createThreadsReq()
     failThread._delete()
 
-def dockerExe():
+def dockerExe(mode):
     #this will load the image back into docker
     os.system("sudo docker load -i image.tgz")
     #this will start the container in a bash
@@ -417,7 +417,9 @@ def dockerExe():
     getTime('Docker Image Loaded and Executing')
 
     #this will execute the code
-    os.system("sudo docker exec $(sudo docker container ls -q) python3 execute.py " + str(mode) )
+    #0 -> Provider
+    #1 -> Validator
+    os.system("sudo docker exec $(sudo docker container ls -q) python3 execute.py " + str(0 if mode == "provider" else 1) )
     #this will delete the old image file
     os.system("sudo rm -rf image.tgz")
     #this will update the container
@@ -459,8 +461,5 @@ if __name__ == '__main__':
             reqController()
         else:
             reqController()
-            dockerExe()
+            dockerExe('provider')
             hostController('image.zip')
-        
-
-    
