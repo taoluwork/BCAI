@@ -45,6 +45,10 @@ fs.open('./pass.txt', 'w', function(err){
     if(err) throw err;
 })
 
+fs.open('./mode.txt', 'w', function(err){
+    if(err) throw err;
+})
+
 /*fs.appendFile('./stat.txt', 'Ready', function (err){
     if (err) throw err;
 })
@@ -81,29 +85,29 @@ fs.readFile('./stat.txt', function read(err, data){
 })*/
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
-var getIp = (async() => {
-    await publicIp.v4().then(val => {ip4 = val});
-    await publicIp.v6().then(val => {ip6 = val});
-})
+// var getIp = (async() => {
+//     await publicIp.v4().then(val => {ip4 = val});
+//     await publicIp.v6().then(val => {ip6 = val});
+// })
   
-  //this calls the IP generating file and then depending on the option that is given it will create the server
-  //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
-getIp().then(() => {
-    //allow for manual choice (defaults to IPv4)
-    if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
-        ip = process.argv[3] + ":" + serverPort;
-    }
-    else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
-      ip = ip4 + ":" + serverPort;
-    }
-    else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
-      ip = "[" + ip6 + "]:" + serverPort;
-    }
-    else{
-      ip = ip4 + ":5000";
-    }
-    //console.log(chalk.cyan(ip);
-});
+//   //this calls the IP generating file and then depending on the option that is given it will create the server
+//   //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
+// getIp().then(() => {
+//     //allow for manual choice (defaults to IPv4)
+//     if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
+//         ip = process.argv[3] + ":" + serverPort;
+//     }
+//     else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
+//       ip = ip4 + ":" + serverPort;
+//     }
+//     else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
+//       ip = "[" + ip6 + "]:" + serverPort;
+//     }
+//     else{
+//       ip = ip4 + ":5000";
+//     }
+//     //console.log(chalk.cyan(ip);
+// });
 
 ///////////////////////////////////////////////////////////////////server///////////////////////////////////////////////////////////////////////////////////
 
@@ -139,7 +143,14 @@ function execute(){
             if(mode === 0){
                 //havent submitted request yet need to submit
                 submitted = true;
-                completeRequest(requestAddr, web3.utils.asciiToHex(ip));
+                //PUT STALL HERE
+                while(!fs.existsSync('./totalOrderAddress.txt')){
+                    setTimeout(Function.prototype, 5000);
+                }
+                fs.readFile('./totalOrderAddress.txt', function read(err, ipAddress){
+                    if(err) throw err;
+                    completeRequest(requestAddr, web3.utils.asciiToHex(ipAddress));
+                })
             }
             if(mode === 1){
                 //havent submitted validatiion yet need to submit
@@ -167,28 +178,6 @@ function clearLog(){
         if(err) throw err;
     })
 }
-
-/*function offer(){
-    
-    if(!executing) {
-        executing = true;
-        console.log("\nNOW OFFERING!!!!!\n")
-        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
-            if(err){
-                console.log(err);
-                return;
-            }
-            console.log(stdout);
-            executing = false;
-            if(mode === 0 ){
-                completeRequest(requestAddr, web3.utils.asciiToHex(ip));
-            }
-            if(mode === 1 ){
-                submitValidation(requestAddr, true);
-            }
-        });
-    }
-}*/
 
 
 var UTCFileArray = [];
@@ -989,7 +978,9 @@ checkEvents = async (showLogs) => {
                 })
                 assignedRequest = 1;
             }
-            
+            fs.appendFile('./mode.txt', "Provider\n", function(err){
+                if(err) throw err;
+            })
             mode = 0;
             requestAddr = pastEvents[i].returnValues.reqAddr
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
@@ -1017,6 +1008,9 @@ checkEvents = async (showLogs) => {
             if(assignedValidation == 0){
                 fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Assigned validator\n", function (err){
                     if (err) throw err;
+                })
+                fs.appendFile('./mode.txt', "Validator\n", function(err){
+                    if(err) throw err;
                 })
                 assignedValidation = 1;
             }
