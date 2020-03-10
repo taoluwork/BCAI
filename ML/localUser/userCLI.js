@@ -20,7 +20,6 @@ var date = "";
 var requestAssignedFlag = 0;
 var validationAssignedFlag = 0;
 //position 38 or 37
-var validationCounter = 0;
 var taskCounter = 0;
 var NetworkID = 3;
 var serverPort = 5000;
@@ -48,6 +47,9 @@ var ratingsTable = new Table({
            , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
 });
 
+
+
+var valEntTracker = 0;
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
 fs.open('./stat.txt', 'w', function(err){
@@ -1291,7 +1293,10 @@ checkEvents = async () => {
           //console.log(pastEvents[i].returnValues;
         if (userAddress === pastEvents[i].returnValues.reqAddr.toLowerCase()) {
             requestAssignedFlag = 0;
-            validationSelectFlag = true;
+            if(valEntTracker == 0){
+                validationSelectFlag = true;
+                valEntTracker += 1;
+            }
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
                 if (err) throw err;
             })
@@ -1320,7 +1325,7 @@ checkEvents = async () => {
         }
         //validation complete
         if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete"){
-            validationAssignedFlag = 0;
+            valEntTracker = 0;
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been validated\n", function (err){
                 if (err) throw err;
             })
