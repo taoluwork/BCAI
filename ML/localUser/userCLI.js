@@ -50,49 +50,40 @@ var ratingsTable = new Table({
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
-fs.open('./stat.txt', 'w', function(err){
-    if (err) throw err;
-})
+// fs.open('./stat.txt', 'w', function(err){
+//     if (err) throw err;
+// })
 
-fs.open('./log.txt', 'w', function(err){
-    if (err) throw err;
-})
+// fs.open('./log.txt', 'w', function(err){
+//     if (err) throw err;
+// })
 
-fs.open('./mode.txt', 'w', function(err){
-    if (err) throw err;
-    fs.truncate('./stat.txt', 0, function(err){
-        if (err) throw err
-    })
-    fs.appendFile('./mode.txt',  "user", function (err){
-        if (err) throw err;
-    })   
-})
 
-var getIp = (async() => {
-    await publicIp.v4().then(val => {ip4 = val});
-    await publicIp.v6().then(val => {ip6 = val});
-})
+// var getIp = (async() => {
+//     await publicIp.v4().then(val => {ip4 = val});
+//     await publicIp.v6().then(val => {ip6 = val});
+// })
   
-  //this calls the IP generating file and then depending on the option that is given it will create the server
-  //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
-getIp().then(() => {
-    //allow for manual choice (defaults to IPv4)
-    if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
-        ip = process.argv[3] + ":" + serverPort;
-    }
-    else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
-      ip = ip4 + ":" + serverPort;
-    }
+//   //this calls the IP generating file and then depending on the option that is given it will create the server
+//   //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
+// getIp().then(() => {
+//     //allow for manual choice (defaults to IPv4)
+//     if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
+//         ip = process.argv[3] + ":" + serverPort;
+//     }
+//     else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
+//       ip = ip4 + ":" + serverPort;
+//     }
 
-    else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
-      ip = "[" + ip6 + "]:" + serverPort;console.log(chalk.cyan("Thank you for using iChain worker CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start providing' to get started or 'help' \nto get more information about the application.\n"))
+//     else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
+//       ip = "[" + ip6 + "]:" + serverPort;console.log(chalk.cyan("Thank you for using iChain worker CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start providing' to get started or 'help' \nto get more information about the application.\n"))
 
-    }
-    else{
-      ip = ip4 + ":5000";
-    }
-    //console.log(ip);
-});
+//     }
+//     else{
+//       ip = ip4 + ":5000";
+//     }
+//     //console.log(ip);
+// });
 
 var UTCFileArray = [];
 var UTCfile;
@@ -458,7 +449,7 @@ function receiveResult(){
         
       });
     }*/
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     fs.readFile('./stat.txt', function read(err, data){
         if (err) throw err;
         fileContent = data;
@@ -806,7 +797,14 @@ function startTask(){
                                     } 
                                     readChunk();
                                     //console.log(buffer);
-                                    ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                    while(!(fs.exists('./totalOrderAddress.txt'))){
+                                        setTimeout(Function.prototype() ,5000);
+                                    }
+                                    fs.readFile('./totalOrderAddress.txt', function(err, ip){
+                                        ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                                    });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                     //console.log(ABIstartRequest);
                                     const rawTransaction = {
                                         "from": userAddress,
@@ -954,7 +952,14 @@ function startTask(){
                             } 
                             readChunk();
                             //console.log(buffer);
-                            ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            while(!(fs.exists('./totalOrderAddress.txt'))){
+                                setTimeout(Function.prototype() ,5000);
+                            }
+                            fs.readFile('./totalOrderAddress.txt', function(err, ip){
+                                ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                            });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                             //console.log(ABIstartRequest);
                             const rawTransaction = {
                                 "from": userAddress,
@@ -1505,8 +1510,14 @@ function listenWebsite(){
                         readChunk();
 
                         console.log(chalk.cyan("\nmaxtime: " + maxTime + "\nmaxTarget: " + maxTarget + "\nminPrice: " + minPrice));
-
-                        ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        while(!(fs.exists('./totalOrderAddress.txt'))){
+                            setTimeout(Function.prototype() ,5000);
+                        }
+                        fs.readFile('./totalOrderAddress.txt', function(err, ip){
+                            ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                        });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         //console.log(ABIstartRequest);
                         const rawTransaction = {
                             "from": String(req.body["Account"]),
@@ -1668,7 +1679,14 @@ function listenWebsite(){
                         } 
                         readChunk();
                         //console.log(buffer);
-                        ABIstartRequest = myContract.methods.updateRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        while(!(fs.exists('./totalOrderAddress.txt'))){
+                            setTimeout(Function.prototype() ,5000);
+                        }
+                        fs.readFile('./totalOrderAddress.txt', function(err, ip){
+                            ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                        });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         //console.log(ABIstartRequest);
                         const rawTransaction = {
                             "from": String(req.body["Account"]),

@@ -21,6 +21,8 @@ totalAddr = None
 totalStartTime = 0
 content = [0] * threads #inits list with threads number of 0s
 mode = '' #user, provider, or validator
+lockModeAt = "user" #varialbe that locks the mode as whatever the variable is set at
+mode = lockModeAt
 fileName = ''
 
 #######################################################################################################################################
@@ -212,6 +214,7 @@ def resetHost():
     global order
     global startTimes
     global mode
+    global lockModeAt
     global fileName
     global totalAddr
     for i in threadL:
@@ -220,7 +223,7 @@ def resetHost():
     orderAddr = []
     order   = []
     startTimes = []
-    mode = ''
+    mode = lockModeAt
     fileName = ''
     totalAddr = ''
     os.remove("totalOrder.txt")
@@ -338,6 +341,7 @@ def resetReq():
     global content
     global threadL
     global mode
+    global lockModeAt
     global mainThread
     global totalAddr
     content = [0] * threads
@@ -348,7 +352,7 @@ def resetReq():
     mainThread = None
     totalAddr = None
     os.remove("totalOrder.txt")
-    mode = ''
+    mode = lockModeAt
     os.remove('onionShareOrder.txt')
 
 
@@ -439,7 +443,10 @@ def dockerExe():
 
 def getMode():
     global mode
+    global lockModeAt
     flag = True
+    if lockModeAt != '':
+        flag = False
     while flag:
         time.sleep(5)
         if os.path.isfile('mode.txt'): 
