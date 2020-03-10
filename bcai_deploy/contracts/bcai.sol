@@ -34,8 +34,7 @@ contract bcaiReputation {
         bool newUser;
     }
 
-    //Final version this needs to be internal
-    function addRating (address user, uint128 rating) public {
+    function addRating (address user, uint128 rating) internal {
         if(ratings[user].numRatings != 0){
             ratings[user].avgRating = (rating + (ratings[user].numRatings * ratings[user].avgRating)) / (ratings[user].numRatings + 1);
             ratings[user].numRatings++;
@@ -70,6 +69,8 @@ contract bcaiReputation {
 }
 
 contract TaskContract is bcaiReputation{
+
+    uint256 price = 10000000000000000;      // 10000000000000000 Wei = 0.01 ETH
 
     mapping (address => Provider) public providerList;   //provAddr => provider struct
     mapping (address => Request)  public requestList;    //reqAddr => request struct
@@ -459,6 +460,17 @@ contract TaskContract is bcaiReputation{
             }
             delete requestList[reqAddr]; //delete user from mapping
         }
+    }
+
+    /////////////////////////////////////////////////////////PAYMENT FUNCTIONS///////////////////////////////////////////////////////////////////////
+
+
+    function deposit() payable internal {
+        
+    }
+
+    function withdraw() payable internal {
+
     }
 
 
