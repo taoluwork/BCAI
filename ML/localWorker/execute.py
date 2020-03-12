@@ -19,7 +19,7 @@ startTimes = []
 mainThread = None
 totalAddr = None
 totalStartTime = 0
-content = [0] * threads #inits list with threads number of 0s
+content = bytearray(threads) #inits list with threads number of 0s
 mode = '' #user, provider, or validator
 fileName = ''
 
@@ -271,7 +271,7 @@ def getShare(address, iter):
     session.proxies['https'] = 'socks5h://localhost:9050'
 
     res = session.get(address) #download file
-    content[iter] = res.content #append this slice's content to total content list
+    content[iter] = bytearray(res.content) #append this slice's content to total content list
     #This thread unneeded now, can safely kill it
     killMe(iter)
 
@@ -340,7 +340,7 @@ def resetReq():
     global mode
     global mainThread
     global totalAddr
-    content = [0] * threads
+    content = bytearray(threads)
     #kill all threads before resetting
     for i in threadL:
         i._delete()

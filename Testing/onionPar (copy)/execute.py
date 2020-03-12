@@ -19,10 +19,8 @@ startTimes = []
 mainThread = None
 totalAddr = None
 totalStartTime = 0
-content = bytearray(threads) #inits list with threads number of 0s
+content = [0] * threads #inits list with threads number of 0s
 mode = '' #user, provider, or validator
-lockModeAt = "user" #varialbe that locks the mode as whatever the variable is set at
-mode = lockModeAt
 fileName = ''
 
 #######################################################################################################################################
@@ -214,7 +212,6 @@ def resetHost():
     global order
     global startTimes
     global mode
-    global lockModeAt
     global fileName
     global totalAddr
     for i in threadL:
@@ -223,7 +220,7 @@ def resetHost():
     orderAddr = []
     order   = []
     startTimes = []
-    mode = lockModeAt
+    mode = ''
     fileName = ''
     totalAddr = ''
     os.remove("totalOrder.txt")
@@ -274,7 +271,7 @@ def getShare(address, iter):
     session.proxies['https'] = 'socks5h://localhost:9050'
 
     res = session.get(address) #download file
-    content[iter] = bytearray(res.content) #append this slice's content to total content list
+    content[iter] = res.content #append this slice's content to total content list
     #This thread unneeded now, can safely kill it
     killMe(iter)
 
@@ -322,7 +319,8 @@ def createThreadsReq():
             #Save in chunks, converting to bytes
             with open("image.zip", "wb") as f:
                 for i in range(threads):
-                        f.write(content[i])
+                    for chunk in content[i]:
+                        f.write(bytes(chunk))  
 
             resetReq()
             flag = False
@@ -334,16 +332,20 @@ def createThreadsReq():
             #if file ready to be received from worker. totalAddr will hold the .onion address
             if totalAddr != '' and totalAddr != 'Executing' and totalAddr != 'Ready' and flagThree:
                 flagThree = False
-                getShareWithoutIter(totalAddr) #download totalOrder.txt
+                session = r.session()
+                session.proxies = {}
+                session.proxies['http'] = 'socks5h://localhost:9050'
+                session.proxies['https'] = 'socks5h://localhost:9050'
+
+                session.get(totalAddr + '/finish') #tell server finished downloading
 
 def resetReq():
     global content
     global threadL
     global mode
-    global lockModeAt
     global mainThread
     global totalAddr
-    content = bytearray(threads)
+    content = [0] * threads
     #kill all threads before resetting
     for i in threadL:
         i._delete()
@@ -351,7 +353,7 @@ def resetReq():
     mainThread = None
     totalAddr = None
     os.remove("totalOrder.txt")
-    mode = lockModeAt
+    mode = ''
     os.remove('onionShareOrder.txt')
 
 
@@ -397,12 +399,18 @@ def hostController(file):
             line = f.readline()
             while line != '':
                 if "/finish" in line :
+                    print("About to say false")
                     flag = False
+                    print("About to delete errcorr")
                     errCorr._delete()
+                    print("About to delete mainthread")
                     mainThread._delete()
+                    break
                 line = f.readline()
             f.close()
+    print("about to delete failthread")
     failThread._delete()
+    print("About to resethost")
     resetHost()
 
 def reqController():
@@ -442,10 +450,7 @@ def dockerExe():
 
 def getMode():
     global mode
-    global lockModeAt
     flag = True
-    if lockModeAt != '':
-        flag = False
     while flag:
         time.sleep(5)
         if os.path.isfile('mode.txt'): 
@@ -465,6 +470,7 @@ if __name__ == '__main__':
         getMode()    
         if mode == 'user':
             hostController('image.zip')
+            print("Finished providing file, now waiting for request.")
             reqController()
         else:
             reqController()
