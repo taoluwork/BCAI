@@ -145,11 +145,35 @@ function execute(){
                 submitted = true;
                 //PUT STALL HERE
                 while(!fs.existsSync('./totalOrderAddress.txt')){
-                    setTimeout(Function.prototype, 5000);
+                    setTimeout(function(){}, 5000);
                 }
-                fs.readFile('./totalOrderAddress.txt', function read(err, ipAddress){
+                console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
+                console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
+                fs.readFile('./totalOrderAddress.txt', 'utf8', function read(err, ipAddress){
                     if(err) throw err;
-                    completeRequest(requestAddr, web3.utils.asciiToHex(ipAddress));
+                    taskCounter+=1;
+    
+                    var ABIcompleteRequest; //prepare abi for a function call
+                    ABIcompleteRequest = myContract.methods.completeRequest(reqAddress, ipAddress).encodeABI();
+                    const rawTransaction = {
+                        "from": userAddress,
+                        "to": addr,
+                        "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                        "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                        "gas": 5000000,
+                        "chainId": 3,
+                        "data": ABIcompleteRequest
+                    }
+
+                    decryptedAccount.signTransaction(rawTransaction)
+                    .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                    .then(receipt => {
+                        //console.log(chalk.cyan("\n\nTransaction receipt: "))
+                        //console.log(receipt)
+                    })
+                    .catch(err => {
+                        console.log("\n", chalk.red(err), "\n");
+                    });
                 })
             }
             if(mode === 1){
@@ -855,32 +879,6 @@ function updateProvider(){
         });
 }
 
-function completeRequest(reqAddress, resultId){
-    taskCounter+=1;
-    console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
-    console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
-        var ABIcompleteRequest; //prepare abi for a function call
-        ABIcompleteRequest = myContract.methods.completeRequest(reqAddress, resultId).encodeABI();
-        const rawTransaction = {
-            "from": userAddress,
-            "to": addr,
-            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-            "gas": 5000000,
-            "chainId": 3,
-            "data": ABIcompleteRequest
-        }
-
-        decryptedAccount.signTransaction(rawTransaction)
-        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-        .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "))
-            //console.log(receipt)
-        })
-        .catch(err => {
-            console.log("\n", chalk.red(err), "\n");
-        });
-}
 
 function submitValidation(reqAddress, result){
     validationCounter+=1;
