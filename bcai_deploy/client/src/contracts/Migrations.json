@@ -1371,12 +1371,13 @@
     "3": {
       "events": {},
       "links": {},
-      "address": "0x648215017f9FD2359d29A513D61E20cD12153E6F",
-      "transactionHash": "0xf121eae73254024bd32d88be1ebf07a9bb53e8be36f7953d3a9acfc7f2a620c8"
+      "address": "0xD2A0a5326C3b556e015F7d4b52BFf8fA5f3183A5",
+      "transactionHash": "0xea6b3c8d7344862588e5ab0632a51b928399c6eebcc703d83eec81f3c595c2d6"
     }
   },
-  "schemaVersion": "3.0.16",
-  "updatedAt": "2020-03-10T17:50:17.416Z",
+  "schemaVersion": "3.0.23",
+  "updatedAt": "2020-03-12T15:57:33.920Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },

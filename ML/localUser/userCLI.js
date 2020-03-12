@@ -798,65 +798,72 @@ function startTask(){
                                     readChunk();
                                     //console.log(buffer);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                    while(!(fs.exists('./totalOrderAddress.txt'))){
-                                        setTimeout(Function.prototype() ,5000);
+                                    while(!(fs.existsSync('./totalOrderAddress.txt'))){
+                                        setTimeout(function(){} ,5000);
                                     }
-                                    fs.readFile('./totalOrderAddress.txt', function(err, ip){
+                                    fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
+                                        console.log(ip);
+                                        console.log(maxTarget);
+                                        console.log(maxTime);
+                                        console.log(minPrice);
+                                        console.log(web3.utils.asciiToHex(ip));
                                         ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                                        const rawTransaction = {
+                                            "from": userAddress,
+                                            "to": addr,
+                                            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                                            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                                            "gas": 5000000,
+                                            "chainId": 3,
+                                            "data": ABIstartRequest
+                                        }
+                                    //});
+                                    //console.log(ABIstartRequest);
+                                    
+                                        decryptedAccount.signTransaction(rawTransaction)
+                                        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                                        .then(receipt => {
+                                            //console.log(chalk.cyan("\n\nTransaction receipt: "));
+                                            //console.log(receipt);
+                                            console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+                                            prov = 1;
+                                        })
+                                        .then(() => {//Pedro put your code here for start providing
+                                            askUser();
+                                            //call subscribe here
+
+                                            try{
+                                                web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                                                    if(err) console.log(chalk.red(err), result);
+                                                    //console.log("================================================   <- updated! #", result.number);
+                                                    //console.log(result);
+                                                    //showPools();
+                                                    checkEvents();
+                                                })
+                                            }
+                                            catch(error){
+                                                alert(
+                                                    `Failed to load web3, accounts, or contract. Check console for details.`
+                                                );
+                                                console.log("\n", chalk.red(err), "\n");
+                                            }
+
+
+                                        })
+                                        .catch(err => {
+                                            if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
+                                            {
+                                                console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
+                                                askUser();
+                                            }
+                                            else{
+                                                console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
+                                                askUser();
+                                            }
+                                        });
                                     });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                    //console.log(ABIstartRequest);
-                                    const rawTransaction = {
-                                        "from": userAddress,
-                                        "to": addr,
-                                        "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-                                        "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-                                        "gas": 5000000,
-                                        "chainId": 3,
-                                        "data": ABIstartRequest
-                                    }
-                                
-                                    decryptedAccount.signTransaction(rawTransaction)
-                                    .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-                                    .then(receipt => {
-                                        //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                                        //console.log(receipt);
-                                        console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
-                                        prov = 1;
-                                    })
-                                    .then(() => {//Pedro put your code here for start providing
-                                        askUser();
-                                        //call subscribe here
 
-                                        try{
-                                            web3.eth.subscribe('newBlockHeaders', (err, result) => {
-                                                if(err) console.log(chalk.red(err), result);
-                                                //console.log("================================================   <- updated! #", result.number);
-                                                //console.log(result);
-                                                //showPools();
-                                                checkEvents();
-                                            })
-                                        }
-                                        catch(error){
-                                            alert(
-                                                `Failed to load web3, accounts, or contract. Check console for details.`
-                                            );
-                                            console.log("\n", chalk.red(err), "\n");
-                                        }
-
-
-                                    })
-                                    .catch(err => {
-                                        if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
-                                        {
-                                            console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                                            askUser();
-                                        }
-                                        else{
-                                            console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                                            askUser();
-                                        }
-                                    });
                                 } 
                                 else{
                                     console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
@@ -958,60 +965,62 @@ function startTask(){
                             }
                             fs.readFile('./totalOrderAddress.txt', function(err, ip){
                                 ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                                const rawTransaction = {
+                                    "from": userAddress,
+                                    "to": addr,
+                                    "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                                    "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                                    "gas": 5000000,
+                                    "chainId": 3,
+                                    "data": ABIstartRequest
+                                }
+                            //});
+                            //console.log(ABIstartRequest);
+                        
+                                decryptedAccount.signTransaction(rawTransaction)
+                                .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                                .then(receipt => {
+                                    //console.log(chalk.cyan("\n\nTransaction receipt: "));
+                                    //console.log(receipt);
+                                    console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+                                    prov = 1;
+                                })
+                                .then(() => {//Pedro put your code here for start providing
+                                    askUser();
+                                    //call subscribe here
+
+                                    try{
+                                        web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                                            if(err) console.log(chalk.red(err), result);
+                                            //console.log("================================================   <- updated! #", result.number);
+                                            //console.log(result);
+                                            //showPools();
+                                            checkEvents();
+                                        })
+                                    }
+                                    catch(error){
+                                        alert(
+                                            `Failed to load web3, accounts, or contract. Check console for details.`
+                                        );
+                                        console.log("\n", chalk.red(err), "\n");
+                                    }
+
+
+                                })
+                                .catch(err => {
+                                    if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
+                                    {
+                                        console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
+                                        askUser();
+                                    }
+                                    else{
+                                        console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
+                                        askUser();
+                                    }
+                                });
                             });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            //console.log(ABIstartRequest);
-                            const rawTransaction = {
-                                "from": userAddress,
-                                "to": addr,
-                                "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-                                "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-                                "gas": 5000000,
-                                "chainId": 3,
-                                "data": ABIstartRequest
-                            }
-                        
-                            decryptedAccount.signTransaction(rawTransaction)
-                            .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-                            .then(receipt => {
-                                //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                                //console.log(receipt);
-                                console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
-                                prov = 1;
-                            })
-                            .then(() => {//Pedro put your code here for start providing
-                                askUser();
-                                //call subscribe here
 
-                                try{
-                                    web3.eth.subscribe('newBlockHeaders', (err, result) => {
-                                        if(err) console.log(chalk.red(err), result);
-                                        //console.log("================================================   <- updated! #", result.number);
-                                        //console.log(result);
-                                        //showPools();
-                                        checkEvents();
-                                    })
-                                }
-                                catch(error){
-                                    alert(
-                                        `Failed to load web3, accounts, or contract. Check console for details.`
-                                    );
-                                    console.log("\n", chalk.red(err), "\n");
-                                }
-
-
-                            })
-                            .catch(err => {
-                                if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
-                                {
-                                    console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                                    askUser();
-                                }
-                                else{
-                                    console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                                    askUser();
-                                }
-                            });
                         } 
                         else{
                             console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
