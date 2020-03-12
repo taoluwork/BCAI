@@ -19,7 +19,9 @@ startTimes = []
 mainThread = None
 totalAddr = None
 totalStartTime = 0
-content = bytearray(threads) #inits list with threads number of 0s
+content = []
+for i in range(threads):
+    content.append(b'')#inits list with threads number of empty byte arrays
 mode = '' #user, provider, or validator
 fileName = ''
 
@@ -271,6 +273,7 @@ def getShare(address, iter):
     session.proxies['https'] = 'socks5h://localhost:9050'
 
     res = session.get(address) #download file
+    print(type(res.content))
     content[iter] = res.content #append this slice's content to total content list
     #This thread unneeded now, can safely kill it
     killMe(iter)
