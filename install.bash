@@ -96,18 +96,18 @@ then
 else
     echo -e "\e[92mpython already installed."
 fi
-#Install flask
-if ! flask --version > /dev/null 2>&1 ; #flask not installed
+#Install tor
+if ! tor --version > /dev/null 2>&1 ; #tor not installed
 then
-    echo -e "\e[93mflask not installed, installing now.\e[0m"
-    if sudo apt install python3-flask --yes --force-yes ; then #if installed
-        echo -e "\e[92mflask successfully installed."
+    echo -e "\e[93mtor not installed, installing now.\e[0m"
+    if sudo apt install tor --yes --force-yes ; then #if installed
+        echo -e "\e[92mtor successfully installed."
     else  #problem installing
-        echo -e "\e[91mProblem installing flask. Aborting installation."
+        echo -e "\e[91mProblem installing tor. Aborting installation."
         exit
     fi
 else
-    echo -e "\e[92mflask already installed."
+    echo -e "\e[92mtor already installed."
 fi
 #Install docker
 if ! docker --version > /dev/null 2>&1 ;  #docker not installed
@@ -144,9 +144,17 @@ if [ "$downloadgit" = true ] ; then
     if git clone https://github.com/PedroGRivera/BCAI.git ; then #if downloaded
         echo -e "\e[92mGithub repo successfully downloaded."
     else  #problem downloading
-        echo -e "\e[91mProblem downlaoding repo. Aborting installation."
+        echo -e "\e[91mProblem downlodding repo. Aborting installation."
         exit
     fi
+fi
+#Download onionshare repo
+echo -e "\e[93m----------------------------Downloading onionshare repo.----------------------------\e[0m"
+if git clone https://github.com/micahflee/onionshare.git ; then #if downloaded
+    echo -e "\e[92mOnionshare repo successfully downloaded."
+else  #problem downloading
+    echo -e "\e[91mProblem downloading onionshare repo. Aborting installation."
+    exit
 fi
 ###################################Installing npm packages###################################
 #Install npm stuff for localuser

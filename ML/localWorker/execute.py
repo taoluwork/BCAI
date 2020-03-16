@@ -31,11 +31,11 @@ fileName = ''
 def shareOrder():
     global totalStartTime
     totalStartTime = time.time()
-    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt")
+    os.system("script -c \"../../../onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt")
 def startShare(file, iter):
     #print(file + ":" + str(iter))
     #start onionshare server to host file
-    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website " + file + "\" -f onionshare" + str(iter) + ".txt")
+    os.system("script -c \"../../../onionshare/dev_scripts/onionshare --website " + file + "\" -f onionshare" + str(iter) + ".txt")
 
 def splitFile(file):
     fileName = file
