@@ -19,7 +19,9 @@ startTimes = []
 mainThread = None
 totalAddr = None
 totalStartTime = 0
-content = bytearray(threads) #inits list with threads number of 0s
+content = []
+for i in range(threads):
+    content.append(b'')#inits list with threads number of empty byte arrays
 mode = '' #user, provider, or validator
 lockModeAt = "user" #varialbe that locks the mode as whatever the variable is set at
 mode = lockModeAt
@@ -343,7 +345,9 @@ def resetReq():
     global lockModeAt
     global mainThread
     global totalAddr
-    content = bytearray(threads)
+    content = []
+    for i in range(threads):
+        content.append(b'')#inits list with threads number of empty byte arrays
     #kill all threads before resetting
     for i in threadL:
         i._delete()

@@ -319,11 +319,17 @@ def createThreadsReq():
 
             session.get(totalAddr + '/finish') #tell server finished downloading
 
+            try:
+                print(type(content))
+                print(type(content[0]))
+                print(type(content[0][0]))
+            except:
+                print("hello")
+
             #Save in chunks, converting to bytes
             with open("image.zip", "wb") as f:
                 for i in range(threads):
-                    for chunk in content[i]:
-                        f.write(bytes(chunk))  
+                        f.write(content[i])  
 
             resetReq()
             flag = False
@@ -343,7 +349,9 @@ def resetReq():
     global mode
     global mainThread
     global totalAddr
-    content = bytearray(threads)
+    content = []
+    for i in range(threads):
+        content.append(b'')#inits list with threads number of empty byte arrays
     #kill all threads before resetting
     for i in threadL:
         i._delete()
