@@ -308,7 +308,7 @@ def createThreadsReq():
                 t.start()
                 j += 1
         #Every slot in content has been written to (Step 3)
-        elif not (0 in content):
+        elif not (b'' in content):
             #print(content)
             #Tell session it has finished
 
