@@ -217,7 +217,9 @@ def resetHost():
     global fileName
     global totalAddr
     for i in threadL:
-        i._delete()
+        try: #May or may not already be deleted
+            i._delete()
+        except: pass
     threadL = []
     orderAddr = []
     order   = []
@@ -354,7 +356,9 @@ def resetReq():
         content.append(b'')#inits list with threads number of empty byte arrays
     #kill all threads before resetting
     for i in threadL:
-        i._delete()
+        try: #May or may not already be deleted
+            i._delete()
+        except: pass
     threadL = []
     mainThread = None
     totalAddr = None
@@ -406,18 +410,26 @@ def hostController(file):
             while line != '':
                 if "/finish" in line :
                     flag = False
-                    errCorr._delete()
-                    mainThread._delete()
+                    try: #May or may not already be deleted
+                        errCorr._delete()
+                    except: pass
+                    try: #May or may not already be deleted
+                        mainThread._delete()
+                    except: pass        
                 line = f.readline()
             f.close()
-    failThread._delete()
+    try: #May or may not already be deleted
+        failThread._delete()
+    except: pass
     resetHost()
 
 def reqController():
     failThread = threading.Thread(target=failingCheck)
     failThread.start()
     createThreadsReq()
-    failThread._delete()
+    try: #May or may not already be deleted
+        failThread._delete()
+    except: pass
 
 def dockerExe():
     global mode
