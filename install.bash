@@ -95,6 +95,19 @@ then
 else
     echo -e "\e[92mpython already installed."
 fi
+#Install flask (necessary for onionshare)
+if ! flask --version > /dev/null 2>&1 ; #flask not installed
+then
+    echo -e "\e[93mflask not installed, installing now.\e[0m"
+    if sudo apt install python3-flask --yes --force-yes > /dev/null 2>&1 ; then #if installed
+        echo -e "\e[92mflask successfully installed."
+    else  #problem installing
+        echo -e "\e[91mProblem installing flask. Aborting installation."
+        exit
+    fi
+else
+    echo -e "\e[92mflask already installed."
+fi
 #Install tor
 if ! tor --version > /dev/null 2>&1 ; #tor not installed
 then
