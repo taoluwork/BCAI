@@ -1,16 +1,0 @@
-Script started on 2020-03-05 19:12:24-0600
-OnionShare 2.2 | https://onionshare.org/
-Connecting to the Tor network: 15% - Establishing an encrypted directory connection[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 25% - Loading networkstatus consensus[KConnecting to the Tor network: 40% - Loading authority key certs[KConnecting to the Tor network: 45% - Asking for relay descriptors[KConnecting to the Tor network: 45% - Asking for relay descriptors[KConnecting to the Tor network: 45% - Asking for relay descriptors[KConnecting to the Tor network: 45% - Asking for relay descriptors[KConnecting to the Tor network: 45% - Asking for relay descriptors[KConnecting to the Tor network: 45% - Asking for relay descriptors[KConnecting to the Tor network: 50% - Loading relay descriptors[KConnecting to the Tor network: 50% - Loading relay descriptors[KConnecting to the Tor network: 50% - Loading relay descriptors[KConnecting to the Tor network: 50% - Loading relay descriptors[KConnecting to the Tor network: 62% - Loading relay descriptors[KConnecting to the Tor network: 62% - Loading relay descriptors[KConnecting to the Tor network: 80% - Connecting to the Tor network[KConnecting to the Tor network: 80% - Connecting to the Tor network[KConnecting to the Tor network: 85% - Finishing handshake with first hop[KConnecting to the Tor network: 85% - Finishing handshake with first hop[KConnecting to the Tor network: 85% - Finishing handshake with first hop[KConnecting to the Tor network: 90% - Establishing a Tor circuit[KConnecting to the Tor network: 90% - Establishing a Tor circuit[KConnecting to the Tor network: 90% - Establishing a Tor circuit[KConnecting to the Tor network: 90% - Establishing a Tor circuit[KConnecting to the Tor network: 100% - Done[K
-Setting up onion service on port 17637.
- * Running on http://127.0.0.1:17637/ (Press CTRL+C to quit)
-
-Give this address to the recipient:
-http://onionshare:untreated-skedaddle@wvnoxmxpxyodqrjo.onion
-
-Press Ctrl+C to stop the server
-127.0.0.1 - - [05/Mar/2020 19:13:55] "[33mGET /totalOrder.txt/finish HTTP/1.1[0m" 404 -
-127.0.0.1 - - [05/Mar/2020 19:15:45] "[33mGET /totalOrder.txt/reqFails.txt HTTP/1.1[0m" 404 -
-127.0.0.1 - - [05/Mar/2020 19:17:46] "[33mGET /totalOrder.txt/reqFails.txt HTTP/1.1[0m" 404 -
-127.0.0.1 - - [05/Mar/2020 19:19:47] "[33mGET /totalOrder.txt/reqFails.txt HTTP/1.1[0m" 404 -
-127.0.0.1 - - [05/Mar/2020 19:21:48] "[33mGET /totalOrder.txt/reqFails.txt HTTP/1.1[0m" 404 -
-127.0.0.1 - - [05/Mar/2020 19:23:49] "[33mGET /totalOrder.txt/reqFails.txt HTTP/1.1[0m" 404 -

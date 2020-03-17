@@ -1,2 +1,0 @@
-thread:6 has been restarted at:1583457089.4828353 due to time issue
-thread:7 has been restarted at:1583457089.5230622 due to time issue
