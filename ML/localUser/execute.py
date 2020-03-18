@@ -12,7 +12,7 @@ import multiprocessing
 ##globals##
 threads = 8
 threadL = []
-orderAddr = [0]*threads
+orderAddr = []
 order   = []
 startTimes = []
 mainThread = None
@@ -75,6 +75,7 @@ def runThreads():
     for i in threadL:
         i.start()
         startTimes.append(time.time())
+        #print(startTimes)
 
 def getAddrs():
     for i in range(0,threads):
@@ -121,7 +122,7 @@ def getTotalAddr():
 
 def threadRestarter():
     while(True):
-        for i in range(0,threads):
+        for i in range(0,len(startTimes)):
             if time.time() > startTimes[i] + 60 and orderAddr[i] == 0:
                 os.system('rm onionshare' + str(i) + '.txt')
                 #threadL[i]._delete()
