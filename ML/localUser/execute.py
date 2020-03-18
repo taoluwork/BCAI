@@ -247,6 +247,18 @@ def resetHost():
     os.remove('order.txt')
     os.remove(fileName + '*.txt')
 
+        
+    #new memory and command line reset
+    os.system("reset")
+    os.system("ps aux > ps.txt")
+    f = open("ps.txt", 'r')
+    line = f.readline()
+    while line != '':
+        if line.find('onionshare') != -1:
+            os.system( 'kill ' + line.split()[1])
+        line = f.readline()
+    f.close()
+
 def failingCheck():
     global threadL
     while True:
@@ -376,6 +388,17 @@ def resetReq():
     os.remove("totalOrder.txt")
     mode = lockModeAt
     os.remove('onionShareOrder.txt')
+
+    #new memory and command line reset
+    os.system("reset")
+    os.system("ps aux > ps.txt")
+    f = open("ps.txt", 'r')
+    line = f.readline()
+    while line != '':
+        if line.find('onionshare') != -1:
+            os.system( 'kill ' + line.split()[1])
+        line = f.readline()
+    f.close()
 
 
 #kill specified thread
