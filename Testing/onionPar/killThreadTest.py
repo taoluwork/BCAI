@@ -38,3 +38,12 @@ for i in range(0,threads):
 
 print("I am still working")
 f.close()
+os.system("reset")
+os.system("ps aux > ps.txt")
+f = open("ps.txt", 'r')
+line = f.readline()
+while line != '':
+    if line.find('onionshare') != -1:
+        os.system( 'kill ' + line.split()[1])
+    line = f.readline()
+f.close()
