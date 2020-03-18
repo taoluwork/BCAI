@@ -6,13 +6,12 @@ from signal import signal, SIGINT
 import subprocess
 import multiprocessing
 
-threads = 10
-proc = []
+threads = 30
+#proc = []
 threadL=[]
 def shareOrder(iter):
-    global proc
-    procT = subprocess.Popen(["script -c \"~/onionshare/dev_scripts/onionshare --website hello.txt\" -f helloLog" + str(iter) + ".txt"], shell=True)
-    proc.append(procT)
+    #global proc
+    proc = subprocess.Popen(["script -c \"~/onionshare/dev_scripts/onionshare --website hello.txt\" -f output" + str(iter) + ".txt"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 #create thread
 for i in range(0,threads):
     thread = multiprocessing.Process(target=shareOrder,args=(i,))
@@ -20,7 +19,7 @@ for i in range(0,threads):
     thread.start()
     threadL.append(thread)
 
-time.sleep(120)
+time.sleep(60)
 
 f = open("output.txt", 'w')
 #for i in range(0,threads):
