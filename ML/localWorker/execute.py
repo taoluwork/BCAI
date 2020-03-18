@@ -7,6 +7,9 @@ from signal import signal, SIGINT
 import threading
 from datetime import datetime
 import math
+import subprocess
+import multiprocessing
+
 
 ##globals##
 threads = 8
@@ -29,11 +32,12 @@ fileName = ''
 def shareOrder():
     global totalStartTime
     totalStartTime = time.time()
-    os.system("script -c \"../../../onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt")
+    subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+    
 def startShare(file, iter):
     #print(file + ":" + str(iter))
     #start onionshare server to host file
-    os.system("script -c \"../../../onionshare/dev_scripts/onionshare --website " + file + "\" -f onionshare" + str(iter) + ".txt")
+    subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website " + file + "\" -f onionshare" + str(iter) + ".txt"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
 def splitFile(file):
     fileName = file
@@ -63,7 +67,8 @@ def createThreadsHost():
     f.close()
     j = 0
     for i in orderFile:
-        t=threading.Thread(target=startShare,args=[i.strip('\n'),j]) 
+        #t=threading.Thread(target=startShare,args=[i.strip('\n'),j]) 
+        t = multiprocessing.Process(target=startShare,args=(i.strip('\n'),j,))
         threadL.append(t)
         j += 1
 
@@ -120,11 +125,13 @@ def threadRestarter():
         for i in range(0,threads):
             if time.time() > startTimes[i] + 60 and orderAddr[i] == 0:
                 os.system('rm onionshare' + str(i) + '.txt')
-                threadL[i]._delete()
+                #threadL[i]._delete()
+                threadL[i].terminate()
                 f = open("order.txt" , 'r')
                 lines = f.readlines()
                 f.close()
-                t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i]) 
+                #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i]) 
+                t = multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
                 threadL[i] = t
                 threadL[i].start()
                 startTimes[i] = time.time()
@@ -138,11 +145,13 @@ def threadRestarter():
                 for line in lines:
                     if line.find('in use') >= 0:
                         os.system('rm onionshare' + str(i) + '.txt')
-                        threadL[i]._delete()
+                        #threadL[i]._delete()
+                        threadL[i].terminate()
                         f = open("order.txt" , 'r')
                         lines = f.readlines()
                         f.close()
-                        t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i]) 
+                        #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i]) 
+                        t = multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
                         threadL[i] = t
                         threadL[i].start()
                         startTimes[i] = time.time()
@@ -154,9 +163,10 @@ def threadRestarter():
 
 
 def hostReqFail():
-    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website reqFails.txt" + "\" -f reqFailLog.txt")
+    subprocess.Popen(["script -c \"~/onionshare/dev_scripts/onionshare --website reqFails.txt" + "\" -f reqFailLog.txt"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 def reqFail():
-    failThread = threading.Thread(target=hostReqFail)
+    #failThread = threading.Thread(target=hostReqFail)
+    failThread = multiprocessing.Process(target=hostReqFail)
     threadOn = False
     global threads
     reqMade = [0]*threads
@@ -178,15 +188,19 @@ def reqFail():
                 if reqMade[i] == 0:
                     f.write(str(i)+'\n')
             if threadOn:
-                failThread._delete()
-                failThread = threading.Thread(target=hostReqFail)
+                #failThread._delete()
+                failThread.terminate()
+                #failThread = threading.Thread(target=hostReqFail)
+                failThread = multiprocessing.Process(target=hostReqFail)
+
                 failThread.start()
                 threadOn = True
             else:
                 failThread.start()
                 threadOn = True
         if callSum == threads:
-            failThread._delete()
+            #failThread._delete()
+            failThread.terminate()
             threadOn = False
 
 def totalThreadRestarter():
@@ -197,8 +211,10 @@ def totalThreadRestarter():
         if time.time() > totalStartTime + 60 and totalAddr == 0:
             os.system('rm onionshareOrder.txt')
             #restart thread
-            mainThread._delete()
-            t = threading.Thread(target=shareOrder)
+            #mainThread._delete()
+            mainThread.terminate()
+            #t = threading.Thread(target=shareOrder)
+            t = multiprocessing.Process(target=shareOrder)
             mainThread = t
             mainThread.start()
             totalStartTime = time.time()
@@ -216,7 +232,8 @@ def resetHost():
     global totalAddr
     for i in threadL:
         try: #May or may not already be deleted
-            i._delete()
+            #i._delete()
+            i.terminate()
         except: pass
     threadL = []
     orderAddr = []
@@ -230,6 +247,17 @@ def resetHost():
     os.remove('onionshare*.txt')
     os.remove('order.txt')
     os.remove(fileName + '*.txt')
+    
+    #new memory and command line reset
+    os.system("reset")
+    os.system("ps aux > ps.txt")
+    f = open("ps.txt", 'r')
+    line = f.readline()
+    while line != '':
+        if line.find('onionshare') != -1:
+            os.system( 'kill ' + line.split()[1])
+        line = f.readline()
+    f.close()
 
 def failingCheck():
     global threadL
@@ -254,8 +282,10 @@ def failingCheck():
             f = open('totalOrder.txt', 'r')
             lines = f.readlines()
             for pos in positions:
-                threadL[pos]._delete()
-                threadL[pos] = threading.Thread(target=getShare,args=[lines[pos].rstrip(),pos])
+                #threadL[pos]._delete()
+                threadL[pos].terminate()
+                #threadL[pos] = threading.Thread(target=getShare,args=[lines[pos].rstrip(),pos])
+                threadL[pos] = multiprocessing.Process(target=getShare,args=(lines[pos].rstrip(),pos,))
                 threadL[pos].start()
         except:
             pass
@@ -303,7 +333,8 @@ def createThreadsReq():
             f.close()
             j = 0
             for line in lines:
-                t = threading.Thread(target=getShare,args=[line.strip('\n'), j])
+                #t = threading.Thread(target=getShare,args=[line.strip('\n'), j])
+                t = multiprocessing.Process(target=getShare,args=(line.strip('\n'), j,))
                 threadL.append(t) 
                 t.start()
                 j += 1
@@ -355,7 +386,8 @@ def resetReq():
     #kill all threads before resetting
     for i in threadL:
         try: #May or may not already be deleted
-            i._delete()
+            #i._delete()
+            i.terminate()
         except: pass
     threadL = []
     mainThread = None
@@ -364,10 +396,22 @@ def resetReq():
     mode = ''
     os.remove('onionShareOrder.txt')
 
+    #new memory and command line reset
+    os.system("reset")
+    os.system("ps aux > ps.txt")
+    f = open("ps.txt", 'r')
+    line = f.readline()
+    while line != '':
+        if line.find('onionshare') != -1:
+            os.system( 'kill ' + line.split()[1])
+        line = f.readline()
+    f.close()
+
 
 #kill specified thread
 def killMe(iter):
-    threadL[iter]._delete()
+    #threadL[iter]._delete()
+    threadL[iter].terminate()
 
 
 #######################################################################################################################################
@@ -387,17 +431,21 @@ def hostController(file):
     createThreadsHost()
     runThreads()
     #Restarter for threads
-    errCorr = threading.Thread(target=threadRestarter)
+    #errCorr = threading.Thread(target=threadRestarter)
+    errCorr = multiprocessing.Process(target=threadRestarter)
     errCorr.start()
     getAddrs()
-    failThread = threading.Thread(target=reqFail)
+    #failThread = threading.Thread(target=reqFail)
+    failThread = multiprocessing.Process(target=reqFail)
     failThread.start()
     #Total share
     global mainThread
-    mainThread = threading.Thread(target=shareOrder)
+    #mainThread = threading.Thread(target=shareOrder)
+    mainThread = multiprocessing.Process(target=shareOrder)
     mainThread.start()
     #Restarter for total share
-    errCorrMain = threading.Thread(target=totalThreadRestarter)
+    #errCorrMain = threading.Thread(target=totalThreadRestarter)
+    errCorrMain = multiprocessing.Process(target=totalThreadRestarter)
     errCorrMain.start()
     getTotalAddr()
     flag = True
@@ -409,24 +457,29 @@ def hostController(file):
                 if "/finish" in line :
                     flag = False
                     try: #May or may not already be deleted
-                        errCorr._delete()
+                        #errCorr._delete()
+                        errCorr.terminate()
                     except: pass
                     try: #May or may not already be deleted
-                        mainThread._delete()
+                        #mainThread._delete()
+                        mainThread.terminate()
                     except: pass        
                 line = f.readline()
             f.close()
     try: #May or may not already be deleted
-        failThread._delete()
+        #failThread._delete()
+        failthread.terminate()
     except: pass
     resetHost()
 
 def reqController():
-    failThread = threading.Thread(target=failingCheck)
+    #failThread = threading.Thread(target=failingCheck)
+    failThread = multiprocessing.Process(target=failingCheck)
     failThread.start()
     createThreadsReq()
     try: #May or may not already be deleted
-        failThread._delete()
+        #failThread._delete()
+        failThread.terminate()
     except: pass
 
 def dockerExe():
