@@ -2,32 +2,30 @@ import os
 import sys
 import time
 import threading
+from signal import signal, SIGINT
+import subprocess
 
-def shareOrder():
-    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website hello.txt" + "\" -f helloLog.txt")
+threads = 10
+proc = []
+def shareOrder(iter):
+    global proc
+    proc.append(0)
+    proc[iter] = subprocess.Popen(["script -c \"~/onionshare/dev_scripts/onionshare --website hello.txt\" -f helloLog" + str(iter) + ".txt"], shell=True)
 
 #create thread
-thread=threading.Thread(target=shareOrder) 
-#start thread
-thread.start()
-#wait 60 seconds
-time.sleep(60)
+for i in range(0,threads):
+    thread = threading.Thread(target=shareOrder,args=[i])
+    #start thread
+    thread.start()
 
-#try _delete
-try:
-    thread._delete()
-    print("_delete pass")
-except:
-    print("_delete failure")
-#try .kill
-try:
-    thread.kill()
-    print("kill pass")
-except:
-    print("kill failure")
-#try _stop
-try:
-    thread._stop()
-    print("_stop pass")
-except:
-    print("_stop failure")
+time.sleep(120)
+
+for i in range(0,threads):
+    try:
+        proc[i].terminate()
+        print("pass:" + str(i) + "\n")
+    except:
+        print("failure:" + str(i) + "\n")
+
+
+print("I am still working")
