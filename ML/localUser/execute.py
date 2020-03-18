@@ -12,7 +12,7 @@ import multiprocessing
 ##globals##
 threads = 8
 threadL = []
-orderAddr = []
+orderAddr = [0]*threads
 order   = []
 startTimes = []
 mainThread = None
