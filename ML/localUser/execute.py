@@ -122,43 +122,45 @@ def getTotalAddr():
 
 def threadRestarter():
     while(True):
-        for i in range(0,len(startTimes)):
-            if time.time() > startTimes[i] + 60 and orderAddr[i] == 0:
-                os.system('rm onionshare' + str(i) + '.txt')
-                #threadL[i]._delete()
-                threadL[i].terminate()
-                f = open("order.txt" , 'r')
-                lines = f.readlines()
-                f.close()
-                #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i]) 
-                t=multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,)) 
-                threadL[i] = t
-                threadL[i].start()
-                startTimes[i] = time.time()
-                f = open('restart.txt', 'a')
-                f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + ' due to time issue\n')
-                f.close()
-        for i in range(0,threads):
-            if os.path.isfile('onionshare' + str(i) + '.txt' ):
-                f = open('onionshare' + str(i) + '.txt' )
-                lines = f.readlines()
-                for line in lines:
-                    if line.find('in use') >= 0:
-                        os.system('rm onionshare' + str(i) + '.txt')
-                        #threadL[i]._delete()
-                        threadL[i].terminate()
-                        f = open("order.txt" , 'r')
-                        lines = f.readlines()
-                        f.close()
-                        #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i]) 
-                        t=multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
-                        threadL[i] = t
-                        threadL[i].start()
-                        startTimes[i] = time.time()
-                        f = open('restart.txt', 'a')
-                        f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + ' due to address error\n')
-                        f.close()
-
+        try:
+            for i in range(0,len(startTimes)):
+                if time.time() > startTimes[i] + 60 and orderAddr[i] == 0:
+                    os.system('rm onionshare' + str(i) + '.txt')
+                    #threadL[i]._delete()
+                    threadL[i].terminate()
+                    f = open("order.txt" , 'r')
+                    lines = f.readlines()
+                    f.close()
+                    #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i]) 
+                    t=multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,)) 
+                    threadL[i] = t
+                    threadL[i].start()
+                    startTimes[i] = time.time()
+                    f = open('restart.txt', 'a')
+                    f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + ' due to time issue\n')
+                    f.close()
+            for i in range(0,threads):
+                if os.path.isfile('onionshare' + str(i) + '.txt' ):
+                    f = open('onionshare' + str(i) + '.txt' )
+                    lines = f.readlines()
+                    for line in lines:
+                        if line.find('in use') >= 0:
+                            os.system('rm onionshare' + str(i) + '.txt')
+                            #threadL[i]._delete()
+                            threadL[i].terminate()
+                            f = open("order.txt" , 'r')
+                            lines = f.readlines()
+                            f.close()
+                            #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i]) 
+                            t=multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
+                            threadL[i] = t
+                            threadL[i].start()
+                            startTimes[i] = time.time()
+                            f = open('restart.txt', 'a')
+                            f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + ' due to address error\n')
+                            f.close()
+        except:
+            pass
         time.sleep(5)
 
 
@@ -405,8 +407,10 @@ def resetReq():
 #kill specified thread
 def killMe(iter):
     #threadL[iter]._delete()
-    threadL[iter].terminate()
-
+    try:
+        threadL[iter].terminate()
+    except:
+        pass
 
 #######################################################################################################################################
 #####################################################controller########################################################################
