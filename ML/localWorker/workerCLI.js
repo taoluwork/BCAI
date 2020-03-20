@@ -976,7 +976,7 @@ checkEvents = async (showLogs) => {
                 })
                 assignedRequest = 1;
             }
-            fs.appendFile('./mode.txt', "Provider\n", function(err){
+            fs.writeFile('./mode.txt', "provider\n", function(err){
                 if(err) throw err;
             })
             mode = 0;
@@ -1007,7 +1007,7 @@ checkEvents = async (showLogs) => {
                 fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Assigned validator\n", function (err){
                     if (err) throw err;
                 })
-                fs.appendFile('./mode.txt', "Validator\n", function(err){
+                fs.writeFile('./mode.txt', "validator\n", function(err){
                     if(err) throw err;
                 })
                 assignedValidation = 1;
