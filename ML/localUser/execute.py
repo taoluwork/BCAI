@@ -329,6 +329,7 @@ def failingCheck():
 #######################################################################################################################################
 
 def getShare(address, iter):
+    global content
     session = r.session()
     session.proxies = {}
     session.proxies['http'] = 'socks5h://localhost:9050'
@@ -389,12 +390,12 @@ def createThreadsReq():
             resetReq()
             flag = False
         #totalOrder.txt not yet received (Step 1)
-        else: 
+        else if flagThree: 
             statF = open("stat.txt", 'r')
             totalAddr = statF.readline().rstrip()
             statF.close()
             #if file ready to be received from worker. totalAddr will hold the .onion address
-            if totalAddr != '' and totalAddr != 'Executing' and totalAddr != 'Ready' and flagThree:
+            if totalAddr != '' and totalAddr != 'Executing' and totalAddr != 'Ready':
                 flagThree = False
                 getShareWithoutIter(totalAddr) #download totalOrder.txt
 
