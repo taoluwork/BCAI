@@ -192,7 +192,7 @@ def threadRestarter():
 
 
 def hostReqFail():
-    os.system("script -c \"~/onionshare/dev_scripts/onionshare --website reqFails.txt" + "\" -f reqFailLog.txt")
+    subprocess.Popen(["script -c \"~/onionshare/dev_scripts/onionshare --website reqFails.txt" + "\" -f reqFailLog.txt"],stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 def reqFail():
     #failThread = threading.Thread(target=hostReqFail)
     failThread = multiprocessing.Process(target=hostReqFail)
@@ -459,7 +459,7 @@ def hostController(file):
     runThreads()
     errCorr = multiprocessing.Process(target=threadRestarter)
     errCorr.start()
-    getAddrs()
+    #getAddrs()
     #failThread = threading.Thread(target=reqFail)
     failThread = multiprocessing.Process(target=reqFail)
     failThread.start()

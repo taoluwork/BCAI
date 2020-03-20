@@ -78,8 +78,8 @@ def runThreads():
         startTimes.append(time.time())
 
 def getAddrs():
-    for i in range(0,threads):
-        orderAddr.append(0)
+    #for i in range(0,threads):
+    #    orderAddr.append(0)
     t = 0
     while t < threads:
         t = 0
@@ -121,23 +121,30 @@ def getTotalAddr():
     f.close()
 
 def threadRestarter():
+    #for i in range(0,threads):
+        #orderAddr.append(0)
+    global orderAddr
     while(True):
+        #global orderAddr
+        #print("addrs:"+ str(orderAddr))
         try:
             for i in range(0,len(startTimes)):
-                if time.time() > startTimes[i] + 60 and orderAddr[i] == 0:
+                global orderAddr
+                if time.time() > startTimes[i] + 120 and orderAddr[i] == 0:
                     os.system('rm onionshare' + str(i) + '.txt')
                     #threadL[i]._delete()
                     threadL[i].terminate()
                     f = open("order.txt" , 'r')
                     lines = f.readlines()
                     f.close()
-                    #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i]) 
-                    t = multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
+                    #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i])
+                    t=multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
                     threadL[i] = t
                     threadL[i].start()
+                    holdVal = startTimes[i]
                     startTimes[i] = time.time()
                     f = open('restart.txt', 'a')
-                    f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + ' due to time issue\n')
+                    f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + ' due to time issue. It started at:'+str(holdVal)+' and should end at:'+str(holdVal+120)+' and addr:'+ str(orderAddr[i])+'\n')
                     f.close()
             for i in range(0,threads):
                 if os.path.isfile('onionshare' + str(i) + '.txt' ):
@@ -151,15 +158,33 @@ def threadRestarter():
                             f = open("order.txt" , 'r')
                             lines = f.readlines()
                             f.close()
-                            #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i]) 
-                            t = multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
+                            #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i])
+                            t=multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
                             threadL[i] = t
                             threadL[i].start()
                             startTimes[i] = time.time()
                             f = open('restart.txt', 'a')
                             f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + ' due to address error\n')
                             f.close()
-        except: 
+            t = 0
+            for i in orderAddr:
+                if i != 0:
+                    t +=1
+            for i in range(0,threads):
+                if os.path.isfile('onionshare'+str(i)+'.txt') and orderAddr[i] == 0:
+                    f = open('onionshare'+str(i)+'.txt', 'r')
+                    lines = f.readlines()
+                    f.close()
+                    for j in lines:
+                        if (j.find("http://onionshare") >= 0): #found address
+                            orderAddr[i] = j.strip('\n') + "/" + order[i].strip('\n')
+            if t == threads:
+                f = open('totalOrder.txt', 'w')
+                for i in orderAddr:
+                    f.write(i + '\n')
+                f.close()
+
+        except:
             pass
         time.sleep(5)
 
@@ -431,14 +456,14 @@ def getTime(mess):
     f.close()
 
 def hostController(file):
+    for i in range(0,threads):
+        orderAddr.append(0)
     splitFile(file)
     createThreadsHost()
     runThreads()
-    #Restarter for threads
-    #errCorr = threading.Thread(target=threadRestarter)
     errCorr = multiprocessing.Process(target=threadRestarter)
     errCorr.start()
-    getAddrs()
+    #getAddrs()
     #failThread = threading.Thread(target=reqFail)
     failThread = multiprocessing.Process(target=reqFail)
     failThread.start()
@@ -467,12 +492,12 @@ def hostController(file):
                     try: #May or may not already be deleted
                         #mainThread._delete()
                         mainThread.terminate()
-                    except: pass        
+                    except: pass      
                 line = f.readline()
             f.close()
     try: #May or may not already be deleted
         #failThread._delete()
-        failthread.terminate()
+        failThread.terminate()
     except: pass
     resetHost()
 
