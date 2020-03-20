@@ -332,7 +332,7 @@ def getShare(address, iter):
 
     res = session.get(address) #download file
     content[iter] = res.content #append this slice's content to total content list
-    print(type("-----Received content from thread " + i))
+    print(type("-----Received content from thread " + iter))
     for i in range(threads):
         print(len(content[i]))
     #This thread unneeded now, can safely kill it
@@ -395,7 +395,7 @@ def createThreadsReq():
             resetReq()
             flag = False
         #totalOrder.txt not yet received (Step 1)
-        else if flagThree: 
+        elif flagThree: 
             statF = open("stat.txt", 'r')
             totalAddr = statF.readline().rstrip()
             statF.close()

@@ -390,7 +390,7 @@ def createThreadsReq():
             resetReq()
             flag = False
         #totalOrder.txt not yet received (Step 1)
-        else if flagThree: 
+        elif flagThree: 
             statF = open("stat.txt", 'r')
             totalAddr = statF.readline().rstrip()
             statF.close()
