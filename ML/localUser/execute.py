@@ -32,6 +32,8 @@ fileName = ''
 #######################################################################################################################################
 def shareOrder():
     global totalStartTime
+    while os.path.isfile('totalOrder.txt') != True:
+        time.sleep(5)
     totalStartTime = time.time()
     subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt"],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=True)
 def startShare(file, iter):
