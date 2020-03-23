@@ -335,7 +335,7 @@ def getShare(address, iter):
     f = open("image.zip" + str(iter) + ".txt","wb" )
     f.write(res.content)
     f.close()
-    print(type("-----Received content from thread " + iter))
+    #print(type("-----Received content from thread " + iter))
     #for i in range(threads):
     #    print(len(content[i]))
     #This thread unneeded now, can safely kill it
