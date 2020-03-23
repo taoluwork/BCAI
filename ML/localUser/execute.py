@@ -274,7 +274,10 @@ def resetHost():
     fileName = ''
     totalAddr = ''
     os.remove("totalOrder.txt")
-    os.remove('onionShareOrder.txt')
+    try:
+      os.remove('onionShareOrder.txt')
+    except:
+      pass
     os.remove('onionshare*.txt')
     os.remove('order.txt')
     os.remove(fileName + '*.txt')
@@ -420,8 +423,10 @@ def resetReq():
     totalAddr = None
     os.remove("totalOrder.txt")
     mode = lockModeAt
-    os.remove('onionShareOrder.txt')
-
+    try:
+      os.remove('onionShareOrder.txt')
+    except:
+      pass
     #new memory and command line reset
     os.system("reset")
     os.system("ps aux > ps.txt")
@@ -522,7 +527,10 @@ def dockerExe():
     #this will execute the code
     #0 -> Provider
     #1 -> Validator
-    os.system("sudo docker exec $(sudo docker container ls -q) python3 execute.py " + str(0 if mode == "provider" else 1) )
+    mval = 0
+    if mode == "validator":
+      mval = 1
+    os.system("sudo docker exec $(sudo docker container ls -q) python3 execute.py " + str(mval) )
     #this will delete the old image file
     os.system("sudo rm -rf image.tgz")
     #this will update the container
