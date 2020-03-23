@@ -1,2 +1,2 @@
-Fri Mar 20 2020 12:52:56 GMT-0500 (CDT)
-Fri Mar 20 2020 13:14:10 GMT-0500 (CDT) Request has been assigned to provider
+Fri Mar 20 2020 14:04:30 GMT-0500 (CDT)
+Fri Mar 20 2020 14:08:27 GMT-0500 (CDT) Request has been assigned to provider
