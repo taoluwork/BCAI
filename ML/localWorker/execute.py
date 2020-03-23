@@ -452,7 +452,7 @@ def resetReq():
     totalAddr = None
     os.remove("totalOrder.txt")
     mode = ''
-    os.remove('onionShareOrder.txt')
+    #os.remove('onionShareOrder.txt')
 
     #new memory and command line reset
     os.system("reset")
