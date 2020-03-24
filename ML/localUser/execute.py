@@ -339,7 +339,13 @@ def getShare(address, iter):
     session.proxies['https'] = 'socks5h://localhost:9050'
 
     res = session.get(address) #download file
-    content[iter] = res.content #append this slice's content to total content list
+    #content[iter] = res.content #append this slice's content to total content list
+    f = open("image.zip" + str(iter) + ".txt","wb" )
+    f.write(res.content)
+    f.close()
+    #print(type("-----Received content from thread " + iter))
+    #for i in range(threads):
+    #    print(len(content[i]))
     #This thread unneeded now, can safely kill it
     killMe(iter)
 
@@ -354,6 +360,7 @@ def getShareWithoutIter(address):
     
 def createThreadsReq():
     global totalAddr
+    global content
     flag = True
     flagTwo = True
     flagThree = True
@@ -368,30 +375,60 @@ def createThreadsReq():
             f.close()
             j = 0
             for line in lines:
-                t = threading.Thread(target=getShare,args=[line.strip('\n'), j])
-                #t = multiprocessing.Process(target=getShare,args=(line.strip('\n'), j,))
+                #t = threading.Thread(target=getShare,args=[line.strip('\n'), j])
+                t = multiprocessing.Process(target=getShare,args=(line.strip('\n'), j,))
                 threadL.append(t) 
                 t.start()
                 j += 1
         #Every slot in content has been written to (Step 3)
-        elif not (b'' in content):
-            #print(content)
-            #Tell session it has finished
+        # elif not (b'' in content):
+        #     #print(content)
+        #     #Tell session it has finished
 
+        #     session = r.session()
+        #     session.proxies = {}
+        #     session.proxies['http'] = 'socks5h://localhost:9050'
+        #     session.proxies['https'] = 'socks5h://localhost:9050'
+
+        #     session.get(totalAddr + '/finish') #tell server finished downloading
+
+        #     try:
+        #         print(type(content))
+        #         print(type(content[0]))
+        #         print(type(content[0][0]))
+        #     except:
+        #         print("hello")
+
+        #     #Save in chunks, converting to bytes
+        #     with open("image.zip", "wb") as f:
+        #         for i in range(threads):
+        #                 f.write(content[i])  
+
+        #     resetReq()
+        #     flag = False
+        #Every slot in content has been written to (Step 3)
+        allVal = True
+        for i in range(0,threads):
+            if os.path.isfile("image.zip" + str(i) + ".txt"):
+                content[i] = True
+            else:
+                allVal = False
+        if allVal:
             session = r.session()
             session.proxies = {}
             session.proxies['http'] = 'socks5h://localhost:9050'
             session.proxies['https'] = 'socks5h://localhost:9050'
 
             session.get(totalAddr + '/finish') #tell server finished downloading
-
-            #Save in chunks, converting to bytes
-            with open("image.zip", "wb") as f:
-                for i in range(threads):
-                        f.write(content[i])
-
-            resetReq()
+            totalFile = open('image.zip', 'wb')
+            for i in range(0, threads):
+                iterFile = open('image.zip' + str(i) + '.txt', 'rb')
+                totalFile.write(iterFile.read())
+                iterFile.close()
+            totalFile.close()
             flag = False
+            resetReq()
+
         #totalOrder.txt not yet received (Step 1)
         elif flagThree: 
             statF = open("stat.txt", 'r')
@@ -406,12 +443,12 @@ def resetReq():
     global content
     global threadL
     global mode
-    global lockModeAt
     global mainThread
     global totalAddr
     content = []
     for i in range(threads):
-        content.append(b'')#inits list with threads number of empty byte arrays
+        content.append(False)
+        #content.append(b'')#inits list with threads number of empty byte arrays
     #kill all threads before resetting
     for i in threadL:
         try: #May or may not already be deleted
@@ -422,7 +459,7 @@ def resetReq():
     mainThread = None
     totalAddr = None
     os.remove("totalOrder.txt")
-    mode = lockModeAt
+    mode = ''
     try:
       os.remove('onionShareOrder.txt')
     except:
