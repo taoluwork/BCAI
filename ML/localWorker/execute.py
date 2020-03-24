@@ -31,13 +31,14 @@ fileName = ''
 #######################################################################################################################################
 def shareOrder():
     global totalStartTime
+    while os.path.isfile('totalOrder.txt') != True:
+        time.sleep(5)
     totalStartTime = time.time()
-    subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
-    
+    subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt"],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=True)
 def startShare(file, iter):
     #print(file + ":" + str(iter))
     #start onionshare server to host file
-    subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website " + file + "\" -f onionshare" + str(iter) + ".txt"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+    subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website " + file + "\" -f onionshare" + str(iter) + ".txt"],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=True)
 
 def splitFile(file):
     fileName = file
@@ -68,7 +69,7 @@ def createThreadsHost():
     j = 0
     for i in orderFile:
         #t=threading.Thread(target=startShare,args=[i.strip('\n'),j]) 
-        t = multiprocessing.Process(target=startShare,args=(i.strip('\n'),j,))
+        t=multiprocessing.Process(target=startShare,args=(i.strip('\n'),j,)) 
         threadL.append(t)
         j += 1
 
@@ -76,12 +77,14 @@ def runThreads():
     for i in threadL:
         i.start()
         startTimes.append(time.time())
+        #print(startTimes)
 
 def getAddrs():
     #for i in range(0,threads):
-    #    orderAddr.append(0)
+        #orderAddr.append(0)
     t = 0
     while t < threads:
+        global orderAddr
         t = 0
         for i in orderAddr:
             if i != 0:
@@ -94,7 +97,7 @@ def getAddrs():
                 for j in lines:
                     if (j.find("http://onionshare") >= 0): #found address
                         orderAddr[i] = j.strip('\n') + "/" + order[i].strip('\n')
-        print(orderAddr)    
+        print(orderAddr)
         time.sleep(5)
     print(orderAddr)
     f = open('totalOrder.txt', 'w')
@@ -190,7 +193,7 @@ def threadRestarter():
 
 
 def hostReqFail():
-    subprocess.Popen(["script -c \"~/onionshare/dev_scripts/onionshare --website reqFails.txt" + "\" -f reqFailLog.txt"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+    subprocess.Popen(["script -c \"~/onionshare/dev_scripts/onionshare --website reqFails.txt" + "\" -f reqFailLog.txt"],stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 def reqFail():
     #failThread = threading.Thread(target=hostReqFail)
     failThread = multiprocessing.Process(target=hostReqFail)
@@ -219,7 +222,6 @@ def reqFail():
                 failThread.terminate()
                 #failThread = threading.Thread(target=hostReqFail)
                 failThread = multiprocessing.Process(target=hostReqFail)
-
                 failThread.start()
                 threadOn = True
             else:
@@ -255,6 +257,7 @@ def resetHost():
     global order
     global startTimes
     global mode
+    global lockModeAt
     global fileName
     global totalAddr
     for i in threadL:
@@ -266,18 +269,19 @@ def resetHost():
     orderAddr = []
     order   = []
     startTimes = []
-    mode = ''
+    mode = lockModeAt
     fileName = ''
     totalAddr = ''
     os.remove("totalOrder.txt")
     try:
       os.remove('onionShareOrder.txt')
-      os.remove('onionshare*.txt')
     except:
       pass
+    os.remove('onionshare*.txt')
     os.remove('order.txt')
     os.remove(fileName + '*.txt')
-    
+
+        
     #new memory and command line reset
     os.system("reset")
     os.system("ps aux > ps.txt")
@@ -319,6 +323,7 @@ def failingCheck():
                 threadL[pos].start()
         except:
             pass
+
 
 
 
