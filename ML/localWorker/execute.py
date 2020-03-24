@@ -473,7 +473,8 @@ def resetReq():
             os.system( 'kill ' + line.split()[1])
         line = f.readline()
     f.close()
-
+    f = open('stat.txt', 'w')
+    f.close()
 
 #kill specified thread
 def killMe(iter):
@@ -605,6 +606,14 @@ if __name__ == '__main__':
         getMode()    
         if mode == 'user':
             hostController('image.zip')
+            flag = True
+            while flag:
+                f = open('stat.txt', 'r')
+                line = f.read()
+                f.close()
+                if line.find('onionshare') != -1:
+                    flag = False
+                time.sleep(5)
             reqController()
         else:
             reqController()
