@@ -543,8 +543,8 @@ def hostController(file):
     resetHost()
 
 def reqController():
-    failThread = threading.Thread(target=failingCheck)
-    #failThread = multiprocessing.Process(target=failingCheck)
+    #failThread = threading.Thread(target=failingCheck)
+    failThread = multiprocessing.Process(target=failingCheck)
     failThread.start()
     createThreadsReq()
     try: #May or may not already be deleted
