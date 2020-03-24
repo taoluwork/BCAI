@@ -257,7 +257,6 @@ def resetHost():
     global order
     global startTimes
     global mode
-    global lockModeAt
     global fileName
     global totalAddr
     for i in threadL:
@@ -269,18 +268,18 @@ def resetHost():
     orderAddr = []
     order   = []
     startTimes = []
-    mode = lockModeAt
-    fileName = ''
+    mode = ''
     totalAddr = ''
-    os.remove("totalOrder.txt")
     try:
-      os.remove('onionShareOrder.txt')
+        os.remove("totalOrder.txt")
+        os.remove('onionShareOrder.txt')
+        os.remove('onionshare*.txt')
+        os.remove('order.txt')
+        os.remove(fileName + '*.txt')
     except:
-      pass
-    os.remove('onionshare*.txt')
-    os.remove('order.txt')
-    os.remove(fileName + '*.txt')
-
+        pass
+    
+    fileName = ''
         
     #new memory and command line reset
     os.system("reset")
@@ -458,10 +457,10 @@ def resetReq():
     threadL = []
     mainThread = None
     totalAddr = None
-    os.remove("totalOrder.txt")
     mode = ''
     try:
-      os.remove('onionShareOrder.txt')
+        os.remove("totalOrder.txt")
+        os.remove('onionShareOrder.txt')
     except:
       pass
     #new memory and command line reset
