@@ -146,24 +146,17 @@ function execute(){
                 //PUT STALL HERE
                 while(!fs.existsSync('./totalOrderAddress.txt')){
                     setTimeout(function(){}, 15000);
-                    console.log("a");
                 }
-                console.log("b");
                 console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
-                console.log("c");
                 console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
-                console.log("d");
                 fs.readFile('./totalOrderAddress.txt', 'utf8', function read(err, ipAddress){
                     if(err) {
                         console.log("file errorr!!!!!!!!!!!!!!!!");
                         throw err;
                     }
-                    console.log("e");
                     taskCounter+=1;
-                    console.log("f");
                     var ABIcompleteRequest; //prepare abi for a function call
-                    console.log("g");
-                    ABIcompleteRequest = myContract.methods.completeRequest(reqAddress, ipAddress).encodeABI();
+                    ABIcompleteRequest = myContract.methods.completeRequest(reqAddr, ipAddress).encodeABI();
                     console.log("h");
                     const rawTransaction = {
                         "from": userAddress,
