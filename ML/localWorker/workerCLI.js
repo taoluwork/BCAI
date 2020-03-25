@@ -145,7 +145,7 @@ function execute(){
                 submitted = true;
                 //PUT STALL HERE
                 while(!fs.existsSync('./totalOrderAddress.txt')){
-                    setTimeout(function(){}, 5000);
+                    setTimeout(function(){}, 15000);
                 }
                 console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
                 console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
