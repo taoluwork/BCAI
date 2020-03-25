@@ -599,6 +599,12 @@ def getMode():
                 f = open('mode.txt', 'w')
                 f.close()
 
+def submitTask():
+    f = open('stat.txt', 'w')
+    f.close()
+    f = open('stat.txt', 'w')
+    f.write('Ready')
+    f.close()
 
 
 if __name__ == '__main__':
@@ -615,7 +621,12 @@ if __name__ == '__main__':
                     flag = False
                 time.sleep(5)
             reqController()
-        else:
+        elif mode == 'provider':
             reqController()
             dockerExe()
+            submitTask()
             hostController('image.zip')
+        elif mode == 'validator':
+            reqController()
+            dockerExe()
+            submitTask()
