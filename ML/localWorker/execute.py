@@ -555,6 +555,7 @@ def reqController():
 def dockerExe():
     global mode
     #this will load the image back into docker
+    os.system("unzip image.zip")
     os.system("sudo docker load -i image.tgz")
     #this will start the container in a bash
     os.system("sudo docker run -dit execute:latest bash")
