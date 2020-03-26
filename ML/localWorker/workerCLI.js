@@ -145,7 +145,7 @@ function execute(){
                 submitted = true;
                 //PUT STALL HERE
                 while(!fs.existsSync('./totalOrderAddress.txt')){
-                    setTimeout(function(){}, 15000);
+                    setTimeout(function(){}, 30000);
                 }
                 console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
                 console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
@@ -154,6 +154,8 @@ function execute(){
                         console.log("file errorr!!!!!!!!!!!!!!!!");
                         throw err;
                     }
+                    console.log("reqAddr: " + reqAddr);
+                    console.log("ipAddr:  " + ipAddress);
                     taskCounter+=1;
                     var ABIcompleteRequest; //prepare abi for a function call
                     ABIcompleteRequest = myContract.methods.completeRequest(reqAddr, ipAddress).encodeABI();
