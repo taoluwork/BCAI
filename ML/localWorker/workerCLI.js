@@ -156,11 +156,11 @@ function execute(){
                         console.log("file errorr!!!!!!!!!!!!!!!!");
                         throw err;
                     }
-                    console.log("reqAddr: " + reqAddr);
+                    console.log("reqAddr: " + requestAddr);
                     console.log("ipAddr:  " + ipAddress);
                     taskCounter+=1;
                     var ABIcompleteRequest; //prepare abi for a function call
-                    ABIcompleteRequest = myContract.methods.completeRequest(reqAddr, ipAddress).encodeABI();
+                    ABIcompleteRequest = myContract.methods.completeRequest(requestAddr, ipAddress).encodeABI();
                     console.log("h");
                     const rawTransaction = {
                         "from": userAddress,
