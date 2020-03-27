@@ -11,7 +11,7 @@ const Folder = './';
 var publicIp = require("public-ip");
 const hex2ascii = require("hex2ascii");
 const express = require('express');
-
+var sleep = require('sleep');
 
 
 
@@ -145,8 +145,9 @@ function execute(){
                 submitted = true;
                 //PUT STALL HERE
                 while(!fs.existsSync('./totalOrderAddress.txt')){
-                    emptyFunc = setTimeout(function(){}, 15000);
-                    delete emptyFunc;
+                    //emptyFunc = setTimeout(function(){}, 15000);
+                    //delete emptyFunc;
+                    sleep.sleep(15);
                 }
                 console.log("file exists now")
                 console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
