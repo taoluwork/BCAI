@@ -145,8 +145,10 @@ function execute(){
                 submitted = true;
                 //PUT STALL HERE
                 while(!fs.existsSync('./totalOrderAddress.txt')){
-                    setTimeout(function(){}, 15000);
+                    emptyFunc = setTimeout(function(){}, 15000);
+                    delete emptyFunc;
                 }
+                console.log("file exists now")
                 console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
                 console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
                 fs.readFile('./totalOrderAddress.txt', 'utf8', function read(err, ipAddress){
