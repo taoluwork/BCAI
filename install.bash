@@ -95,6 +95,29 @@ then
 else
     echo -e "\e[92mpython already installed."
 fi
+#Install pip3 (necessary for PySocks)
+if ! pip3 --version > /dev/null 2>&1 ; #pip3 not installed
+then
+    echo -e "\e[93mpip3 not installed, installing now.\e[0m"
+    if sudo apt install python3-pip --yes --force-yes > /dev/null 2>&1 ; then #if installed
+        echo -e "\e[92mpip3 successfully installed."
+    else  #problem installing
+        echo -e "\e[91mProblem installing pip3. Aborting installation."
+        exit
+    fi
+else
+    echo -e "\e[92mpip3 already installed."
+fi
+#Install PySocks
+#No way to check if PySocks is installed without actually running a python script...
+#Just assume it isn't, if it is nothing bad happens
+echo -e "\e[93mInstalling PySocks.\e[0m"
+if pip3 install PySocks > /dev/null 2>&1 ; then #if installed
+    echo -e "\e[92mPySocks successfully installed."
+else  #problem installing
+    echo -e "\e[91mProblem installing PySocks. Aborting installation."
+    exit
+fi
 #Install flask (necessary for onionshare)
 if ! flask --version > /dev/null 2>&1 ; #flask not installed
 then
