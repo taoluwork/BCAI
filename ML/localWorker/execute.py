@@ -360,6 +360,7 @@ def getShareWithoutIter(address):
 def createThreadsReq():
     global totalAddr
     global content
+    global mode
     flag = True
     flagTwo = True
     flagThree = True
@@ -413,12 +414,12 @@ def createThreadsReq():
             else:
                 allVal = False
         if allVal:
-            session = r.session()
-            session.proxies = {}
-            session.proxies['http'] = 'socks5h://localhost:9050'
-            session.proxies['https'] = 'socks5h://localhost:9050'
-
-            session.get(totalAddr + '/finish') #tell server finished downloading
+            if mode == 'user' or mode == 'provider':
+                session = r.session()
+                session.proxies = {}
+                session.proxies['http'] = 'socks5h://localhost:9050'
+                session.proxies['https'] = 'socks5h://localhost:9050'
+                session.get(totalAddr + '/finish') #tell server finished downloading
             totalFile = open('image.zip', 'wb')
             for i in range(0, threads):
                 iterFile = open('image.zip' + str(i) + '.txt', 'rb')
