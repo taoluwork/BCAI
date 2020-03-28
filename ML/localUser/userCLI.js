@@ -325,7 +325,6 @@ function promptProviderChoices(){
     setRatingVars();
     var displayProvList = [];
     var displayString = "";
-    console.log(rateProvs);
     for(var i = 0; i<rateProvs.length; i++){
         displayString = rateProvs[i] + "- Rating: " + ratings[i];
         displayProvList.push(displayString);
@@ -339,7 +338,7 @@ function promptProviderChoices(){
         }
     ])
     .then(choice => {
-        console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your provider\n"));
+        console.log(chalk.cyan("\nYou have choosen ", choice.provChoice, " as your provider\n"));
         //address is chars 0-41
         var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
         var ABIChooseProvider; //prepare abi for a function call
@@ -386,7 +385,7 @@ function chooseValidator(){
         }
     ])
     .then(choice => {
-        console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your validator\n"));
+        console.log(chalk.cyan("\nYou have choosen ", choice.provChoice, " as your validator\n"));
         //address is chars 0-41
         var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
         var ABIChooseProvider; //prepare abi for a function call
@@ -423,7 +422,6 @@ function askUser(){
         giveRating();
     }
     if(validationSelectFlag == true){
-        checkEvents();
         chooseValidator();
     }
     else{
