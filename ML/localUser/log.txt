@@ -1,2 +1,2018 @@
-Fri Mar 27 2020 15:39:45 GMT-0500 (CDT)
-Fri Mar 27 2020 15:44:41 GMT-0500 (CDT) Request has been assigned to provider
+Sat Mar 28 2020 12:31:25 GMT-0500 (CDT)
+Sat Mar 28 2020 12:39:42 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:12:50 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:12:51 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:12:51 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:13:06 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:13:06 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:13:08 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:13:08 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:13:14 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:13:14 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:13:16 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:13:16 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:13:16 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:13:16 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:13:21 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:13:21 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:13:51 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:13:51 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:13:55 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:13:55 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:13:59 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:13:59 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:14:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:14:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:14:09 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:14:09 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:14:12 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:14:12 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:14:26 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:14:26 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:14:29 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:14:29 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:14:30 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:14:30 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:14:40 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:14:40 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:14:53 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:14:53 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:14:57 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:14:57 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:15:08 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:15:08 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:15:17 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:15:17 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:15:18 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:15:18 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:15:28 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:15:28 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:15:40 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:15:40 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:15:43 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:15:43 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:15:43 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:15:43 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:16:28 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:16:28 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:16:38 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:16:38 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:16:54 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:16:54 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:17:02 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:17:02 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:17:14 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:17:14 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:17:21 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:17:21 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:17:36 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:17:36 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:17:40 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:17:40 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:17:47 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:17:47 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:18:13 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:18:13 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:18:25 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:18:25 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:18:51 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:18:51 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:19:05 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:19:05 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:19:13 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:19:13 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:19:14 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:19:14 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:19:24 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:19:24 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:19:31 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:19:31 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:20:06 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:20:06 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:20:18 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:20:18 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:20:27 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:20:27 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:20:31 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:20:31 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:20:47 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:20:47 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:20:52 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:20:52 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:20:59 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:20:59 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:21:04 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:21:04 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:21:09 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:21:09 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:21:16 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:21:16 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:21:29 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:21:29 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:21:53 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:21:53 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:22:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:22:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:22:04 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:22:04 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:22:15 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:22:15 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:22:21 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:22:21 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:22:26 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:22:26 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:22:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:22:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:22:46 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:22:46 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:23:12 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:23:12 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:23:12 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:23:12 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:23:16 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:23:16 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:23:54 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:23:54 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:24:25 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:24:25 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:24:29 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:24:29 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:24:44 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:24:44 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:24:47 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:24:47 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:25:11 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:25:11 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:25:12 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:25:12 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:25:23 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:25:23 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:25:25 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:25:25 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:25:48 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:25:48 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:26:01 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:26:01 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:26:04 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:26:04 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:26:08 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:26:08 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:26:13 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:26:13 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:26:27 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:26:27 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:26:56 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:26:56 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:27:04 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:27:04 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:27:16 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:27:16 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:28:42 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:28:42 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:28:44 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:28:44 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:29:23 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:29:23 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:29:40 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:29:40 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:29:43 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:29:43 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:29:45 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:29:45 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:30:08 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:30:08 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:30:35 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:30:35 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:30:39 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:30:39 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:30:43 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:30:43 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:31:19 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:31:19 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:31:23 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:31:23 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:31:28 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:31:28 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:31:35 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:31:35 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:31:44 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:31:44 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:31:48 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:31:48 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:31:56 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:31:56 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:31:59 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:31:59 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:32:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:32:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:32:33 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:32:33 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:32:35 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:32:35 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:33:17 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:33:17 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:33:47 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:33:47 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:33:50 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:33:50 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:34:21 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:34:21 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:35:05 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:35:05 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:35:09 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:35:09 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:35:33 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:35:33 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:35:40 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:35:40 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:36:00 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:36:00 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:36:01 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:36:01 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:36:14 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:36:14 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:36:15 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:36:15 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:36:17 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:36:17 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:36:18 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:36:18 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:36:55 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:36:55 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:36:58 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:36:58 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:37:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:37:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:37:06 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:37:06 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:37:23 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:37:23 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:37:27 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:37:27 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:37:40 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:37:40 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:38:35 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:38:35 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:38:57 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:38:57 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:39:05 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:39:05 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:39:14 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:39:14 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:39:16 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:39:16 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:39:19 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:39:19 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:39:56 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:39:56 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:40:01 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:40:01 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:40:06 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:40:06 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:40:09 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:40:09 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:40:37 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:40:37 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:40:48 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:40:48 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:40:52 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:40:52 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:41:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:41:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:41:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:41:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:41:24 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:41:24 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:41:58 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:41:58 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:42:24 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:42:24 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:42:24 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:42:24 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:42:29 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:42:29 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:42:29 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:42:29 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:42:59 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:42:59 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:43:06 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:43:06 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:43:10 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:43:10 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:43:11 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:43:11 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:43:30 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:43:30 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:43:33 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:43:33 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:43:54 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:43:54 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:44:01 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:44:01 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:44:23 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:44:23 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:44:42 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:44:42 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:45:10 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:45:10 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:45:17 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:45:17 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:45:24 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:45:24 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:45:33 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:45:33 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:45:44 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:45:44 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:45:51 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:45:51 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:46:00 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:46:00 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:46:04 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:46:04 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:46:09 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:46:09 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:46:25 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:46:25 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:46:50 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:46:50 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:47:17 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:47:17 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:47:18 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:47:18 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:47:51 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:47:51 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:47:54 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:47:54 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:48:18 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:48:18 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:48:24 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:48:24 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:48:25 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:48:25 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:48:27 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:48:27 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:48:34 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:48:34 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:49:14 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:49:14 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:49:23 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:49:23 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:49:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:49:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:49:38 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:49:38 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:49:44 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:49:44 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:50:10 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:50:10 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:50:30 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:50:30 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:50:44 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:50:44 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:50:45 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:50:45 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:50:51 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:50:51 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:50:56 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:50:56 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:51:06 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:51:06 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:51:21 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:51:21 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:51:36 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:51:36 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:51:57 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:51:57 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:52:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:52:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:52:38 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:52:38 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:52:52 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:52:52 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:53:04 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:53:04 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:53:47 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:53:47 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:54:08 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:54:08 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:54:22 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:54:22 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:54:33 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:54:33 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:54:38 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:54:38 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:54:43 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:54:43 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:54:58 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:54:58 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:55:02 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:55:02 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:55:07 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:55:07 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:55:31 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:55:31 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:55:37 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:55:37 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:55:44 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:55:44 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:55:45 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:55:45 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:55:52 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:55:52 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:56:14 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:56:14 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:56:22 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:56:22 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:56:35 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:56:35 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:56:39 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:56:39 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:56:50 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:56:50 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:56:51 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:56:51 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:56:56 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:56:56 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:57:37 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:57:37 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:57:49 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:57:49 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:57:50 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:57:50 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:57:53 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:57:53 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:57:57 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:57:57 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:58:00 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:58:00 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:58:07 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:58:07 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:58:13 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:58:13 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:58:14 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:58:14 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:58:22 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:58:22 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:58:24 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:58:24 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:58:31 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:58:31 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:58:43 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:58:43 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:59:23 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:59:23 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:59:42 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 13:59:42 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:59:59 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 13:59:59 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:00:13 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:00:13 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:00:18 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:00:18 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:00:33 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:00:33 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:00:44 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:00:44 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:01:11 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:01:11 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:01:38 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:01:38 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:01:45 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:01:45 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:01:53 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:01:53 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:02:28 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:02:28 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:02:30 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:02:30 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:03:06 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:03:06 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:03:11 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:03:11 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:03:17 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:03:17 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:03:21 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:03:21 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:03:24 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:03:24 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:03:28 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:03:28 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:03:43 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:03:43 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:03:44 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:03:44 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:03:52 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:03:52 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:04:08 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:04:08 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:04:20 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:04:20 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:04:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:04:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:04:58 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:04:58 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:05:00 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:05:00 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:05:29 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:05:29 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:05:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:05:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:05:40 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:05:40 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:05:59 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:05:59 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:06:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:06:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:06:21 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:06:21 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:06:24 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:06:24 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:06:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:06:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:06:41 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:06:41 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:06:45 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:06:45 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:07:00 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:07:00 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:07:23 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:07:23 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:07:37 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:07:37 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:07:49 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:07:49 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:07:55 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:07:55 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:07:56 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:07:56 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:07:59 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:07:59 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:08:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:08:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:08:07 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:08:07 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:08:20 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:08:20 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:08:37 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:08:37 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:08:39 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:08:39 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:08:41 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:08:41 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:08:56 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:08:56 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:09:17 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:09:17 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:09:22 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:09:22 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:09:37 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:09:37 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:09:41 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:09:41 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:09:46 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:09:46 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:10:47 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:10:47 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:11:42 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:11:42 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:12:00 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:12:00 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:12:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:12:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:12:38 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:12:38 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:13:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:13:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:13:05 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:13:05 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:13:07 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:13:07 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:13:25 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:13:25 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:13:29 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:13:29 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:13:30 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:13:30 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:13:47 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:13:47 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:13:49 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:13:49 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:13:59 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:13:59 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:14:07 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:14:07 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:14:16 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:14:16 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:14:45 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:14:45 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:14:46 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:14:46 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:14:55 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:14:55 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:15:19 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:15:19 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:15:26 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:15:26 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:15:40 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:15:40 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:16:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:16:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:16:57 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:16:57 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:17:07 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:17:07 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:17:16 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:17:16 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:17:16 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:17:29 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:17:29 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:17:29 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:17:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:17:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:17:32 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:17:36 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:17:36 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:17:36 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:17:47 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:17:47 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:17:47 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:18:19 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:18:19 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:18:19 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:19:02 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:19:02 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:19:02 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:19:05 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:19:05 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:19:05 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:19:31 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:19:31 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:19:31 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:19:50 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:19:50 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:19:50 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:20:00 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:20:00 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:20:00 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:20:21 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:20:21 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:20:21 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:20:24 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:20:24 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:20:24 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:20:31 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:20:31 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:20:31 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:20:48 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:20:48 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:20:48 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:21:22 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:21:22 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:21:22 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:21:24 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:21:24 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:21:24 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:21:33 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:21:33 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:21:33 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:21:36 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:21:36 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:21:36 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:21:43 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:21:43 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:21:43 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:22:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:22:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:22:32 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:22:38 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:22:38 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:22:38 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:22:59 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:22:59 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:22:59 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:23:02 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:23:02 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:23:02 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:23:10 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:23:10 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:23:10 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:23:26 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:23:26 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:23:26 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:23:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:23:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:23:32 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:23:55 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:23:55 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:23:55 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:24:00 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:24:00 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:24:00 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:24:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:24:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:24:03 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:24:06 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:24:06 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:24:06 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:24:10 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:24:10 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:24:10 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:24:14 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:24:14 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:24:14 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:24:33 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:24:33 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:24:33 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:24:34 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:24:34 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:24:34 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:24:39 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:24:39 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:24:39 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:24:58 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:24:58 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:24:58 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:25:57 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:25:57 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:25:57 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:26:09 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:26:09 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:26:09 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:26:13 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:26:13 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:26:13 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:26:18 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:26:18 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:26:18 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:26:18 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:26:18 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:26:18 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:26:55 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:26:55 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:26:55 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:26:58 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:26:58 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:26:58 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:27:05 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:27:05 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:27:05 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:27:09 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:27:09 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:27:09 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:27:34 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:27:34 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:27:34 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:28:21 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:28:21 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:28:21 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:28:22 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:28:22 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:28:22 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:28:29 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:28:29 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:28:29 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:28:34 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:28:34 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:28:34 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:28:50 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:28:50 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:28:50 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:28:54 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:28:54 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:28:54 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:29:08 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:29:08 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:29:08 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:29:19 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:29:19 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:29:19 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:29:50 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:29:50 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:29:50 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:30:02 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:30:02 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:30:02 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:30:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:30:03 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:30:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:30:07 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:30:07 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:30:07 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:30:13 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:30:13 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:30:13 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:30:19 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:30:19 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:30:19 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:30:34 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:30:34 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:30:34 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:30:51 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:30:51 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:30:51 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:30:51 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:30:51 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:30:51 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:30:55 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:30:55 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:30:55 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:31:15 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:31:15 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:31:15 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:31:22 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:31:22 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:31:22 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:31:54 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:31:54 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:31:54 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:31:59 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:31:59 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:31:59 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:32:19 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:32:19 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:32:19 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:32:30 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:32:30 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:32:30 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:32:37 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:32:37 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:32:37 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:33:11 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:33:11 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:33:11 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:33:21 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:33:21 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:33:21 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:33:23 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:33:23 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:33:23 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:33:47 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:33:47 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:33:47 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:33:49 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:33:49 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:33:49 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:34:41 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:34:41 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:34:41 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:34:49 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:34:49 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:34:49 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:35:08 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:35:08 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:35:08 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:35:57 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:35:57 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:35:57 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:35:59 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:35:59 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:35:59 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:36:10 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:36:10 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:36:10 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:36:22 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:36:22 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:36:22 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:36:27 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:36:27 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:36:27 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:36:29 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:36:29 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:36:29 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:36:31 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:36:31 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:36:31 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:36:35 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:36:35 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:36:35 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:36:36 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:36:36 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:36:36 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:36:53 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:36:53 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:36:53 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:37:09 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:37:09 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:37:09 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:37:11 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:37:11 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:37:11 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:37:13 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:37:13 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:37:13 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:37:33 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:37:33 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:37:33 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:37:41 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:37:41 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:37:41 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:38:05 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:38:05 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:38:05 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:38:18 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:38:18 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:38:18 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:38:22 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:38:22 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:38:22 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:38:29 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:38:29 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:38:29 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:38:32 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:38:32 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:38:32 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:38:39 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:38:39 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:38:39 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:38:42 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:38:42 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:38:42 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:38:48 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:38:48 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:38:48 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:39:06 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:39:06 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:39:06 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:39:22 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:39:22 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:39:22 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:39:55 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:39:55 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:39:55 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:40:37 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:40:37 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:40:37 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:40:39 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:40:39 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:40:39 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:40:51 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:40:51 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:40:51 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:41:14 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:41:14 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:41:14 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:41:16 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:41:16 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:41:16 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:41:18 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:41:18 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:41:18 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:41:52 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:41:52 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:41:52 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:42:13 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:42:13 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:42:13 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:42:27 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:42:27 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:42:27 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:42:30 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:42:30 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:42:30 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:42:49 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:42:49 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:42:49 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:43:07 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:43:07 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:43:07 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:44:13 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:44:13 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:44:13 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:44:14 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:44:14 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:44:14 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:44:30 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:44:30 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:44:30 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:44:30 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:44:30 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:44:30 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:44:33 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:44:33 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:44:33 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:44:44 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:44:44 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:44:44 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:44:50 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:44:50 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:44:50 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:45:03 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:45:03 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:45:03 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:45:12 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:45:12 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:45:12 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:45:49 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:45:49 GMT-0500 (CDT) Request has been completed. Needs validation
+
+Sat Mar 28 2020 14:45:49 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:45:54 GMT-0500 (CDT) Request has been assigned to provider
+
+Sat Mar 28 2020 14:45:54 GMT-0500 (CDT) Request has been validated
+
+Sat Mar 28 2020 14:45:54 GMT-0500 (CDT) Request has been completed. Needs validation

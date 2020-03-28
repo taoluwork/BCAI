@@ -271,11 +271,7 @@ def resetHost():
     mode = ''
     totalAddr = ''
     try:
-        os.remove("totalOrder.txt")
-        os.remove('onionShareOrder.txt')
-        os.remove('onionshare*.txt')
-        os.remove('order.txt')
-        os.remove(fileName + '*.txt')
+        os.system('rm totalOrder.txt onionShareOrder.txt onionshare*.txt order.txt ' + str(fileName) + '*.txt')
     except:
         pass
     
@@ -460,8 +456,7 @@ def resetReq():
     totalAddr = None
     mode = ''
     try:
-        os.remove("totalOrder.txt")
-        os.remove('onionShareOrder.txt')
+        os.system('rm totalOrder.txt onionShareOrder.txt image.zip*.txt')
     except:
       pass
     #new memory and command line reset
