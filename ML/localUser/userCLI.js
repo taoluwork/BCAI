@@ -47,7 +47,7 @@ var ratingsTable = new Table({
            , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
            , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
 });
-
+var valEntCount = 0;
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
 // fs.open('./stat.txt', 'w', function(err){
@@ -1288,12 +1288,7 @@ checkEvents = async () => {
         pastEvents.splice(0,i+1);
         if(pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr){
             //validation is complete and now can ask for rating
-            console.log("\n validation complete move into ask for rating \n");
-
             canRate = true;
-        }
-        if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr){
-            console.log("\n validator signed \n");
         }
         if(validationAssignedFlag == 0){
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to validator\n", function (err){
@@ -1315,7 +1310,10 @@ checkEvents = async () => {
           //console.log(pastEvents[i].returnValues;
         if (userAddress === pastEvents[i].returnValues.reqAddr.toLowerCase()) {
             requestAssignedFlag = 0;
-            validationSelectFlag = true;
+            if(valEntCount == 0){
+                validationSelectFlag = true;
+                valEntCount+=1;
+            }
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
                 if (err) throw err;
             })
@@ -1345,6 +1343,7 @@ checkEvents = async () => {
         //validation complete
         if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete"){
             validationAssignedFlag = 0;
+            valEntCount = 0;
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been validated\n", function (err){
                 if (err) throw err;
             })
