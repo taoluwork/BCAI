@@ -161,7 +161,7 @@ function execute(){
                     console.log("ipAddr:  " + ipAddress);
                     taskCounter+=1;
                     var ABIcompleteRequest; //prepare abi for a function call
-                    ABIcompleteRequest = myContract.methods.completeRequest(requestAddr, ipAddress).encodeABI();
+                    ABIcompleteRequest = myContract.methods.completeRequest(requestAddr, web3.utils.asciiToHex(ipAddress)).encodeABI();
                     console.log("h");
                     const rawTransaction = {
                         "from": userAddress,
