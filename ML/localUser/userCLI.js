@@ -801,7 +801,7 @@ function startTask(){
                                     const rawTransaction = {
                                         "from": userAddress,
                                         "to": addr,
-                                        "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                                        "value": web3.utils.toHex(web3.utils.toWei("0.01", "ether")),
                                         "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
                                         "gas": 5000000,
                                         "chainId": 3,
@@ -809,7 +809,17 @@ function startTask(){
                                     }
                                 
                                     decryptedAccount.signTransaction(rawTransaction)
-                                    .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                                    .then(signedTx =>{
+                                        try{
+                                            web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+                                        }
+                                        catch(err){
+                                            if(err == "Not enough ether"){
+                                                console.log(chalk.red("\nThere is not enough ether in this account to start a request\n"));
+                                            }
+                                            else(console.log(chalk.red("\n", err, "\n"));)
+                                        }
+                                    })
                                     .then(receipt => {
                                         //console.log(chalk.cyan("\n\nTransaction receipt: "));
                                         //console.log(receipt);
