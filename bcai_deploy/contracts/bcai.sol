@@ -4,11 +4,6 @@
 //Copyright: tlu4@lsu.edu
 //
 //update from 2.1 -> 3.0, keep alignment with the project version v3.0, which is a stable release version.
-//NOTE: at the time Aug, 2019 the amount of contract code is close to its limit,
-//      adding more functions may result in a failure in deployment.
-//update Apr. 2019: fixed validateReqeust Logic: validator list is updated when selection,
-//      signature list is updated when result submitted, to avoid multi-submission
-//      did not change function parameter, should not break anything.
 ///////////////////////////////////////////////////////////////////////////////////////
 //NOTE:
 //This design uses account address as the identifier, meaning each address could only have one req/prov associated.
@@ -78,11 +73,12 @@ contract TaskContract is bcaiReputation{
     struct Request {
         uint256 blockNumber;                //record the time of submission
         address payable provider;           //record the provider assigned to this request
-        uint256 price;                      //the max amount he willing to pay          
+        uint256 deposit;                    //the amount he put down for a deposit          
+        uint256 price;                      //the amount of wei provider is owed for the work (set to price for now)
         bytes   dataID;                     //dataID used to fetch the off-chain data, interact with ipfs
         bytes   resultID;                   //dataID to fetch the off-chain result, via ipfs
-        address validator;       //validators' addr, update when assigned the task to validators
-        bool    signature;                 //true or false array, update only when validator submit result
+        address validator;                  //validators' addr, update when assigned the task to validators
+        bool    signature;                  //true or false array, update only when validator submit result
         bool    isValid;                    //the final flag
         byte    status;                     //one byte indicating the status: 0: 'pending', 1:'providing', 2: 'validating', 3: 'complete'
     }
@@ -157,12 +153,14 @@ contract TaskContract is bcaiReputation{
     // Send a request from user to blockchain. Assumes price is including the cost for verification
     // NOTE: use bytes memory as argument will increase the gas cost, one alternative will be uint type, may consifer in future.
     function startRequest(bytes memory dataID) public payable returns (bool) {
+        require(msg.value >= price, 'Not enough ether');
         if(requestList[msg.sender].blockNumber == 0){   //never submitted before
             //register on List
             requestList[msg.sender].blockNumber = block.number;
             requestList[msg.sender].provider = address(0);
-            //requestList[msg.sender].validator = address(0);
-            requestList[msg.sender].price = price;
+            requestList[msg.sender].validator = address(0);
+            requestList[msg.sender].deposit = msg.value;          //how much ether was sent to contract by the user, their "deposit"
+            requestList[msg.sender].price = price;                //set to price here, in future will need to be calculated and set later
             requestList[msg.sender].dataID = dataID;
             requestList[msg.sender].numValidations = 1;
             requestList[msg.sender].status = '0';       //pending = 0x30, is in ascii not number 0
@@ -271,7 +269,21 @@ contract TaskContract is bcaiReputation{
     function submitValidation(address payable reqAddr, bool result) public returns (bool) {
         if(msg.sender != requestList[reqAddr].provider) {     //validator cannot be provider
             if(requestList[reqAddr].validator == msg.sender && requestList[reqAddr].signature == false){ // this is the validator and no signature yet
-                    requestList[reqAddr].signature = result;        //length is matched, this prevent multi-submission and can update his own
+
+                    //The way the project is coded right now, this is gauranteed to run. If this doesn't run something is wrong.
+                    if(requestList[reqAddr].deposit >= requestList[reqAddr].price){ //if the deposit is enough to pay
+                        requestList[reqAddr].provider.transfer(requestList[reqAddr].price); //send price to provider
+                        emit SystemInfo(requestList[reqAddr].provider, 'You have been paid: ' + price + 'wei'); //alert provider
+                        if(requestList[reqAddr].deposit >= requestList[reqAddr].price){ //if deposit was greater than price
+                            reqAddr.transfer(requestList[reqAddr].deposit - requestList[reqAddr].price); //return remaining eth back to user
+                            emit SystemInfo(reqAddr, 'You have been paid: ' + price + 'wei back'); //alert user
+                        }
+                    }
+                    // else { //deposit was not enough, need more ether
+                    //     emit PairingInfo(reqAddr, requestList[reqAddr].provider, 'Deposit insufficient, )
+                    // }
+
+                    requestList[reqAddr].signature = result;
                     providerList[msg.sender].available = true;          //release validator
                     providerPool.push(msg.sender);
                     emit PairingInfo(reqAddr, msg.sender, 'Validator Signed');
@@ -293,18 +305,6 @@ contract TaskContract is bcaiReputation{
             delete requestList[reqAddr]; //delete user from mapping
         }
     }
-
-    /////////////////////////////////////////////////////////PAYMENT FUNCTIONS///////////////////////////////////////////////////////////////////////
-
-    //Needs no explicit action to accept the ether send in the transaction
-    function deposit() payable public {
-        require(msg.value == price);
-    }
-
-    function withdraw() payable public {
-        msg.sender.transfer(price); //transfer price to msg.sender
-    }
-
 
 /////////////////////////////////////////////////////////////////////
     // Used to dynamically remove elements from array of open provider spaces.
