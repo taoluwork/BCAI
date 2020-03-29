@@ -272,10 +272,10 @@ contract TaskContract is bcaiReputation{
                     //The way the project is coded right now, this is gauranteed to run. If this doesn't run something is wrong.
                     if(requestList[reqAddr].deposit >= requestList[reqAddr].price){ //if the deposit is enough to pay
                         requestList[reqAddr].provider.transfer(requestList[reqAddr].price); //send price to provider
-                        emit SystemInfo(requestList[reqAddr].provider, 'You have been paid: ' + price + 'wei'); //alert provider
+                        emit SystemInfo(requestList[reqAddr].provider, 'You have been paid'); //alert provider
                         if(requestList[reqAddr].deposit >= requestList[reqAddr].price){ //if deposit was greater than price
                             reqAddr.transfer(requestList[reqAddr].deposit - requestList[reqAddr].price); //return remaining eth back to user
-                            emit SystemInfo(reqAddr, 'You have been paid: ' + price + 'wei back'); //alert user
+                            emit SystemInfo(reqAddr, 'You have recieved part of your deposit back'); //alert user
                         }
                     }
                     // else { //deposit was not enough, need more ether
