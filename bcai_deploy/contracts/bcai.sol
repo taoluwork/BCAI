@@ -162,7 +162,6 @@ contract TaskContract is bcaiReputation{
             requestList[msg.sender].deposit = msg.value;          //how much ether was sent to contract by the user, their "deposit"
             requestList[msg.sender].price = price;                //set to price here, in future will need to be calculated and set later
             requestList[msg.sender].dataID = dataID;
-            requestList[msg.sender].numValidations = 1;
             requestList[msg.sender].status = '0';       //pending = 0x30, is in ascii not number 0
             pendingPool.push(msg.sender);
             emit IPFSInfo (msg.sender, "Request Added", dataID);
