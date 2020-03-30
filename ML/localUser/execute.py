@@ -273,7 +273,7 @@ def resetHost():
     mode = lockModeAt
     totalAddr = ''
     try:
-        os.system('rm totalOrder.txt onionShareOrder.txt onionshare*.txt order.txt ' + str(fileName) + '*.txt')
+        os.system('rm totalOrder.txt onionShareOrder.txt onionshare*.txt order.txt image.zip*.txt')
     except:
         pass
     fileName = ''
