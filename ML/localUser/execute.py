@@ -458,7 +458,7 @@ def resetReq():
     totalAddr = None
     mode = ''
     try:
-        os.system('rm totalOrder.txt onionShareOrder.txt image.zip*.txt')
+        os.system('rm totalOrder.txt image.zip*.txt')
     except:
       pass
     #new memory and command line reset
