@@ -33664,12 +33664,12 @@
         }
       },
       "links": {},
-      "address": "0x823b3b022f57CcC11f302E44fA2f48C89EBC9a8D",
-      "transactionHash": "0x8654ee51b0412b60a0271ff1559612fa28954919d3fa1c29e127704efa54b145"
+      "address": "0xbBBcd55DBA659838D9602F6c282f2a6E858232D2",
+      "transactionHash": "0xbb24819c108060f7ba4110175da5b8475db3718a9bab5a76d0a7befc434a43b5"
     }
   },
   "schemaVersion": "3.0.23",
-  "updatedAt": "2020-03-30T21:49:05.410Z",
+  "updatedAt": "2020-03-30T22:57:38.675Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
