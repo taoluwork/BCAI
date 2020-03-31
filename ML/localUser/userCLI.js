@@ -12,6 +12,7 @@ var publicIp = require("public-ip");
 var hex2ascii= require("hex2ascii")
 var express = require('express');
 var Table = require('cli-table');
+var sleep = require('sleep')
 
 require('events').EventEmitter.prototype._maxListeners = 100;
 
@@ -47,7 +48,7 @@ var ratingsTable = new Table({
            , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
 });
 
-
+var sleep = require('sleep');
 
 var valEntTracker = 0;
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
@@ -801,7 +802,9 @@ function startTask(){
                                     //console.log(buffer);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                     while(!(fs.existsSync('./totalOrderAddress.txt'))){
-                                        setTimeout(function(){} ,5000);
+                                        //setTimeout(function(){} ,5000);
+                                        sleep.sleep(15);
+
                                     }
                                     fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
                                         console.log(ip);
