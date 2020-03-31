@@ -273,12 +273,11 @@ def resetHost():
     mode = lockModeAt
     totalAddr = ''
     try:
-        os.system('rm totalOrder.txt onionShareOrder.txt onionshare*.txt order.txt image.zip*.txt')
+        os.system('rm restart.txt ps.txt totalOrderAddress.txt totalOrder.txt onionShareOrder.txt onionshare*.txt order.txt image.zip*.txt')
     except:
         pass
     fileName = ''
-
-        
+      
     #new memory and command line reset
     os.system("reset")
     os.system("ps aux > ps.txt")
@@ -286,7 +285,10 @@ def resetHost():
     line = f.readline()
     while line != '':
         if line.find('onionshare') != -1:
-            os.system( 'kill ' + line.split()[1])
+            try:
+                os.system('kill ' + line.split()[1])
+            except:
+                pass
         line = f.readline()
     f.close()
 
@@ -468,7 +470,10 @@ def resetReq():
     line = f.readline()
     while line != '':
         if line.find('onionshare') != -1:
-            os.system( 'kill ' + line.split()[1])
+            try:
+                os.system('kill ' + line.split()[1])
+            except:
+                pass
         line = f.readline()
     f.close()
     f = open('stat.txt', 'w')
