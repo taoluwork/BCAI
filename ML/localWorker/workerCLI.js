@@ -11,7 +11,7 @@ const Folder = './';
 var publicIp = require("public-ip");
 const hex2ascii = require("hex2ascii");
 const express = require('express');
-
+var sleep = require('sleep');
 
 
 
@@ -42,6 +42,10 @@ fs.open('./log.txt', 'w', function(err){
 })
 
 fs.open('./pass.txt', 'w', function(err){
+    if(err) throw err;
+})
+
+fs.open('./mode.txt', 'w', function(err){
     if(err) throw err;
 })
 
@@ -81,29 +85,29 @@ fs.readFile('./stat.txt', function read(err, data){
 })*/
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
-var getIp = (async() => {
-    await publicIp.v4().then(val => {ip4 = val});
-    await publicIp.v6().then(val => {ip6 = val});
-})
+// var getIp = (async() => {
+//     await publicIp.v4().then(val => {ip4 = val});
+//     await publicIp.v6().then(val => {ip6 = val});
+// })
   
-  //this calls the IP generating file and then depending on the option that is given it will create the server
-  //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
-getIp().then(() => {
-    //allow for manual choice (defaults to IPv4)
-    if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
-        ip = process.argv[3] + ":" + serverPort;
-    }
-    else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
-      ip = ip4 + ":" + serverPort;
-    }
-    else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
-      ip = "[" + ip6 + "]:" + serverPort;
-    }
-    else{
-      ip = ip4 + ":5000";
-    }
-    //console.log(chalk.cyan(ip);
-});
+//   //this calls the IP generating file and then depending on the option that is given it will create the server
+//   //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
+// getIp().then(() => {
+//     //allow for manual choice (defaults to IPv4)
+//     if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
+//         ip = process.argv[3] + ":" + serverPort;
+//     }
+//     else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
+//       ip = ip4 + ":" + serverPort;
+//     }
+//     else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
+//       ip = "[" + ip6 + "]:" + serverPort;
+//     }
+//     else{
+//       ip = ip4 + ":5000";
+//     }
+//     //console.log(chalk.cyan(ip);
+// });
 
 ///////////////////////////////////////////////////////////////////server///////////////////////////////////////////////////////////////////////////////////
 
@@ -139,7 +143,46 @@ function execute(){
             if(mode === 0){
                 //havent submitted request yet need to submit
                 submitted = true;
-                completeRequest(requestAddr, web3.utils.asciiToHex(ip));
+                //PUT STALL HERE
+                while(!fs.existsSync('./totalOrderAddress.txt')){
+                    //emptyFunc = setTimeout(function(){}, 15000);
+                    //delete emptyFunc;
+                    sleep.sleep(15);
+                }
+                console.log("file exists now")
+                console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
+                console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
+                fs.readFile('./totalOrderAddress.txt', 'utf8', function read(err, ipAddress){
+                    if(err) {
+                        console.log("file errorr!!!!!!!!!!!!!!!!");
+                        throw err;
+                    }
+                    console.log("reqAddr: " + requestAddr);
+                    console.log("ipAddr:  " + ipAddress);
+                    taskCounter+=1;
+                    var ABIcompleteRequest; //prepare abi for a function call
+                    ABIcompleteRequest = myContract.methods.completeRequest(requestAddr, web3.utils.asciiToHex(ipAddress)).encodeABI();
+                    console.log("h");
+                    const rawTransaction = {
+                        "from": userAddress,
+                        "to": addr,
+                        "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                        "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                        "gas": 5000000,
+                        "chainId": 3,
+                        "data": ABIcompleteRequest
+                    }
+                    console.log("i");
+                    decryptedAccount.signTransaction(rawTransaction)
+                    .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                    .then(receipt => {
+                        //console.log(chalk.cyan("\n\nTransaction receipt: "))
+                        //console.log(receipt)
+                    })
+                    .catch(err => {
+                        console.log("\n", chalk.red(err), "\n");
+                    });
+                })
             }
             if(mode === 1){
                 //havent submitted validatiion yet need to submit
@@ -167,28 +210,6 @@ function clearLog(){
         if(err) throw err;
     })
 }
-
-/*function offer(){
-    
-    if(!executing) {
-        executing = true;
-        console.log("\nNOW OFFERING!!!!!\n")
-        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
-            if(err){
-                console.log(err);
-                return;
-            }
-            console.log(stdout);
-            executing = false;
-            if(mode === 0 ){
-                completeRequest(requestAddr, web3.utils.asciiToHex(ip));
-            }
-            if(mode === 1 ){
-                submitValidation(requestAddr, true);
-            }
-        });
-    }
-}*/
 
 
 var UTCFileArray = [];
@@ -866,32 +887,6 @@ function updateProvider(){
         });
 }
 
-function completeRequest(reqAddress, resultId){
-    taskCounter+=1;
-    console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
-    console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
-        var ABIcompleteRequest; //prepare abi for a function call
-        ABIcompleteRequest = myContract.methods.completeRequest(reqAddress, resultId).encodeABI();
-        const rawTransaction = {
-            "from": userAddress,
-            "to": addr,
-            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-            "gas": 5000000,
-            "chainId": 3,
-            "data": ABIcompleteRequest
-        }
-
-        decryptedAccount.signTransaction(rawTransaction)
-        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-        .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "))
-            //console.log(receipt)
-        })
-        .catch(err => {
-            console.log("\n", chalk.red(err), "\n");
-        });
-}
 
 function submitValidation(reqAddress, result){
     validationCounter+=1;
@@ -989,7 +984,9 @@ checkEvents = async (showLogs) => {
                 })
                 assignedRequest = 1;
             }
-            
+            fs.writeFile('./mode.txt', "provider\n", function(err){
+                if(err) throw err;
+            })
             mode = 0;
             requestAddr = pastEvents[i].returnValues.reqAddr
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
@@ -1017,6 +1014,9 @@ checkEvents = async (showLogs) => {
             if(assignedValidation == 0){
                 fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Assigned validator\n", function (err){
                     if (err) throw err;
+                })
+                fs.writeFile('./mode.txt', "validator\n", function(err){
+                    if(err) throw err;
                 })
                 assignedValidation = 1;
             }

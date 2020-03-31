@@ -6,7 +6,6 @@ downloadgit=true
 if [ $# -eq 0 ] ;#No argument provided, install here
 then
     echo -e "\e[93mInstalling here."
-    cd ..
 else
     if [ -d "$1" ] #If directory exists
     then
@@ -47,7 +46,7 @@ then
     echo -e "\e[93mgit not installed, installing now.\e[0m"
     add-apt-repository ppa:git-core/ppa -y
     apt-get update
-    if apt-get install git --yes --force-yes ; then #if installed
+    if apt-get install git --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mgit successfully installed."
     else  #problem installing
         echo -e "\e[91mProblem installing git. Aborting installation."
@@ -60,7 +59,7 @@ fi
 if ! npm --version > /dev/null 2>&1 ; #npm not installed
 then
     echo -e "\e[93mnpm not installed, installing now.\e[0m"
-    if sudo apt install npm --yes --force-yes ; then #if installed
+    if sudo apt install npm --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mnpm successfully installed."
     else  #problem installing
         echo -e "\e[91mProblem installing npm. Aborting installation."
@@ -74,7 +73,7 @@ if ! node --version > /dev/null 2>&1 ; #node not installed
 then
     echo -e "\e[93mnode not installed, installing now.\e[0m"
     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-    if sudo apt install nodejs --yes --force-yes ; then #if installed
+    if sudo apt install nodejs --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mnode successfully installed."
     else  #problem installing
         echo -e "\e[91mProblem installing node. Aborting installation."
@@ -87,7 +86,7 @@ fi
 if ! python3 --version > /dev/null 2>&1 ; #python not installed
 then
     echo -e "\e[93mpython not installed, installing now.\e[0m"
-    if sudo apt install python3 --yes --force-yes ; then #if installed
+    if sudo apt install python3 --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mpython successfully installed."
     else  #problem installing
         echo -e "\e[91mProblem installing python. Aborting installation."
@@ -96,11 +95,34 @@ then
 else
     echo -e "\e[92mpython already installed."
 fi
-#Install flask
+#Install pip3 (necessary for PySocks)
+if ! pip3 --version > /dev/null 2>&1 ; #pip3 not installed
+then
+    echo -e "\e[93mpip3 not installed, installing now.\e[0m"
+    if sudo apt install python3-pip --yes --force-yes > /dev/null 2>&1 ; then #if installed
+        echo -e "\e[92mpip3 successfully installed."
+    else  #problem installing
+        echo -e "\e[91mProblem installing pip3. Aborting installation."
+        exit
+    fi
+else
+    echo -e "\e[92mpip3 already installed."
+fi
+#Install PySocks
+#No way to check if PySocks is installed without actually running a python script...
+#Just assume it isn't, if it is nothing bad happens
+echo -e "\e[93mInstalling PySocks.\e[0m"
+if pip3 install PySocks > /dev/null 2>&1 ; then #if installed
+    echo -e "\e[92mPySocks successfully installed."
+else  #problem installing
+    echo -e "\e[91mProblem installing PySocks. Aborting installation."
+    exit
+fi
+#Install flask (necessary for onionshare)
 if ! flask --version > /dev/null 2>&1 ; #flask not installed
 then
     echo -e "\e[93mflask not installed, installing now.\e[0m"
-    if sudo apt install python3-flask --yes --force-yes ; then #if installed
+    if sudo apt install python3-flask --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mflask successfully installed."
     else  #problem installing
         echo -e "\e[91mProblem installing flask. Aborting installation."
@@ -109,12 +131,25 @@ then
 else
     echo -e "\e[92mflask already installed."
 fi
+#Install tor
+if ! tor --version > /dev/null 2>&1 ; #tor not installed
+then
+    echo -e "\e[93mtor not installed, installing now.\e[0m"
+    if sudo apt install tor --yes --force-yes > /dev/null 2>&1 ; then #if installed
+        echo -e "\e[92mtor successfully installed."
+    else  #problem installing
+        echo -e "\e[91mProblem installing tor. Aborting installation."
+        exit
+    fi
+else
+    echo -e "\e[92mtor already installed."
+fi
 #Install docker
 if ! docker --version > /dev/null 2>&1 ;  #docker not installed
 then
     echo -e "\e[93mDocker not installed, installing now.\e[0m"
     sudo apt-get update
-    if sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common --yes --force-yes ; then #if installed
+    if sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[93mInstalling...\e[0m"
     else  #problem installing
         echo -e "\e[91mProblem installing Docker. Aborting installation."
@@ -129,7 +164,7 @@ then
     #    sub   rsa4096 2017-02-22 [S]
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     sudo apt-get update
-    if sudo apt-get install docker-ce docker-ce-cli containerd.io --yes --force-yes ; then #if installed
+    if sudo apt-get install docker-ce docker-ce-cli containerd.io --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mDocker successfully installed."
     else  #problem installing
         echo -e "\e[91mProblem installing Docker. Aborting installation."
@@ -144,9 +179,17 @@ if [ "$downloadgit" = true ] ; then
     if git clone https://github.com/PedroGRivera/BCAI.git ; then #if downloaded
         echo -e "\e[92mGithub repo successfully downloaded."
     else  #problem downloading
-        echo -e "\e[91mProblem downlaoding repo. Aborting installation."
+        echo -e "\e[91mProblem downlodding repo. Aborting installation."
         exit
     fi
+fi
+#Download onionshare repo
+echo -e "\e[93m----------------------------Downloading onionshare repo.----------------------------\e[0m"
+if git clone https://github.com/micahflee/onionshare.git ; then #if downloaded
+    echo -e "\e[92mOnionshare repo successfully downloaded."
+else  #problem downloading
+    echo -e "\e[91mProblem downloading onionshare repo. Aborting installation."
+    exit
 fi
 ###################################Installing npm packages###################################
 #Install npm stuff for localuser

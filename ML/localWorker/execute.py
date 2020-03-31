@@ -1,24 +1,501 @@
-
 import os
 import sys
-from flask import Flask
 import requests as r
 import time
 import json
 from signal import signal, SIGINT
 import threading
 from datetime import datetime
+import math
+import subprocess
+import multiprocessing
 
-# 0-> provider
-# 1-> validator
-#myIp = sys.argv[1]
 
-#mode = sys.argv[1] 
-#ip   = sys.argv[2] 
-#file = sys.argv[3]
-#myIp = sys.argv[4] 
-#print('FILE PROCESS BEGINNING')
+##globals##
+threads = 8
+threadL = []
+orderAddr = []
+order   = []
+startTimes = []
+mainThread = None
+totalAddr = None
+totalStartTime = 0
+content = []
+for i in range(threads):
+    content.append(b'')#inits list with threads number of empty byte arrays
+mode = '' #user, provider, or validator
+fileName = ''
 
+#######################################################################################################################################
+###########################################################host########################################################################
+#######################################################################################################################################
+def shareOrder():
+    global totalStartTime
+    while os.path.isfile('totalOrder.txt') != True:
+        time.sleep(5)
+    totalStartTime = time.time()
+    subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt"],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=True)
+def startShare(file, iter):
+    #print(file + ":" + str(iter))
+    #start onionshare server to host file
+    subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website " + file + "\" -f onionshare" + str(iter) + ".txt"],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=True)
+
+def splitFile(file):
+    fileName = file
+    f       = open(file,'rb')
+    lines   = f.readlines()
+    lineLen = len(lines)
+    pos     = 0
+
+    #print(lines)
+    print(lineLen)
+    for i in range(0, threads):
+        fw = open(file+str(i)+'.txt' ,'wb')
+        lo = int((i)*(lineLen/threads))
+        hi = int((i+1)*(lineLen/threads))
+        print("lo:" + str(lo) + " hi:" + str(hi))
+        fw.writelines(lines[lo:hi])
+        fw.close()
+        order.append(file+str(i)+'.txt\n') 
+    f.close()
+    f = open('order.txt', 'w')
+    f.writelines(order)
+    f.close()
+
+def createThreadsHost():
+    f = open("order.txt" , 'r')
+    orderFile = f.readlines()
+    f.close()
+    j = 0
+    for i in orderFile:
+        #t=threading.Thread(target=startShare,args=[i.strip('\n'),j]) 
+        t=multiprocessing.Process(target=startShare,args=(i.strip('\n'),j,)) 
+        threadL.append(t)
+        j += 1
+
+def runThreads():
+    for i in threadL:
+        i.start()
+        startTimes.append(time.time())
+        #print(startTimes)
+
+def getAddrs():
+    #for i in range(0,threads):
+        #orderAddr.append(0)
+    t = 0
+    while t < threads:
+        global orderAddr
+        t = 0
+        for i in orderAddr:
+            if i != 0:
+                t +=1
+        for i in range(0,threads):
+            if os.path.isfile('onionshare'+str(i)+'.txt'):
+                f = open('onionshare'+str(i)+'.txt', 'r')
+                lines = f.readlines()
+                f.close()
+                for j in lines:
+                    if (j.find("http://onionshare") >= 0): #found address
+                        orderAddr[i] = j.strip('\n') + "/" + order[i].strip('\n')
+        print(orderAddr)
+        time.sleep(5)
+    print(orderAddr)
+    f = open('totalOrder.txt', 'w')
+    for i in orderAddr:
+        f.write(i + '\n')
+    f.close()
+
+def getTotalAddr():
+    global totalAddr
+    flag = True
+    while(flag):
+        if os.path.isfile('onionshareOrder.txt'):
+            f = open('onionshareOrder.txt', 'r')
+            lines = f.readlines()
+            f.close()
+            for j in lines:
+                if (j.find("http://onionshare") >= 0): #found address
+                    totalAddr = j.strip('\n') + "/totalOrder.txt"
+                    flag = False 
+        time.sleep(5)
+    #Write address to file
+    f = open('totalOrderAddress.txt', 'w')
+    f.write(totalAddr)
+    f.close()
+
+def threadRestarter():
+    #for i in range(0,threads):
+        #orderAddr.append(0)
+    global orderAddr
+    while(True):
+        #global orderAddr
+        #print("addrs:"+ str(orderAddr))
+        try:
+            for i in range(0,len(startTimes)):
+                global orderAddr
+                if time.time() > startTimes[i] + 120 and orderAddr[i] == 0:
+                    os.system('rm onionshare' + str(i) + '.txt')
+                    #threadL[i]._delete()
+                    threadL[i].terminate()
+                    f = open("order.txt" , 'r')
+                    lines = f.readlines()
+                    f.close()
+                    #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i])
+                    t=multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
+                    threadL[i] = t
+                    threadL[i].start()
+                    holdVal = startTimes[i]
+                    startTimes[i] = time.time()
+                    f = open('restart.txt', 'a')
+                    f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + ' due to time issue. It started at:'+str(holdVal)+' and should end at:'+str(holdVal+120)+' and addr:'+ str(orderAddr[i])+'\n')
+                    f.close()
+            for i in range(0,threads):
+                if os.path.isfile('onionshare' + str(i) + '.txt' ):
+                    f = open('onionshare' + str(i) + '.txt' )
+                    lines = f.readlines()
+                    for line in lines:
+                        if line.find('in use') >= 0:
+                            os.system('rm onionshare' + str(i) + '.txt')
+                            #threadL[i]._delete()
+                            threadL[i].terminate()
+                            f = open("order.txt" , 'r')
+                            lines = f.readlines()
+                            f.close()
+                            #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i])
+                            t=multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
+                            threadL[i] = t
+                            threadL[i].start()
+                            startTimes[i] = time.time()
+                            f = open('restart.txt', 'a')
+                            f.write("thread:" + str(i) + ' has been restarted at:' + str(time.time()) + ' due to address error\n')
+                            f.close()
+            t = 0
+            for i in orderAddr:
+                if i != 0:
+                    t +=1
+            for i in range(0,threads):
+                if os.path.isfile('onionshare'+str(i)+'.txt') and orderAddr[i] == 0:
+                    f = open('onionshare'+str(i)+'.txt', 'r')
+                    lines = f.readlines()
+                    f.close()
+                    for j in lines:
+                        if (j.find("http://onionshare") >= 0): #found address
+                            orderAddr[i] = j.strip('\n') + "/" + order[i].strip('\n')
+            if t == threads:
+                f = open('totalOrder.txt', 'w')
+                for i in orderAddr:
+                    f.write(i + '\n')
+                f.close()
+
+        except:
+            pass
+        time.sleep(5)
+
+
+def hostReqFail():
+    subprocess.Popen(["script -c \"~/onionshare/dev_scripts/onionshare --website reqFails.txt" + "\" -f reqFailLog.txt"],stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+def reqFail():
+    #failThread = threading.Thread(target=hostReqFail)
+    failThread = multiprocessing.Process(target=hostReqFail)
+    threadOn = False
+    global threads
+    reqMade = [0]*threads
+    callSum = 0
+    while True:
+        time.sleep(120)
+        for i in range(0,threads):
+            if os.path.isfile('onionshare' + str(i) + '.txt'):
+                f = open('onionshare' + str(i) + '.txt')
+                lines = f.readlines()
+                f.close()
+                for line in lines:
+                    if reqMade[i] == 0 and line.find('get') >= 0:
+                        reqMade[i] = 1
+                        callSum += 1
+        if callSum >= (threads/2) and callSum != threads:
+            f = open('reqFails.txt', 'w')
+            for i in range(0,threads):
+                if reqMade[i] == 0:
+                    f.write(str(i)+'\n')
+            if threadOn:
+                #failThread._delete()
+                failThread.terminate()
+                #failThread = threading.Thread(target=hostReqFail)
+                failThread = multiprocessing.Process(target=hostReqFail)
+                failThread.start()
+                threadOn = True
+            else:
+                failThread.start()
+                threadOn = True
+        if callSum == threads:
+            #failThread._delete()
+            failThread.terminate()
+            threadOn = False
+
+def totalThreadRestarter():
+    global totalStartTime
+    global totalAddr
+    global mainThread
+    while (True):
+        if time.time() > totalStartTime + 60 and totalAddr == 0:
+            os.system('rm onionshareOrder.txt')
+            #restart thread
+            #mainThread._delete()
+            mainThread.terminate()
+            #t = threading.Thread(target=shareOrder)
+            t = multiprocessing.Process(target=shareOrder)
+            mainThread = t
+            mainThread.start()
+            totalStartTime = time.time()
+            f = open('restart.txt', 'a')
+            f.write("thread: for toalOrder has been restarted at:" + str(time.time()) + ' due to time issue\n')
+            f.close()
+
+def resetHost():
+    global threadL
+    global orderAddr
+    global order
+    global startTimes
+    global mode
+    global fileName
+    global totalAddr
+    for i in threadL:
+        try: #May or may not already be deleted
+            #i._delete()
+            i.terminate()
+        except: pass
+    threadL = []
+    orderAddr = []
+    order   = []
+    startTimes = []
+    mode = ''
+    totalAddr = ''
+    try:
+        os.system('rm restart.txt totalOrderAddress.txt totalOrder.txt onionShareOrder.txt onionshare*.txt order.txt image.zip*.txt')
+    except:
+        pass
+    fileName = ''
+        
+    #new memory and command line reset
+    os.system("reset")
+    os.system("ps aux > ps.txt")
+    f = open("ps.txt", 'r')
+    line = f.readline()
+    while line != '':
+        if line.find('onionshare') != -1:
+            try:
+                os.system('kill ' + line.split()[1])
+            except:
+                pass
+        line = f.readline()
+    f.close()
+    try:
+        os.system('rm ps.txt')
+    except:
+        pass
+
+def failingCheck():
+    global threadL
+    while True:
+        time.sleep(120)
+        positions = []
+        try:
+
+            session = r.session()
+            session.proxies = {}
+            session.proxies['http'] = 'socks5h://localhost:9050'
+            session.proxies['https'] = 'socks5h://localhost:9050'
+
+            fails = session.get(totalAddr + '/reqFails.txt')
+            f = open('reqFails.txt', 'wb').write(fails.contetn)
+            f.close()
+            f = open('reqFails.txt', 'r')
+            lines = f.readlines()
+            f.close()
+            for line in lines:
+                positions.append(int(line).rstrip())
+            f = open('totalOrder.txt', 'r')
+            lines = f.readlines()
+            for pos in positions:
+                #threadL[pos]._delete()
+                threadL[pos].terminate()
+                #threadL[pos] = threading.Thread(target=getShare,args=[lines[pos].rstrip(),pos])
+                threadL[pos] = multiprocessing.Process(target=getShare,args=(lines[pos].rstrip(),pos,))
+                threadL[pos].start()
+        except:
+            pass
+
+
+
+
+#######################################################################################################################################
+########################################################request########################################################################
+#######################################################################################################################################
+
+def getShare(address, iter):
+    global content
+    session = r.session()
+    session.proxies = {}
+    session.proxies['http'] = 'socks5h://localhost:9050'
+    session.proxies['https'] = 'socks5h://localhost:9050'
+
+    res = session.get(address) #download file
+    #content[iter] = res.content #append this slice's content to total content list
+    f = open("image.zip" + str(iter) + ".txt","wb" )
+    f.write(res.content)
+    f.close()
+    #print(type("-----Received content from thread " + iter))
+    #for i in range(threads):
+    #    print(len(content[i]))
+    #This thread unneeded now, can safely kill it
+    killMe(iter)
+
+def getShareWithoutIter(address):
+    session = r.session()
+    session.proxies = {}
+    session.proxies['http'] = 'socks5h://localhost:9050'
+    session.proxies['https'] = 'socks5h://localhost:9050'
+
+    res = session.get(address) #download file
+    open("totalOrder.txt", 'wb').write(res.content)
+    
+def createThreadsReq():
+    global totalAddr
+    global content
+    global mode
+    flag = True
+    flagTwo = True
+    flagThree = True
+    while flag:
+        time.sleep(5)
+        #Addresses written to file (Step 2)
+        if os.path.isfile("totalOrder.txt") and flagTwo:
+            flagTwo = False
+            #Need to make a thread for each address
+            f = open("totalOrder.txt", 'r')
+            lines = f.readlines()
+            f.close()
+            j = 0
+            for line in lines:
+                #t = threading.Thread(target=getShare,args=[line.strip('\n'), j])
+                t = multiprocessing.Process(target=getShare,args=(line.strip('\n'), j,))
+                threadL.append(t) 
+                t.start()
+                j += 1
+        #Every slot in content has been written to (Step 3)
+        # elif not (b'' in content):
+        #     #print(content)
+        #     #Tell session it has finished
+
+        #     session = r.session()
+        #     session.proxies = {}
+        #     session.proxies['http'] = 'socks5h://localhost:9050'
+        #     session.proxies['https'] = 'socks5h://localhost:9050'
+
+        #     session.get(totalAddr + '/finish') #tell server finished downloading
+
+        #     try:
+        #         print(type(content))
+        #         print(type(content[0]))
+        #         print(type(content[0][0]))
+        #     except:
+        #         print("hello")
+
+        #     #Save in chunks, converting to bytes
+        #     with open("image.zip", "wb") as f:
+        #         for i in range(threads):
+        #                 f.write(content[i])  
+
+        #     resetReq()
+        #     flag = False
+        #Every slot in content has been written to (Step 3)
+        allVal = True
+        for i in range(0,threads):
+            if os.path.isfile("image.zip" + str(i) + ".txt"):
+                content[i] = True
+            else:
+                allVal = False
+        if allVal:
+            if mode == 'user' or mode == 'provider':
+                session = r.session()
+                session.proxies = {}
+                session.proxies['http'] = 'socks5h://localhost:9050'
+                session.proxies['https'] = 'socks5h://localhost:9050'
+                session.get(totalAddr + '/finish') #tell server finished downloading
+            totalFile = open('image.zip', 'wb')
+            for i in range(0, threads):
+                iterFile = open('image.zip' + str(i) + '.txt', 'rb')
+                totalFile.write(iterFile.read())
+                iterFile.close()
+            totalFile.close()
+            flag = False
+            resetReq()
+
+        #totalOrder.txt not yet received (Step 1)
+        elif flagThree: 
+            statF = open("stat.txt", 'r')
+            totalAddr = statF.readline().rstrip()
+            statF.close()
+            #if file ready to be received from worker. totalAddr will hold the .onion address
+            if totalAddr != '' and totalAddr != 'Executing' and totalAddr != 'Ready':
+                flagThree = False
+                getShareWithoutIter(totalAddr) #download totalOrder.txt
+
+def resetReq():
+    global content
+    global threadL
+    global mode
+    global mainThread
+    global totalAddr
+    content = []
+    for i in range(threads):
+        content.append(False)
+        #content.append(b'')#inits list with threads number of empty byte arrays
+    #kill all threads before resetting
+    for i in threadL:
+        try: #May or may not already be deleted
+            #i._delete()
+            i.terminate()
+        except: pass
+    threadL = []
+    mainThread = None
+    totalAddr = None
+    mode = ''
+    try:
+        os.system('rm totalOrder.txt onionShareOrder.txt image.zip*.txt')
+    except:
+      pass
+    #new memory and command line reset
+    os.system("reset")
+    os.system("ps aux > ps.txt")
+    f = open("ps.txt", 'r')
+    line = f.readline()
+    while line != '':
+        if line.find('onionshare') != -1:
+            try:
+                os.system('kill ' + line.split()[1])
+            except:
+                pass
+        line = f.readline()
+    f.close()
+    f = open('stat.txt', 'w')
+    f.close()
+    try:
+        os.system('rm ps.txt')
+    except:
+        pass
+
+#kill specified thread
+def killMe(iter):
+    #threadL[iter]._delete()
+    try:
+        threadL[iter].terminate()
+    except:
+        pass
+
+#######################################################################################################################################
+#####################################################controller########################################################################
+#######################################################################################################################################
 def getTime(mess):
     now = datetime.now()
     end = open('log.txt', 'r').readline().rstrip()[24:]
@@ -28,48 +505,66 @@ def getTime(mess):
     f.write(time + " "+ mess)
     f.close()
 
-app = Flask(__name__)
-#f = open(file , 'rb')
+def hostController(file):
+    for i in range(0,threads):
+        orderAddr.append(0)
+    splitFile(file)
+    createThreadsHost()
+    runThreads()
+    errCorr = multiprocessing.Process(target=threadRestarter)
+    errCorr.start()
+    #getAddrs()
+    #failThread = threading.Thread(target=reqFail)
+    failThread = multiprocessing.Process(target=reqFail)
+    failThread.start()
+    #Total share
+    global mainThread
+    #mainThread = threading.Thread(target=shareOrder)
+    mainThread = multiprocessing.Process(target=shareOrder)
+    mainThread.start()
+    #Restarter for total share
+    #errCorrMain = threading.Thread(target=totalThreadRestarter)
+    errCorrMain = multiprocessing.Process(target=totalThreadRestarter)
+    errCorrMain.start()
+    getTotalAddr()
+    flag = True
+    while flag:
+        if os.path.isfile('onionshareOrder.txt'):
+            f = open('onionshareOrder.txt', 'r')
+            line = f.readline()
+            while line != '':
+                if "/finish" in line :
+                    flag = False
+                    try: #May or may not already be deleted
+                        #errCorr._delete()
+                        errCorr.terminate()
+                    except: pass
+                    try: #May or may not already be deleted
+                        #mainThread._delete()
+                        mainThread.terminate()
+                    except: pass      
+                line = f.readline()
+            f.close()
+    try: #May or may not already be deleted
+        #failThread._delete()
+        failThread.terminate()
+    except: pass
+    resetHost()
 
-@app.route('/')
-def hello():
-    return "Hello World!"
+def reqController():
+    #failThread = threading.Thread(target=failingCheck)
+    failThread = multiprocessing.Process(target=failingCheck)
+    failThread.start()
+    createThreadsReq()
+    try: #May or may not already be deleted
+        #failThread._delete()
+        failThread.terminate()
+    except: pass
 
-@app.route('/files')
-def fileRead():
-    if os.path.isfile("image.zip"):
-        #open("stat.txt", "w").writelines("Sending File")
-        file = open("image.zip", "rb")
-        f = file.read()
-        file.close()
-        getTime('File Requested')
-        return f
-    else:
-        return "Not Ready"
-
-
-#@app.route('/execute')
-def executeDocker(ip, mode):
-    ipfile = open("stat.txt", "w")
-    ipfile.close() #empties file
-    ipfile = open("stat.txt", "w")
-    ipfile.writelines("Executing") #write executing so .js knows status
-    ipfile.close()
-
-    getTime('Requesting file for Execution')
-
-    #print('requesting files from: ' + ip)
-    res = r.get('http://' + ip + '/files')
-    ##removes file
-    os.system("sudo rm -rf image.*")
-    open('image.zip', 'wb').write(res.content)
-    #res = r.put('http://' + ip + '/exit')
-    #unzip file (!!!!assume that image.zip is created by cli!!!!)
-    os.system("unzip image.zip")
-
-    getTime('File Received and Saved')
-
+def dockerExe():
+    global mode
     #this will load the image back into docker
+    os.system("unzip image.zip")
     os.system("sudo docker load -i image.tgz")
     #this will start the container in a bash
     os.system("sudo docker run -dit execute:latest bash")
@@ -77,7 +572,12 @@ def executeDocker(ip, mode):
     getTime('Docker Image Loaded and Executing')
 
     #this will execute the code
-    os.system("sudo docker exec $(sudo docker container ls -q) python3 execute.py " + str(mode) )
+    #0 -> Provider
+    #1 -> Validator
+    mval = 0
+    if mode == 'validator':
+      mval = 1
+    os.system("sudo docker exec $(sudo docker container ls -q) python3 execute.py " + str(mval) )
     #this will delete the old image file
     os.system("sudo rm -rf image.tgz")
     #this will update the container
@@ -94,27 +594,49 @@ def executeDocker(ip, mode):
 
     getTime('Image Unloaded and Ready For Transmission')
 
-    ipfile = open("stat.txt", "w")
-    ipfile.close() #empties file
-    ipfile = open("stat.txt", "w")
-    ipfile.writelines("Ready") #write read so .js knows status
-    ipfile.close()
-
-def loop():
-    while True:
+def getMode():
+    global mode
+    flag = True
+    while flag:
         time.sleep(5)
-        #print("hello")
-        if os.stat("stat.txt").st_size > 0: #if file is not empty
-            ipfile = open("stat.txt", "r")
-            ip = ipfile.readline().rstrip() #first line: ip
-            if(ip != "Ready" and ip != "Executing"): #make sure it's not reading ready or executing 
-                #print(ip)
-                mode = ipfile.readline().rstrip() #second line: mode
-                #print(mode)
-                ipfile.close()
-                executeDocker(ip, mode) #send to execute function
-            
+        if os.path.isfile('mode.txt'): 
+            f = open("mode.txt", "r")
+            curLine = f.readline().rstrip()
+            f.close() 
+            if(curLine == "provider" or curLine == 'validator' or curLine == "user"):  
+                mode = curLine
+                flag = False
+                f = open('mode.txt', 'w')
+                f.close()
+
+def submitTask():
+    f = open('stat.txt', 'w')
+    f.close()
+    f = open('stat.txt', 'w')
+    f.write('Ready')
+    f.close()
+
+
 if __name__ == '__main__':
-    t1 = threading.Thread(target=loop)
-    t1.start()
-    app.run(host='0.0.0.0',threaded=False)
+    while True:
+        getMode()    
+        if mode == 'user':
+            hostController('image.zip')
+            flag = True
+            while flag:
+                f = open('stat.txt', 'r')
+                line = f.read()
+                f.close()
+                if line.find('onionshare') != -1:
+                    flag = False
+                time.sleep(5)
+            reqController()
+        elif mode == 'provider':
+            reqController()
+            dockerExe()
+            submitTask()
+            hostController('image.zip')
+        elif mode == 'validator':
+            reqController()
+            dockerExe()
+            submitTask()
