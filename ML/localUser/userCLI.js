@@ -370,6 +370,8 @@ function promptProviderChoices(){
 
 function chooseValidator(){
     setRatingVars();
+    validationSelectFlag = false;
+
     var displayValidatorList = [];
     var displayString = "";
     for(var i = 0; i<rateProvs.length; i++){
@@ -408,7 +410,6 @@ function chooseValidator(){
             prov = 1;
         })
         .then(()=>{
-            validationSelectFlag = false;
             askUser();
         })
     })
