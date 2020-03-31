@@ -271,7 +271,7 @@ def resetHost():
     mode = ''
     totalAddr = ''
     try:
-        os.system('rm restart.txt ps.txt totalOrderAddress.txt totalOrder.txt onionShareOrder.txt onionshare*.txt order.txt image.zip*.txt')
+        os.system('rm restart.txt totalOrderAddress.txt totalOrder.txt onionShareOrder.txt onionshare*.txt order.txt image.zip*.txt')
     except:
         pass
     fileName = ''
@@ -288,8 +288,11 @@ def resetHost():
             except:
                 pass
         line = f.readline()
-        line = f.readline()
     f.close()
+    try:
+        os.system('rm ps.txt')
+    except:
+        pass
 
 def failingCheck():
     global threadL
@@ -477,6 +480,10 @@ def resetReq():
     f.close()
     f = open('stat.txt', 'w')
     f.close()
+    try:
+        os.system('rm ps.txt')
+    except:
+        pass
 
 #kill specified thread
 def killMe(iter):
