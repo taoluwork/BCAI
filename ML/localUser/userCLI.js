@@ -425,7 +425,8 @@ function askUser(){
     }
     if(validationSelectFlag == true){
         checkEvents();
-        chooseValidator();
+        console.log("\nYou must now select a validator for validation\n");
+        //chooseValidator();
     }
     else{
         if(prov == 0)
