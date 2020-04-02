@@ -565,6 +565,7 @@ def reqController():
 
 def dockerExe():
     global mode
+    time,sleep(30)
     os.system("unzip image.zip")
     #this will load the image back into docker
     os.system("sudo docker load -i image.tgz")
