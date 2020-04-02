@@ -426,7 +426,6 @@ function askUser(){
     }
     if(validationSelectFlag == true){
         checkEvents();
-        console.log("\nYou must now select a validator for validation\n");
         //chooseValidator();
     }
     else{
@@ -1321,6 +1320,7 @@ checkEvents = async () => {
         if (userAddress === pastEvents[i].returnValues.reqAddr.toLowerCase()) {
             requestAssignedFlag = 0;
             if(valEntTracker == 0){
+                console.log("\nYou must now select a validator for validation\n");
                 validationSelectFlag = true;
                 valEntTracker += 1;
             }
