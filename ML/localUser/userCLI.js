@@ -424,10 +424,6 @@ function askUser(){
     if(canRate == true){
         giveRating();
     }
-    if(validationSelectFlag == true){
-        checkEvents();
-        //chooseValidator();
-    }
     else{
         if(prov == 0)
             inquirer.prompt([questions]).then(answers => {choiceMade(answers.whatToDo)});
