@@ -150,6 +150,7 @@ function execute(){
                     sleep.sleep(15);
                 }
                 console.log("file exists now")
+                taskCounter+=1;
                 console.log(chalk.cyan("\n\nCompleted task. You now have completed "+taskCounter+" tasks and "+validationCounter+" validations... \n"));
                 console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
                 fs.readFile('./totalOrderAddress.txt', 'utf8', function read(err, ipAddress){
@@ -159,7 +160,6 @@ function execute(){
                     }
                     console.log("reqAddr: " + requestAddr);
                     console.log("ipAddr:  " + ipAddress);
-                    taskCounter+=1;
                     var ABIcompleteRequest; //prepare abi for a function call
                     ABIcompleteRequest = myContract.methods.completeRequest(requestAddr, web3.utils.asciiToHex(ipAddress)).encodeABI();
                     console.log("h");
@@ -558,7 +558,6 @@ function startProviding(){
                     var ABIstartProviding; //prepare abi for a function call
                     
                     ABIstartProviding = myContract.methods.startProviding().encodeABI();
-                    //console.log(chalk.cyan(ABIstartProviding);
                     const rawTransaction = {
                         "from": userAddress,
                         "to": addr,
@@ -572,22 +571,16 @@ function startProviding(){
                     decryptedAccount.signTransaction(rawTransaction)
                     .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                     .then(receipt => {
-                        //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                        //console.log(receipt);
                         console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
                         prov = 1;
                     })
-                    .then(() => {//Pedro put your code here for start providing
+                    .then(() => {
                         askUser();
                         //call subscribe here
 
                         try{
                             web3.eth.subscribe('newBlockHeaders', (err, result) => {
                                 if(err) console.log(chalk.cyan("ERRRR", err, result));
-                                //console.log(chalk.cyan("================================================   <- updated! #", result.number);
-                                //console.log(chalk.cyan(result);
-                                //showPools();
-                                //checkEvents();
                                 checkEvents(false);
                             })
                         }
@@ -601,7 +594,6 @@ function startProviding(){
 
                         })
                         .catch(err => {
-                            //console.log(String(err).slice(0, 41));
                             if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
                             {
                                 console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
@@ -634,7 +626,6 @@ function startProviding(){
                 var ABIstartProviding; //prepare abi for a function call
 
                 ABIstartProviding = myContract.methods.startProviding().encodeABI();
-                //console.log(chalk.cyan(ABIstartProviding);
                 const rawTransaction = {
                     "from": userAddress,
                     "to": addr,
@@ -648,8 +639,6 @@ function startProviding(){
                 decryptedAccount.signTransaction(rawTransaction)
                 .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                 .then(receipt => {
-                    //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                    //console.log(receipt)
                     console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
                     prov = 1;
                 })
@@ -659,9 +648,6 @@ function startProviding(){
                     try{
                         web3.eth.subscribe('newBlockHeaders', (err, result) => {
                             if(err) console.log(chalk.cyan("ERRRR", err, result));
-                            //console.log(chalk.cyan("================================================   <- updated! #", result.number);
-                            //console.log(chalk.cyan(result);
-                            //showPools();
                             checkEvents(false);
                         })
                     }
@@ -738,8 +724,6 @@ function stopProviding(choice){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "))
-            //console.log(receipt)
             console.log(chalk.cyan("\n\nYou have now stopped providing...\n"))
             prov = 0;
         })
@@ -794,8 +778,6 @@ function completeRequest(reqAddress, resultId){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "))
-            //console.log(receipt)
         })
         .catch(err => {
             console.log("\n", chalk.red(err), "\n");
@@ -820,10 +802,6 @@ function submitValidation(reqAddress, result){
 
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-        .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "))
-            //console.log(receipt)
-        })
         .catch(err => {
             console.log("\n", chalk.red(err), "\n");
         });

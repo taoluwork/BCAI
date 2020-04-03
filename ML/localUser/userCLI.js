@@ -130,7 +130,7 @@ questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop request', 'update request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'choose validator', 'quit'],
+    choices : ['stop request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'choose validator', 'quit'],
 };
 
 clearStat();
@@ -727,18 +727,6 @@ function startTask(){
                     console.log("\n");
                     inquirer.prompt([
                         {
-                            name : 'mTime',
-                            message: 'Enter max time: ',
-                        },
-                        {
-                            name : 'mTarget',
-                            message: 'Enter max target: ',
-                        },
-                        {
-                            name : 'mPrice',
-                            message: 'Enter min price: ',
-                        },
-                        {
                             name : 'filePath',
                             message: 'Enter file path: ',
                         }
@@ -757,16 +745,13 @@ function startTask(){
                         }
                         else{
                             fs.open(filePath, 'r', (err, fd)=>{
-                                //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                                 if(fd != undefined){
                                     function readChunk(){
                                         chunkSize = 10*1024*1024;
                                         var holdBuff = Buffer.alloc(chunkSize);
                                         fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
-                                            //if(err){console.log("\n", chalk.red(err), "\n");}
                                             if(nread === 0){
                                                 fs.close(fd, function(err){
-                                                    //if(err){console.log("\n", chalk.red(err), "\n");}
                                                 });
                                                 return;
                                             }
@@ -780,25 +765,20 @@ function startTask(){
                                             }
                                             else{
                                                 buffer.push(holdBuff);
-                                                //console.log(holdBuff)
                                                 readChunk();
                                     
                                             }
                                         })
                                     } 
                                     readChunk();
-                                    //console.log(buffer);
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                    while(!(fs.existsSync('./totalOrderAddress.txt'))){
-                                        //setTimeout(function(){} ,5000);
-                                        sleep.sleep(15);
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                    while(!(fs.existsSync('./totalOrderAddress.txt'))){
+                                        sleep.sleep(15);
                                     }
                                     fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
                                         console.log(ip);
-                                        console.log(maxTarget);
-                                        console.log(maxTime);
-                                        console.log(minPrice);
                                         console.log(web3.utils.asciiToHex(ip));
                                         ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
                                         const rawTransaction = {
@@ -810,27 +790,28 @@ function startTask(){
                                             "chainId": 3,
                                             "data": ABIstartRequest
                                         }
-                                    //});
-                                    //console.log(ABIstartRequest);
-                                    
+                                        
                                         decryptedAccount.signTransaction(rawTransaction)
+                                        .catch(err =>{
+                                            if(err == "Error: Not enough ether"){
+                                                console.log(chalk.red("\nThere is not enough ether in this account to start a request. You must have at least 0.01 ETH to start a request...\n"));
+                                            }
+                                            else{
+                                                console.log(chalk.red("\n", err, "\n"));
+                                            }
+                                        })
                                         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                                         .then(receipt => {
-                                            //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                                            //console.log(receipt);
                                             console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
                                             prov = 1;
                                         })
-                                        .then(() => {//Pedro put your code here for start providing
+                                        .then(() => {
                                             askUser();
                                             //call subscribe here
 
                                             try{
                                                 web3.eth.subscribe('newBlockHeaders', (err, result) => {
                                                     if(err) console.log(chalk.red(err), result);
-                                                    //console.log("================================================   <- updated! #", result.number);
-                                                    //console.log(result);
-                                                    //showPools();
                                                     checkEvents();
                                                 })
                                             }
@@ -906,16 +887,13 @@ function startTask(){
                 }
                 else{
                     fs.open(filePath, 'r', (err, fd)=>{
-                        //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                         if(fd != undefined){
                             function readChunk(){
                                 chunkSize = 10*1024*1024;
                                 var holdBuff = Buffer.alloc(chunkSize);
                                 fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
-                                    //if(err){console.log("\n", chalk.red(err), "\n");}
                                     if(nread === 0){
                                         fs.close(fd, function(err){
-                                            //if(err){console.log("\n", chalk.red(err), "\n");}
                                         });
                                         return;
                                     }
@@ -929,15 +907,15 @@ function startTask(){
                                     }
                                     else{
                                         buffer.push(holdBuff);
-                                        //console.log(holdBuff)
                                         readChunk();
                             
                                     }
                                 })
                             }
                             readChunk();
-                            //console.log(buffer);
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                             while(!(fs.exists('./totalOrderAddress.txt'))){
                                 setTimeout(Function.prototype() ,5000);
                             }
@@ -946,33 +924,25 @@ function startTask(){
                                 const rawTransaction = {
                                     "from": userAddress,
                                     "to": addr,
-                                    "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                                    "value": web3.utils.toHex(web3.utils.toWei("0.01", "ether")),
                                     "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
                                     "gas": 5000000,
                                     "chainId": 3,
                                     "data": ABIstartRequest
                                 }
-                            //});
-                            //console.log(ABIstartRequest);
                         
                                 decryptedAccount.signTransaction(rawTransaction)
                                 .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                                 .then(receipt => {
-                                    //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                                    //console.log(receipt);
                                     console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
                                     prov = 1;
                                 })
-                                .then(() => {//Pedro put your code here for start providing
+                                .then(() => {
                                     askUser();
                                     //call subscribe here
-
                                     try{
                                         web3.eth.subscribe('newBlockHeaders', (err, result) => {
                                             if(err) console.log(chalk.red(err), result);
-                                            //console.log("================================================   <- updated! #", result.number);
-                                            //console.log(result);
-                                            //showPools();
                                             checkEvents();
                                         })
                                     }
@@ -997,6 +967,7 @@ function startTask(){
                                     }
                                 });
                             });
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         } 
@@ -1072,7 +1043,6 @@ function stopTask(choice){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
             console.log(chalk.cyan("\n\nYou have taken down your request for address " + userAddress + "...\n"))
             prov = 0;
         })
@@ -1395,7 +1365,7 @@ function listenWebsite(){
                             setTimeout(Function.prototype() ,5000);
                         }
                         fs.readFile('./totalOrderAddress.txt', function(err, ip){
-                            ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                            ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
                         });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         //console.log(ABIstartRequest);
