@@ -44,9 +44,8 @@ fi
 if ! git --version > /dev/null 2>&1 ;  #git not installed
 then
     echo -e "\e[93mgit not installed, installing now.\e[0m"
-    add-apt-repository ppa:git-core/ppa -y
-    apt-get update
-    if apt-get install git --yes --force-yes > /dev/null 2>&1 ; then #if installed
+    sudo apt update > /dev/null 2>&1 
+    if sudo apt install git --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mgit successfully installed."
     else  #problem installing
         echo -e "\e[91mProblem installing git. Aborting installation."
@@ -148,23 +147,10 @@ fi
 if ! docker --version > /dev/null 2>&1 ;  #docker not installed
 then
     echo -e "\e[93mDocker not installed, installing now.\e[0m"
-    sudo apt-get update
-    if sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common --yes --force-yes > /dev/null 2>&1 ; then #if installed
-        echo -e "\e[93mInstalling...\e[0m"
-    else  #problem installing
-        echo -e "\e[91mProblem installing Docker. Aborting installation."
-        exit
-    fi
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo apt-key fingerprint 0EBFCD88
-    #this should return this:
-    #    pub   rsa4096 2017-02-22 [SCEA]
-    #          9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88
-    #    uid           [ unknown] Docker Release (CE deb) <docker@docker.com>
-    #    sub   rsa4096 2017-02-22 [S]
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    sudo apt-get update
-    if sudo apt-get install docker-ce docker-ce-cli containerd.io --yes --force-yes > /dev/null 2>&1 ; then #if installed
+    sudo apt-get update > /dev/null 2>&1 
+    if sudo apt-get install docker.io --yes --force-yes > /dev/null 2>&1 ; then #if installed
+        sudo systemctl start docker > /dev/null 2>&1
+        sudo systemctl start docker > /dev/null 2>&1
         echo -e "\e[92mDocker successfully installed."
     else  #problem installing
         echo -e "\e[91mProblem installing Docker. Aborting installation."
