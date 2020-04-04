@@ -123,14 +123,14 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'quit'],
+    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'check address a8 balance', 'quit'],
 };
 
 questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'choose validator', 'quit'],
+    choices : ['stop request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'choose validator', 'show ETH balance', 'quit'],
 };
 
 clearStat();
@@ -613,6 +613,18 @@ function choiceMade(choice){
             console.log(chalk.cyan("\nRequest has not been completed yet. You are unable to select a validator.\n"))
             askUser();
         }
+    }
+    else if(choice == questions1.choices[6]){
+        web3.eth.getBalance(userAddress)
+        .then((balance) => {console.log("\n\n", web3.utils.fromWei(String(balance), 'ether'), "Ether \n")})
+        .then(()=>{askUser()})
+        .catch((err)=>{console.log(err)});
+    }
+    else if(choice == questions.choices[6]){
+        web3.eth.getBalance("0x458c5617e4f549578e181f12da8f840889e3c0a8".toLowerCase())
+        .then((balance) => {console.log("\n\n", web3.utils.fromWei(String(balance), 'ether'), "Ether \n")})
+        .then(()=>{askUser()})
+        .catch((err)=>{console.log(err)});
     }
     else
     {
