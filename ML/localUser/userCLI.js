@@ -932,7 +932,7 @@ function startTask(){
                                 setTimeout(Function.prototype() ,5000);
                             }
                             fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
-                                ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                                ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
                                 const rawTransaction = {
                                     "from": userAddress,
                                     "to": addr,
