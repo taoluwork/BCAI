@@ -18,7 +18,7 @@ orderAddr = []
 order   = []
 startTimes = []
 mainThread = None
-totalAddr = None
+totalAddr = ''
 totalStartTime = 0
 content = []
 for i in range(threads):
@@ -189,6 +189,22 @@ def threadRestarter():
 
         except:
             pass
+
+        #Print a string with each file's percentage
+        toprint = "" 
+        for i in range(threads):
+            try: #Will fail if index not found, then just ignore
+                f = open('onionshare'+str(i)+'.txt', 'r')
+                #Get string of percentage for file slice
+                wholetext = f.read()
+                f.close()
+                percentindex = wholetext.rindex("%") #Finds the position of the last percent
+                spaceindex = wholetext.rindex(" ", 0, percentindex) #Finds the position of the last space before the percent
+                percentage = wholetext[spaceindex+1:percentindex+1] #Skips the space but includes the percent
+                toprint += str(i) + ": " + percentage + ("" if i == threads-1 else ", ") #Formats string
+            except: pass
+        print(toprint + "\r", end="") #recurrent character so it rewrites last line instead of making new lines
+
         time.sleep(5)
 
 
@@ -237,7 +253,7 @@ def totalThreadRestarter():
     global totalAddr
     global mainThread
     while (True):
-        if time.time() > totalStartTime + 60 and totalAddr == 0:
+        if totalStartTime != 0 and time.time() > totalStartTime + 60 and totalAddr == '':
             os.system('rm onionshareOrder.txt')
             #restart thread
             #mainThread._delete()
@@ -248,7 +264,7 @@ def totalThreadRestarter():
             mainThread.start()
             totalStartTime = time.time()
             f = open('restart.txt', 'a')
-            f.write("thread: for toalOrder has been restarted at:" + str(time.time()) + ' due to time issue\n')
+            f.write("thread: for totalOrder has been restarted at:" + str(time.time()) + ' due to time issue\n')
             f.close()
 
 def resetHost():
@@ -271,7 +287,7 @@ def resetHost():
     mode = ''
     totalAddr = ''
     try:
-        os.system('rm restart.txt totalOrderAddress.txt totalOrder.txt onionShareOrder.txt onionshare*.txt order.txt image.zip*.txt')
+        os.system('rm restart.txt totalOrderAddress.txt totalOrder.txt onionShareOrder.txt onionshare*.txt order.txt image.zip*.txt >/dev/null 2>&1')
     except:
         pass
     fileName = ''
@@ -284,7 +300,7 @@ def resetHost():
     while line != '':
         if line.find('onionshare') != -1:
             try:
-                os.system('kill ' + line.split()[1])
+                os.system('kill -9' + line.split()[1] + ' >/dev/null 2>&1')
             except:
                 pass
         line = f.readline()
@@ -370,6 +386,7 @@ def createThreadsReq():
         time.sleep(5)
         #Addresses written to file (Step 2)
         if os.path.isfile("totalOrder.txt") and flagTwo:
+            print("Downloading file from host. This may take a while...")
             flagTwo = False
             #Need to make a thread for each address
             f = open("totalOrder.txt", 'r')
@@ -459,7 +476,7 @@ def resetReq():
         except: pass
     threadL = []
     mainThread = None
-    totalAddr = None
+    totalAddr = ''
     mode = ''
     try:
         os.system('rm totalOrder.txt onionShareOrder.txt image.zip*.txt')
@@ -633,11 +650,13 @@ if __name__ == '__main__':
                 time.sleep(5)
             reqController()
         elif mode == 'provider':
+            resetHost()
             reqController()
             dockerExe()
             submitTask()
             hostController('image.zip')
         elif mode == 'validator':
+            resetHost()
             reqController()
             dockerExe()
             submitTask()
