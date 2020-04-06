@@ -650,13 +650,13 @@ if __name__ == '__main__':
                 time.sleep(5)
             reqController()
         elif mode == 'provider':
-            resetHost()
+            #resetHost()
             reqController()
             dockerExe()
             submitTask()
             hostController('image.zip')
         elif mode == 'validator':
-            resetHost()
+            #resetHost()
             reqController()
             dockerExe()
             submitTask()
