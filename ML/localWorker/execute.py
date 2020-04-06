@@ -432,6 +432,7 @@ def createThreadsReq():
                 content[i] = True
             else:
                 allVal = False
+                break
         if allVal:
             if mode == 'user' or mode == 'provider':
                 session = r.session()
