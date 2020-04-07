@@ -11,6 +11,7 @@ const Folder = './';
 var publicIp = require("public-ip");
 const hex2ascii = require("hex2ascii");
 const express = require('express');
+var Table = require('cli-table');
 var sleep = require('sleep');
 
 
