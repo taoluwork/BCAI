@@ -31,6 +31,15 @@ var requestAddr= undefined;
 var requestIP= undefined;
 var executing = false;
 var submitted = false;
+var pos = 0;
+var ratings = [];
+var rateProvs = [];
+var ratingsTable = new Table({
+    chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+           , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+           , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+           , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+});
 
 var fileContent;
 fs.open('./stat.txt', 'w', function(err){
@@ -250,14 +259,14 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start providing', 'show pools', 'create new address', 'show addresses', 'help', 'quit'],
+    choices : ['start providing', 'show pools', 'create new address', 'show addresses', 'help', 'show ratings', 'quit'],
 };
 
 questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop providing', 'update provider', 'show pools', 'show balance', 'quit'],
+    choices : ['stop providing', 'update provider', 'show pools', 'show balance', 'show ratings', 'quit'],
 };
 
 clearStat();
@@ -338,8 +347,48 @@ function cliOrSite(){
         }
     })
 }
+
+
+
+function setRatingVars(){
+    ratingsTable = new Table({
+        chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+               , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+               , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+               , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+    });
+    myContract.methods.getProviderPool().call().then(function(provPool){
+        return provPool
+        //return provPool;
+        //console.log(provPool);
+    })
+    .then((provPool) => {
+        ratingsTable.push(["Rating", "Provider"])
+        ratings.length = 0;
+        rateProvs.length = 0;
+        provPool.forEach(prov =>{
+            myContract.methods.getAvgRating(prov).call().then(function(rating){
+                pos+=1;
+
+                ratings.push(rating);
+                rateProvs.push(prov);
+                return [rating, pos, prov];
+            })
+            .then((arr) => {
+                //console.log("\nThe rating is ", rating, " for provider", prov, "\n")
+                ratingsTable.push([arr[0].toString(), arr[2].toString()]);
+                return arr[1];
+            })
+        })
+    })
+    //.then(() => askUser())
+    .catch((err) => console.log(err));
+
+}
+
 //Gives the user a starting menu of choices
 function askUser(){
+    setRatingVars();
     if(prov == 0)
         inquirer.prompt([questions]).then(answers => {choiceMade(answers.whatToDo)});
     else
@@ -448,6 +497,11 @@ function choiceMade(choice){
         .then((balance) => {console.log("\n\n", web3.utils.fromWei(String(balance), 'ether'), "Ether \n")})
         .then(()=>{askUser()})
         .catch((err)=>{console.log(err)});
+    }
+    else if(choice == questions1.choices[4] || choice == questions.choices[5]){
+        console.log("\n");
+        console.log(ratingsTable.toString(), "\n\n")
+        askUser();
     }
     else{
         if(prov == 1)
