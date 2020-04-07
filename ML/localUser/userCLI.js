@@ -47,10 +47,10 @@ var ratingsTable = new Table({
            , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
            , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
 });
+var outChooseVal = 0;
 
 var sleep = require('sleep');
 
-var valEntTracker = 0;
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
 // fs.open('./stat.txt', 'w', function(err){
@@ -287,7 +287,7 @@ function giveRating(){
                 .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                 .then(receipt => {
                     //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
-                    console.log(chalk.cyan("\n\nYour rating has gone through...\n"))
+                    console.log(chalk.cyan("\n\nYour rating has gone through. Your task is now complete...\n"))
                 })
                 .then(()=>{
                     askUser();
@@ -313,7 +313,7 @@ function giveRating(){
             .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
             .then(receipt => {
                 //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
-                console.log(chalk.cyan("\n\nYour request has gone through...\n"))
+                console.log(chalk.cyan("\n\nYour task is now complete...\n"))
             })
             .then(()=>{
                 askUser();
@@ -341,7 +341,7 @@ function promptProviderChoices(){
         }
     ])
     .then(choice => {
-        console.log(chalk.cyan("\nYou have choosen ", choice.provChoice, " as your provider\n"));
+        console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your provider\n"));
         //address is chars 0-41
         var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
         var ABIChooseProvider; //prepare abi for a function call
@@ -389,7 +389,7 @@ function chooseValidator(){
         }
     ])
     .then(choice => {
-        console.log(chalk.cyan("\nYou have choosen ", choice.provChoice, " as your validator\n"));
+        console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your validator\n"));
         //address is chars 0-41
         var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
         var ABIChooseProvider; //prepare abi for a function call
@@ -420,7 +420,10 @@ function chooseValidator(){
 //Gives the user a starting menu of choices
 function askUser(){
     setRatingVars();
-
+    checkEvents();
+    if(outChooseVal == 1){
+        console.log(chalk.cyan("\nYour task has been completed. Select the a validator to continue...\n"));
+    }
     if(canRate == true){
         giveRating();
     }
@@ -825,7 +828,7 @@ function startTask(){
                                         .then(receipt => {
                                             //console.log(chalk.cyan("\n\nTransaction receipt: "));
                                             //console.log(receipt);
-                                            console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+                                            console.log(chalk.cyan("\n\nYour request has been submitted. You must choose a provider now to continue... \n\n"));
                                             prov = 1;
                                         })
                                         .then(() => {//Pedro put your code here for start providing
@@ -1278,6 +1281,8 @@ function showPools(){
 }
 
 checkEvents = async () => {
+    var reqCompCount = 0;
+    var valCompCount = 0;
     let pastEvents = await myContract.getPastEvents("allEvents", {fromBlock:  RequestStartTime, toBlock: 'latest'});
     //console.log("Event range: ", RequestStartTime)
     //console.log("All events:", pastEvents)
@@ -1315,11 +1320,9 @@ checkEvents = async () => {
           //console.log(pastEvents[i].returnValues;
         if (userAddress === pastEvents[i].returnValues.reqAddr.toLowerCase()) {
             requestAssignedFlag = 0;
-            if(valEntTracker == 0){
+            reqCompCount+=1;
                 //console.log("\nYou must now select a validator for validation\n");
-                validationSelectFlag = true;
-                valEntTracker += 1;
-            }
+            validationSelectFlag = true;
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
                 if (err) throw err;
             })
@@ -1348,13 +1351,20 @@ checkEvents = async () => {
         }
         //validation complete
         if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete"){
-            valEntTracker = 0;
+            valCompCount+=1;
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been validated\n", function (err){
                 if (err) throw err;
             })
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
             receiveResult();
         }
+    }
+    if(reqCompCount != valCompCount){
+        //This means that a validation hasn't been completed for a task but a task has been executed so need to assign provider
+        outChooseVal = 1;
+    }
+    else{
+        outChooseVal = 0;
     }
 }
 
