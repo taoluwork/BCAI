@@ -94,7 +94,7 @@ then
 else
     echo -e "\e[92mpython already installed."
 fi
-#Install pip3 (necessary for PySocks)
+#Install pip3
 if ! pip3 --version > /dev/null 2>&1 ; #pip3 not installed
 then
     echo -e "\e[93mpip3 not installed, installing now.\e[0m"
@@ -106,16 +106,6 @@ then
     fi
 else
     echo -e "\e[92mpip3 already installed."
-fi
-#Install PySocks
-#No way to check if PySocks is installed without actually running a python script...
-#Just assume it isn't, if it is nothing bad happens
-echo -e "\e[93mInstalling PySocks.\e[0m"
-if pip3 install PySocks > /dev/null 2>&1 ; then #if installed
-    echo -e "\e[92mPySocks successfully installed."
-else  #problem installing
-    echo -e "\e[91mProblem installing PySocks. Aborting installation."
-    exit
 fi
 #Install flask (necessary for onionshare)
 if ! flask --version > /dev/null 2>&1 ; #flask not installed
@@ -158,6 +148,32 @@ then
     fi
 else
     echo -e "\e[92mdocker already installed."
+fi
+#No way to check if pip3 packages are installed without actually running a python script...
+#Just assume they aren't, if they are nothing bad happens
+#Install PySocks
+echo -e "\e[93mInstalling PySocks.\e[0m"
+if pip3 install PySocks > /dev/null 2>&1 ; then #if installed
+    echo -e "\e[92mPySocks successfully installed."
+else  #problem installing
+    echo -e "\e[91mProblem installing PySocks. Aborting installation."
+    exit
+fi
+#Install flask-httpauth
+echo -e "\e[93mInstalling flask-httpauth.\e[0m"
+if pip3 install flask-httpauth > /dev/null 2>&1 ; then #if installed
+    echo -e "\e[92mflask-httpauth successfully installed."
+else  #problem installing
+    echo -e "\e[91mProblem installing flask-httpauth. Aborting installation."
+    exit
+fi
+#Install stem
+echo -e "\e[93mInstalling stem.\e[0m"
+if pip3 install stem > /dev/null 2>&1 ; then #if installed
+    echo -e "\e[92mstem successfully installed."
+else  #problem installing
+    echo -e "\e[91mProblem installing stem. Aborting installation."
+    exit
 fi
 #Download repo
 if [ "$downloadgit" = true ] ; then
