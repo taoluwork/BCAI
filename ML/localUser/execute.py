@@ -134,7 +134,7 @@ def threadRestarter():
         try:
             for i in range(0,len(startTimes)):
                 global orderAddr
-                if time.time() > startTimes[i] + 120 and orderAddr[i] == 0:
+                if time.time() > startTimes[i] + 60 and orderAddr[i] == 0:
                     os.system('rm onionshare' + str(i) + '.txt')
                     #threadL[i]._delete()
                     threadL[i].terminate()
