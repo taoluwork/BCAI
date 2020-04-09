@@ -1,13 +1,13 @@
 #This is a version of execute.py intended for demo purposes.
 #Normally, when running the program there are 3 file transfers:
 #1. User task file to provider (1.2GB image.zip)
-#2. Provider result file to validator (1.1GB image.zip)
+#2. Provider result file to validator (already ran image)
 #3. Provider result file to user
 #This version of execute will skip the first two file transfers.
 #The last one is left in to demonstrate the file transfer and that the user receives the file.
 #Note that the regular user execute.py will work for this goal.
 #For this to work, the provider must already have the task file (1.2GB) in their directory,
-#  and the validator must already have the result file (1.1GB) in their directory.
+#  and the validator must already have the result file in their directory.
 
 import os
 import sys
@@ -471,11 +471,12 @@ def createThreadsReq():
                 #getShareWithoutIter(totalAddr) #Do not start transfer
                 flag = False #This will cause loop to exit and image.zip to start running
                 #Tell user program to stop
-                session = r.session()
-                session.proxies = {}
-                session.proxies['http'] = 'socks5h://localhost:9050'
-                session.proxies['https'] = 'socks5h://localhost:9050'
-                session.get(totalAddr + '/finish') #tell server finished downloading
+                if mode == 'provider':
+                    session = r.session()
+                    session.proxies = {}
+                    session.proxies['http'] = 'socks5h://localhost:9050'
+                    session.proxies['https'] = 'socks5h://localhost:9050'
+                    session.get(totalAddr + '/finish') #tell server finished downloading
 
 
 def resetReq():
