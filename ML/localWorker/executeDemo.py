@@ -470,6 +470,12 @@ def createThreadsReq():
                 flagThree = False
                 #getShareWithoutIter(totalAddr) #Do not start transfer
                 flag = False #This will cause loop to exit and image.zip to start running
+                #Tell user program to stop
+                session = r.session()
+                session.proxies = {}
+                session.proxies['http'] = 'socks5h://localhost:9050'
+                session.proxies['https'] = 'socks5h://localhost:9050'
+                session.get(totalAddr + '/finish') #tell server finished downloading
 
 
 def resetReq():
