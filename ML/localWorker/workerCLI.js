@@ -49,66 +49,6 @@ fs.open('./mode.txt', 'w', function(err){
     if(err) throw err;
 })
 
-/*fs.appendFile('./stat.txt', 'Ready', function (err){
-    if (err) throw err;
-})
-requestIP = "132.0.0.21";
-mode = 0;
-
-fs.readFile('./stat.txt', function read(err, data){
-    if (err) throw err;
-    fileContent = data;
-    console.log(fileContent.toString('utf8'));
-    if(fileContent.toString('utf8') === 'Ready')
-    {
-        if(submitted == false && mode == 0){
-            //havent submitted request yet need to submit
-            submitted = true;
-            completeRequest(requestAddr, web3.utils.asciiToHex(ip));
-        }
-        if(submitted == false && mode == 1){
-            //havent submitted validatiion yet need to submit
-            submitted = true;
-            submitValidation(requestAddr, true);
-        }
-        else{
-            //have already submitted write next 
-            submitted = false;
-            fs.truncate('./stat.txt', 0, function(){
-                if (err) throw err
-            })
-            fs.appendFile('./stat.txt', String(mode)+"\n"+ String(requestIP), function (err){
-                if (err) throw err;
-            })    
-        }
-    }
-})*/
-
-///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
-// var getIp = (async() => {
-//     await publicIp.v4().then(val => {ip4 = val});
-//     await publicIp.v6().then(val => {ip6 = val});
-// })
-  
-//   //this calls the IP generating file and then depending on the option that is given it will create the server
-//   //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
-// getIp().then(() => {
-//     //allow for manual choice (defaults to IPv4)
-//     if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
-//         ip = process.argv[3] + ":" + serverPort;
-//     }
-//     else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
-//       ip = ip4 + ":" + serverPort;
-//     }
-//     else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
-//       ip = "[" + ip6 + "]:" + serverPort;
-//     }
-//     else{
-//       ip = ip4 + ":5000";
-//     }
-//     //console.log(chalk.cyan(ip);
-// });
-
 ///////////////////////////////////////////////////////////////////server///////////////////////////////////////////////////////////////////////////////////
 
 //execute the python code 
@@ -116,24 +56,6 @@ fs.readFile('./stat.txt', function read(err, data){
 //this should only be called by write file
 function execute(){
 
-    /*if(!executing) {
-        executing = true;
-        //need requestIP in stat.txt
-        exec('python3 execute.py ' + mode + ' ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
-            if(err){
-                console.log(err);
-                return;
-            }
-            console.log(stdout);
-            executing = false;
-            if(mode === 0 ){
-                completeRequest(requestAddr, web3.utils.asciiToHex(ip));
-            }
-            if(mode === 1 ){
-                submitValidation(requestAddr, true);
-            }
-        });
-    }*/
     fs.readFile('./stat.txt', function read(err, data){
         if (err) throw err;
         fileContent = data;
@@ -175,10 +97,6 @@ function execute(){
                     console.log("i");
                     decryptedAccount.signTransaction(rawTransaction)
                     .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-                    .then(receipt => {
-                        //console.log(chalk.cyan("\n\nTransaction receipt: "))
-                        //console.log(receipt)
-                    })
                     .catch(err => {
                         console.log("\n", chalk.red(err), "\n");
                     });
@@ -239,7 +157,6 @@ var abi = TaskContract.abi;
 var addr = TaskContract.networks[NetworkID].address;        //align to const ID defination on top
 const myContract = new web3.eth.Contract(abi, addr);
 
-//test user account addr : 0x458C5617e4f549578E181F12dA8f840889E3C0A8 and password : localtest
 var prov = 0;
 var webpageUp = 0;
 var decryptedAccount = "";
@@ -312,9 +229,6 @@ process.on('SIGINT', async () => {
     }
 });
 
-
-
-//askUser();
 
 cliOrSite();
 
@@ -437,7 +351,6 @@ function choiceMade(choice){
     else if (choice == questions.choices[1] || choice == questions1.choices[1])
     {
         showPools();
-        //checkEvents(true);
     }
     else if(choice == questions1.choices[2]){
         web3.eth.getBalance(userAddress)
@@ -576,8 +489,6 @@ function startProviding(){
                     })
                     .then(() => {
                         askUser();
-                        //call subscribe here
-
                         try{
                             web3.eth.subscribe('newBlockHeaders', (err, result) => {
                                 if(err) console.log(chalk.cyan("ERRRR", err, result));
@@ -813,7 +724,6 @@ function submitValidation(reqAddress, result){
 
 function showPools(){
     //Lists pool all pools
-    //checkEvents();
     return myContract.methods.getProviderPool().call().then(function(provPool){
 		console.log("\n\n=======================================================");
 		console.log("Active provider pool: Total = ", provPool.length);
@@ -899,10 +809,8 @@ checkEvents = async (showLogs) => {
 
       // Validation Assigned to Provider
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Assigned to Provider") {
-          //console.log(pastEvents[i].returnValues);
         if (userAddress === pastEvents[i].returnValues.provAddr.toLowerCase()) {
             //if (showLogs) console.log("You are a validator", "You need to validate the task for: " + pastEvents[i].reqAddr + " as true or false. The server id is:" + hex2ascii(pastEvents[i].returnValues.extra));
-            //console.log("\nIn here this is the request IP " + String(hex2ascii(pastEvents[i].returnValues.extra)) + "\n");
             if(assignedValidation == 0){
                 fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Assigned validator\n", function (err){
                     if (err) throw err;
@@ -1107,16 +1015,10 @@ function listenWebsite(){
                 prov = 1;
 
             })
-            .then(() => {//Pedro put your code here for start providing
-                //call subscribe here
-
+            .then(() => {
                 try{
                     web3.eth.subscribe('newBlockHeaders', (err, result) => {
                         if(err) console.log(chalk.cyan("ERRRR", err, result));
-                        //console.log(chalk.cyan("================================================   <- updated! #", result.number);
-                        //console.log(chalk.cyan(result);
-                        //showPools();
-                        //checkEvents();
                         checkEvents(false);
                     })
                 }
@@ -1204,8 +1106,6 @@ function listenWebsite(){
             decryptedAccount.signTransaction(rawTransaction)
             .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
             .then(receipt => {
-                //console.log(chalk.cyan("\n\nTransaction receipt: "))
-                //console.log(receipt)
                 console.log(chalk.cyan("\n\nYou have now stopped providing...\n"))
                 prov = 0;
 
