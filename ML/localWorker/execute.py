@@ -606,6 +606,7 @@ def getTime(mess):
     f.close()
 
 def hostController(file):
+    genKey()
     for i in range(0,threads):
         orderAddr.append(0)
     splitFile(file)

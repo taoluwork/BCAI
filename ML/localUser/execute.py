@@ -72,7 +72,6 @@ def dec(key=b"", nonce=b"", mess=b""):
     return decryptor.update(mess)
 
 
-genKey()
 
 #######################################################################################################################################
 ###########################################################host########################################################################
@@ -608,6 +607,7 @@ def getTime(mess):
     f.close()
 
 def hostController(file):
+    genKey()
     for i in range(0,threads):
         orderAddr.append(0)
     splitFile(file)
