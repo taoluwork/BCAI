@@ -42,7 +42,7 @@ def genKey():
     f = open(nonceFile, 'w')
     f.close()
     key = os.urandom(32)
-    nonce = os.urandom(2048)
+    nonce = os.urandom(32)
     f = open(keyFile, 'wb')
     f.write(key)
     f.close()
