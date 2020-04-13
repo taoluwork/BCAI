@@ -267,7 +267,7 @@ def totalThreadRestarter():
             f.write("thread: for totalOrder has been restarted at:" + str(time.time()) + ' due to time issue\n')
             f.close()
 
-def resetHost():
+def resetHost(resetMode):
     global threadL
     global orderAddr
     global order
@@ -284,7 +284,8 @@ def resetHost():
     orderAddr = []
     order   = []
     startTimes = []
-    mode = ''
+    if resetMode == True:
+        mode = ''
     totalAddr = ''
     try:
         os.system('rm restart.txt totalOrderAddress.txt totalOrder.txt onionShareOrder.txt onionshare*.txt order.txt image.zip*.txt >/dev/null 2>&1')
@@ -567,7 +568,7 @@ def hostController(file):
         #failThread._delete()
         failThread.terminate()
     except: pass
-    resetHost()
+    resetHost(True)
 
 def reqController():
     #failThread = threading.Thread(target=failingCheck)
@@ -651,13 +652,13 @@ if __name__ == '__main__':
                 time.sleep(5)
             reqController()
         elif mode == 'provider':
-            resetHost()
+            resetHost(False)
             reqController()
             dockerExe()
             submitTask()
             hostController('image.zip')
         elif mode == 'validator':
-            resetHost()
+            resetHost(False)
             reqController()
             dockerExe()
             submitTask()

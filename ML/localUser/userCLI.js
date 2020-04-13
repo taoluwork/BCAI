@@ -48,7 +48,8 @@ var ratingsTable = new Table({
            , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
 });
 var outChooseVal = 0;
-
+var valEntCount = 0;
+var provEntCount = 0;
 var sleep = require('sleep');
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
@@ -342,6 +343,9 @@ function promptProviderChoices(){
     ])
     .then(choice => {
         console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your provider\n"));
+        fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to provider\n", function (err){
+            if (err) throw err;
+        })
         //address is chars 0-41
         var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
         var ABIChooseProvider; //prepare abi for a function call
@@ -390,6 +394,9 @@ function chooseValidator(){
     ])
     .then(choice => {
         console.log(chalk.cyan("\nYou have chosen ", choice.provChoice, " as your validator\n"));
+        fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to validator\n", function (err){
+            if (err) throw err;
+        })
         //address is chars 0-41
         var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
         var ABIChooseProvider; //prepare abi for a function call
@@ -1293,18 +1300,12 @@ checkEvents = async () => {
         pastEvents.splice(0,i+1);
         if(pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete" && userAddress === pastEvents[i].returnValues.provAddr){
             //validation is complete and now can ask for rating
-            console.log("\n validation complete move into ask for rating \n");
+            //console.log("\n validation complete move into ask for rating \n");
 
             canRate = true;
         }
         if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr){
-            console.log("\n validator signed \n");
-        }
-        if(validationAssignedFlag == 0){
-            fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to validator\n", function (err){
-                if (err) throw err;
-            })
-            requestAssignedFlag = 1;
+            //console.log("\n validator signed \n");
         }
        // console.log("Validator signed/validation complete");
       }
@@ -1323,9 +1324,6 @@ checkEvents = async () => {
             reqCompCount+=1;
                 //console.log("\nYou must now select a validator for validation\n");
             validationSelectFlag = true;
-            fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
-                if (err) throw err;
-            })
          // console.log("Awaiting validation", "You have completed a task an are waiting for validation");
 
          //requestIP = hex2ascii(pastEvents[i].returnValues.extra);
@@ -1337,12 +1335,6 @@ checkEvents = async () => {
 
         // Request Assigned
         if (pastEvents[i].returnValues  && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
-            if(requestAssignedFlag == 0){
-                fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to provider\n", function (err){
-                    if (err) throw err;
-                })
-                requestAssignedFlag = 1;
-            }
             
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
             //console.log("Request has been assigned.");
@@ -1352,18 +1344,29 @@ checkEvents = async () => {
         //validation complete
         if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validation Complete"){
             valCompCount+=1;
-            fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been validated\n", function (err){
-                if (err) throw err;
-            })
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
             receiveResult();
         }
     }
     if(reqCompCount != valCompCount){
         //This means that a validation hasn't been completed for a task but a task has been executed so need to assign provider
+        if(provEntCount == 0){
+            //Hasn't logged to file yet
+            fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
+                if (err) throw err;
+            })
+            provEntCount+=1;
+        }
         outChooseVal = 1;
     }
     else{
+        if(valEntCount == 0){
+            //hasn't logged to file validation was completed
+            fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been validated\n", function (err){
+                if (err) throw err;
+            })
+            valEntCount+=1;
+        }
         outChooseVal = 0;
     }
 }
@@ -1469,6 +1472,9 @@ function listenWebsite(){
     })
 
     app.post('/startTask', function (req, res) {
+        valEntCount = 0;
+        provEntCount = 0;
+        outChooseVal = 0;
         var ABIstartRequest;
         var filename;
         var maxTime = parseInt(req.body["time"])
