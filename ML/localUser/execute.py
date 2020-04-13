@@ -454,7 +454,7 @@ def getShareWithoutIter(address):
     #########save the zip and unzip it#########
     open("totalOrder.zip", 'wb').write(res.content)
     time.sleep(5)
-    os.system("unzip totalOrder.zip")
+    os.system("unzip -o totalOrder.zip")
     ###########################################
 
 def createThreadsReq():
