@@ -41,7 +41,7 @@ var ratingsTable = new Table({
            , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
            , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
 });
-
+var curRating;
 var fileContent;
 fs.open('./stat.txt', 'w', function(err){
     if (err) throw err;
@@ -260,14 +260,14 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start providing', 'show pools', 'create new address', 'show addresses', 'help', 'show ratings', 'quit'],
+    choices : ['start providing', 'show pools', 'create new address', 'show addresses', 'help', 'show provider ratings', 'quit'],
 };
 
 questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop providing', 'update provider', 'show pools', 'show balance', 'show ratings', 'quit'],
+    choices : ['stop providing', 'update provider', 'show pools', 'show balance', 'show provider ratings', 'show my rating', 'quit'],
 };
 
 clearStat();
@@ -306,6 +306,7 @@ process.on('SIGINT', async () => {
             }
         }
         if(response.val.toLowerCase() == "back"){
+            console.log("\n");
             askUser();
         }
     }
@@ -502,6 +503,21 @@ function choiceMade(choice){
     else if(choice == questions1.choices[4] || choice == questions.choices[5]){
         console.log("\n");
         console.log(ratingsTable.toString(), "\n\n")
+        askUser();
+    }
+    else if(choice == questions1.choices[5]){
+        console.log("\n");
+        if(curRating != null){
+            console.log(chalk.cyan("Your current rating is ", curRating, "\n"));
+        }
+        else{
+            for(var i = 1; i<ratingsTable.length; i+=1){
+                if(userAddress.toLowerCase() == ratingsTable[i][1].toLowerCase()){
+                    console.log(chalk.cyan("Your current rating is ", ratingsTable[i][0], "\n"));
+                    curRating = ratingsTable[i][0];
+                }
+            }
+        }
         askUser();
     }
     else{
