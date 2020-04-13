@@ -120,6 +120,8 @@ def splitFile(file):
         fenc = open(file+str(i)+'.txt', "rb")
         hold = enc(key, nonce, fenc.read())
         fenc.close()
+        fenc = open(file + str(i) + ".txt", "w")
+        fenc.close
         fenc = open(file+str(i)+".txt", "wb")
         fenc.write(hold)
         fenc.close()
