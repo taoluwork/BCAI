@@ -168,7 +168,7 @@ def getTotalAddr():
             f.close()
             for j in lines:
                 if (j.find("http://onionshare") >= 0): #found address
-                    totalAddr = j.strip('\n') + "/totalOrder.txt"
+                    totalAddr = j.strip('\n') + "/totalOrder.zip"
                     flag = False 
         time.sleep(5)
     #Write address to file
