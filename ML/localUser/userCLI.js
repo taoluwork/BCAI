@@ -20,7 +20,6 @@ var now = new Date();
 var date = "";
 var requestAssignedFlag = 0;
 var validationAssignedFlag = 0;
-//position 38 or 37
 var taskCounter = 0;
 var NetworkID = 3;
 var serverPort = 5000;
@@ -53,41 +52,6 @@ var sleep = require('sleep');
 var valEntTracker = 0;
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
-// fs.open('./stat.txt', 'w', function(err){
-//     if (err) throw err;
-// })
-
-// fs.open('./log.txt', 'w', function(err){
-//     if (err) throw err;
-// })
-
-
-// var getIp = (async() => {
-//     await publicIp.v4().then(val => {ip4 = val});
-//     await publicIp.v6().then(val => {ip6 = val});
-// })
-  
-//   //this calls the IP generating file and then depending on the option that is given it will create the server
-//   //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
-// getIp().then(() => {
-//     //allow for manual choice (defaults to IPv4)
-//     if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
-//         ip = process.argv[3] + ":" + serverPort;
-//     }
-//     else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
-//       ip = ip4 + ":" + serverPort;
-//     }
-
-//     else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
-//       ip = "[" + ip6 + "]:" + serverPort;console.log(chalk.cyan("Thank you for using iChain worker CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start providing' to get started or 'help' \nto get more information about the application.\n"))
-
-//     }
-//     else{
-//       ip = ip4 + ":5000";
-//     }
-//     //console.log(ip);
-// });
-
 var UTCFileArray = [];
 var UTCfile;
 var userAddress;
@@ -115,7 +79,6 @@ var abi = TaskContract.abi;
 var addr = TaskContract.networks[NetworkID].address;       //align to const ID defination on top
 const myContract = new web3.eth.Contract(abi, addr);
 
-//test user account addr : 0x458C5617e4f549578E181F12dA8f840889E3C0A8 and password : localtest
 var prov = 0;
 var decryptedAccount = "";
 
@@ -211,8 +174,6 @@ function setRatingVars(){
     });
     myContract.methods.getProviderPool().call().then(function(provPool){
         return provPool
-        //return provPool;
-        //console.log(provPool);
     })
     .then((provPool) => {
         ratingsTable.push(["Rating", "Provider"])
@@ -227,13 +188,11 @@ function setRatingVars(){
                 return [rating, pos, prov];
             })
             .then((arr) => {
-                //console.log("\nThe rating is ", rating, " for provider", prov, "\n")
                 ratingsTable.push([arr[0].toString(), arr[2].toString()]);
                 return arr[1];
             })
         })
     })
-    //.then(() => askUser())
     .catch((err) => console.log(err));
 
 }
@@ -260,7 +219,6 @@ function giveRating(){
     .then (answers =>{
         if(answers.askToRate == 'Yes'){
             console.log(chalk.cyan("\nYou have chosen to give a rating\n"));
-            //finalize request function
 
             inquirer.prompt([
                 {
@@ -286,7 +244,6 @@ function giveRating(){
                 decryptedAccount.signTransaction(rawTransaction)
                 .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                 .then(receipt => {
-                    //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
                     console.log(chalk.cyan("\n\nYour rating has gone through...\n"))
                 })
                 .then(()=>{
@@ -312,7 +269,6 @@ function giveRating(){
             decryptedAccount.signTransaction(rawTransaction)
             .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
             .then(receipt => {
-                //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
                 console.log(chalk.cyan("\n\nYour request has gone through...\n"))
             })
             .then(()=>{
@@ -359,7 +315,6 @@ function promptProviderChoices(){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
             console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
             prov = 1;
         })
@@ -390,7 +345,6 @@ function chooseValidator(){
     ])
     .then(choice => {
         console.log(chalk.cyan("\nYou have choosen ", choice.provChoice, " as your validator\n"));
-        //address is chars 0-41
         var chooseProvAddr = choice.provChoice.slice(0, 42).toLowerCase();
         var ABIChooseProvider; //prepare abi for a function call
         ABIChooseProvider = myContract.methods.chooseProvider(chooseProvAddr).encodeABI();
@@ -407,7 +361,6 @@ function chooseValidator(){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
             console.log(chalk.cyan("\n\nYour request has been submitted for validation... \n\n"));
             prov = 1;
         })
@@ -432,22 +385,10 @@ function askUser(){
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 function receiveResult(){
-    /*if(!executing) {
-        executing = true;
-        exec('python3 execute.py ' + '0 ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
-
-            if(err){
-            console.log(err);
-            return;
-            }
-        executing = false;
-        console.log(stdout);
-        
-      });
-    }*/
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     fs.readFile('./stat.txt', function read(err, data){
         if (err) throw err;
         fileContent = data;
@@ -482,25 +423,6 @@ function clearLog(){
     })
 }
 
-
-/*function offer(){ 
-    console.log("in offer function");
-    if(!executing) {
-        console.log("about to offer");
-        executing = true;
-        exec('python3 execute.py ' + '0 ' + requestIP + ' image.zip ' + ip4, (err,stdout,stderr)=>{
-            if(err){
-
-            console.log(err);
-            return;
-            }
-        executing = false;
-        console.log(stdout);
-        
-      });
-    }
-}
-*/
 
 //Takes choice made by prompt and controls where to go
 function choiceMade(choice){
@@ -1091,8 +1013,6 @@ function stopTask(choice){
 
 
 function showPools(){
-    //Lists pool all pools
-    //checkEvents();
     return myContract.methods.getProviderPool().call().then(function(provPool){
 		console.log("\n\n=======================================================");
 		console.log("Active provider pool: Total = ", provPool.length);
@@ -1150,29 +1070,22 @@ checkEvents = async () => {
             })
             requestAssignedFlag = 1;
         }
-       // console.log("Validator signed/validation complete");
       }
     }
 
     // For pairing info events
     for (var i = 0; i < pastEvents.length; i++) {
-      //console.log(hex2ascii(pastEvents[i].returnValues.info))
       // Request Computation Complete
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
-          //console.log("\nIn complete block\n");
-          //console.log("\nuser address is ", userAddress, "\n");
-          //console.log(pastEvents[i].returnValues;
         if (userAddress === pastEvents[i].returnValues.reqAddr.toLowerCase()) {
             requestAssignedFlag = 0;
             if(valEntTracker == 0){
-                //console.log("\nYou must now select a validator for validation\n");
                 validationSelectFlag = true;
                 valEntTracker += 1;
             }
             fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been completed. Needs validation\n", function (err){
                 if (err) throw err;
             })
-         // console.log("Awaiting validation", "You have completed a task an are waiting for validation");
 
          //requestIP = hex2ascii(pastEvents[i].returnValues.extra);
          //receiveResult();
@@ -1191,7 +1104,6 @@ checkEvents = async () => {
             }
             
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
-            //console.log("Request has been assigned.");
             finished = false;
             //offer();
         }
@@ -1222,15 +1134,7 @@ function listenWebsite(){
         
     });
     console.log(chalk.cyan('\nWebpage is now open check your default browser...\n'))
-    /*exec('sensible-browser https://localhost:3000', (err,stdout,stderr)=>{
-        if(err){
-
-          console.log(err);
-          return;
-        }
-        console.log(stdout);
-        
-    });*/
+    
     var app = express();
     app.listen(3000);
     //json of all available accounts for the user
@@ -1394,22 +1298,13 @@ function listenWebsite(){
                         decryptedAccount.signTransaction(rawTransaction)
                         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                         .then(receipt => {
-                            //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                            //console.log(receipt);
                             console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
                             prov = 1;
                         })
-                        .then(() => {//Pedro put your code here for start providing
-                            //res.send(JSON.stringify({"Success": 0}));
-
-                            //call subscribe here
-
+                        .then(() => {
                             try{
                                 web3.eth.subscribe('newBlockHeaders', (err, result) => {
                                     if(err) console.log(chalk.red(err), result);
-                                    //console.log("================================================   <- updated! #", result.number);
-                                    //console.log(result);
-                                    //showPools();
                                     checkEvents();
                                 })
                             }
