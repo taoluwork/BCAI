@@ -10,13 +10,8 @@ import math
 import multiprocessing
 import subprocess
 
-import getpass
-import cryptography.hazmat.backends as backends
-import cryptography.hazmat.primitives.asymmetric.rsa as rsa
-import cryptography.hazmat.primitives.serialization as serial
-import cryptography.hazmat.primitives.hashes as hashes
-import cryptography.hazmat.primitives as primitives
-import cryptography.hazmat.primitives.asymmetric.padding as padding
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
 
 ##globals##
 threads    = 8

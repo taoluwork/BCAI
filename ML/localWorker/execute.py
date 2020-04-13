@@ -10,6 +10,8 @@ import math
 import subprocess
 import multiprocessing
 
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
 
 ##globals##
 threads = 8
