@@ -40,7 +40,9 @@ encNonce   = None
 #######################################################encryption######################################################################
 #######################################################################################################################################
 
-def genKey(keyFile="", nonceFile=""):
+def genKey():
+    keyFile= "key.txt"
+    nonceFile="nonce.txt"
     f = open(keyFile, 'w')
     f.close()
     f = open(nonceFile, 'w')
@@ -74,16 +76,15 @@ def dec(key=b"", nonce=b"", mess=b""):
     decryptor = cipher.decryptor()
     return decryptor.update(mess)
 
-    if(os.path.isfile("key.txt") and os.path.isfile("nonce.txt") != True):
-        genKey("key.txt","nonce.txt")
 
+genKey()
 
 #######################################################################################################################################
 ###########################################################host########################################################################
 #######################################################################################################################################
 def shareOrder():
     global totalStartTime
-    while os.path.isfile('totalOrder.txt') and os.path.isfile("key.txt") and os.path.isfile("nonce.txt") != True:
+    while os.path.isfile('totalOrder.txt') != True:
         time.sleep(5)
     totalStartTime = time.time()
     
