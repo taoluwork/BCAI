@@ -20,7 +20,6 @@ var now = new Date();
 var date = "";
 var requestAssignedFlag = 0;
 var validationAssignedFlag = 0;
-//position 38 or 37
 var taskCounter = 0;
 var NetworkID = 3;
 var serverPort = 5000;
@@ -54,41 +53,6 @@ var sleep = require('sleep');
 
 ///////////////////////////////////////////////////////////////////Get IP///////////////////////////////////////////////////////////////////////////////////
 
-// fs.open('./stat.txt', 'w', function(err){
-//     if (err) throw err;
-// })
-
-// fs.open('./log.txt', 'w', function(err){
-//     if (err) throw err;
-// })
-
-
-// var getIp = (async() => {
-//     await publicIp.v4().then(val => {ip4 = val});
-//     await publicIp.v6().then(val => {ip6 = val});
-// })
-  
-//   //this calls the IP generating file and then depending on the option that is given it will create the server
-//   //since the IP is necessary for the creation of the socket.io server all the server section resides in this .then call
-// getIp().then(() => {
-//     //allow for manual choice (defaults to IPv4)
-//     if(process.argv[2] !== undefined && process.argv[2] === "-def" && process.argv[3] !== undefined ){
-//         ip = process.argv[3] + ":" + serverPort;
-//     }
-//     else if(process.argv[2] !== undefined && process.argv[2] === "-4"){
-//       ip = ip4 + ":" + serverPort;
-//     }
-
-//     else if(process.argv[2] !== undefined && process.argv[2] === "-6"){
-//       ip = "[" + ip6 + "]:" + serverPort;console.log(chalk.cyan("Thank you for using iChain worker CLI! The Peer to Peer Blockchain Machine \nLearning Application. Select 'start providing' to get started or 'help' \nto get more information about the application.\n"))
-
-//     }
-//     else{
-//       ip = ip4 + ":5000";
-//     }
-//     //console.log(ip);
-// });
-
 var UTCFileArray = [];
 var UTCfile;
 var userAddress;
@@ -116,7 +80,6 @@ var abi = TaskContract.abi;
 var addr = TaskContract.networks[NetworkID].address;       //align to const ID defination on top
 const myContract = new web3.eth.Contract(abi, addr);
 
-//test user account addr : 0x458C5617e4f549578E181F12dA8f840889E3C0A8 and password : localtest
 var prov = 0;
 var decryptedAccount = "";
 
@@ -124,14 +87,14 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'quit'],
+    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'check address a8 balance', 'quit'],
 };
 
 questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop request', 'update request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'choose validator', 'quit'],
+    choices : ['stop request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'choose validator', 'show ETH balance', 'quit'],
 };
 
 clearStat();
@@ -212,8 +175,6 @@ function setRatingVars(){
     });
     myContract.methods.getProviderPool().call().then(function(provPool){
         return provPool
-        //return provPool;
-        //console.log(provPool);
     })
     .then((provPool) => {
         ratingsTable.push(["Rating", "Provider"])
@@ -228,13 +189,11 @@ function setRatingVars(){
                 return [rating, pos, prov];
             })
             .then((arr) => {
-                //console.log("\nThe rating is ", rating, " for provider", prov, "\n")
                 ratingsTable.push([arr[0].toString(), arr[2].toString()]);
                 return arr[1];
             })
         })
     })
-    //.then(() => askUser())
     .catch((err) => console.log(err));
 
 }
@@ -261,7 +220,6 @@ function giveRating(){
     .then (answers =>{
         if(answers.askToRate == 'Yes'){
             console.log(chalk.cyan("\nYou have chosen to give a rating\n"));
-            //finalize request function
 
             inquirer.prompt([
                 {
@@ -363,7 +321,6 @@ function promptProviderChoices(){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
             console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
             prov = 1;
         })
@@ -414,7 +371,6 @@ function chooseValidator(){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
             console.log(chalk.cyan("\n\nYour request has been submitted for validation... \n\n"));
             prov = 1;
         })
@@ -442,22 +398,10 @@ function askUser(){
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 function receiveResult(){
-    /*if(!executing) {
-        executing = true;
-        exec('python3 execute.py ' + '0 ' + requestIP + ' none ' + ip4, (err,stdout,stderr)=>{
-
-            if(err){
-            console.log(err);
-            return;
-            }
-        executing = false;
-        console.log(stdout);
-        
-      });
-    }*/
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     fs.readFile('./stat.txt', function read(err, data){
         if (err) throw err;
         fileContent = data;
@@ -493,25 +437,6 @@ function clearLog(){
 }
 
 
-/*function offer(){ 
-    console.log("in offer function");
-    if(!executing) {
-        console.log("about to offer");
-        executing = true;
-        exec('python3 execute.py ' + '0 ' + requestIP + ' image.zip ' + ip4, (err,stdout,stderr)=>{
-            if(err){
-
-            console.log(err);
-            return;
-            }
-        executing = false;
-        console.log(stdout);
-        
-      });
-    }
-}
-*/
-
 //Takes choice made by prompt and controls where to go
 function choiceMade(choice){
 
@@ -523,15 +448,11 @@ function choiceMade(choice){
     {
         stopTask();
     }
-    else if(choice == questions1.choices[1])
-    {
-        updateTask();
-    }
-    else if (choice == questions.choices[1] || choice == questions1.choices[2])
+    else if (choice == questions.choices[1] || choice == questions1.choices[1])
     {
         showPools();
     }
-    else if(choice == questions1.choices[3]){
+    else if(choice == questions1.choices[2]){
         giveRating();
     }
     else if(choice == questions.choices[2]){
@@ -610,16 +531,16 @@ function choiceMade(choice){
         console.log(chalk.cyan("user input settings. Thank you for using iChain!\n\n"))
         askUser();
     }
-    else if(choice == questions.choices[5] || choice == questions1.choices[4]){
+    else if(choice == questions.choices[5] || choice == questions1.choices[3]){
         
         console.log("\n");
         console.log(ratingsTable.toString(), "\n\n")
         askUser();
     }
-    else if(choice == questions1.choices[5]){
+    else if(choice == questions1.choices[4]){
         promptProviderChoices();
     }
-    else if(choice == questions1.choices[6]){
+    else if(choice == questions1.choices[5]){
         if(validationSelectFlag == true){
             chooseValidator();
         }
@@ -627,6 +548,18 @@ function choiceMade(choice){
             console.log(chalk.cyan("\nRequest has not been completed yet. You are unable to select a validator.\n"))
             askUser();
         }
+    }
+    else if(choice == questions1.choices[6]){
+        web3.eth.getBalance(userAddress)
+        .then((balance) => {console.log("\n\n", web3.utils.fromWei(String(balance), 'ether'), "Ether \n")})
+        .then(()=>{askUser()})
+        .catch((err)=>{console.log(err)});
+    }
+    else if(choice == questions.choices[6]){
+        web3.eth.getBalance("0x458c5617e4f549578e181f12da8f840889e3c0a8".toLowerCase())
+        .then((balance) => {console.log("\n\n", web3.utils.fromWei(String(balance), 'ether'), "Ether \n")})
+        .then(()=>{askUser()})
+        .catch((err)=>{console.log(err)});
     }
     else
     {
@@ -741,32 +674,17 @@ function startTask(){
                     console.log("\n");
                     inquirer.prompt([
                         {
-                            name : 'mTime',
-                            message: 'Enter max time: ',
-                        },
-                        {
-                            name : 'mTarget',
-                            message: 'Enter max target: ',
-                        },
-                        {
-                            name : 'mPrice',
-                            message: 'Enter min price: ',
-                        },
-                        {
                             name : 'filePath',
                             message: 'Enter file path: ',
                         }
                     ])
                     .then(settings => {
-                        return [settings.mTime, settings.mTarget, settings.mPrice, settings.filePath];
+                        return settings.filePath;
                     })
-                    .then(newSettings => {
+                    .then(path => {
                         console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
                         var ABIstartRequest; //prepare abi for a function call
-                        var maxTime = newSettings[0];
-                        var maxTarget = newSettings[1];
-                        var minPrice = newSettings[2];
-                        filePath = newSettings[3];
+                        var filePath = path;
                         if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
                         {
                             console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'start request' to try again..."), "\n")
@@ -774,16 +692,13 @@ function startTask(){
                         }
                         else{
                             fs.open(filePath, 'r', (err, fd)=>{
-                                //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                                 if(fd != undefined){
                                     function readChunk(){
                                         chunkSize = 10*1024*1024;
                                         var holdBuff = Buffer.alloc(chunkSize);
                                         fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
-                                            //if(err){console.log("\n", chalk.red(err), "\n");}
                                             if(nread === 0){
                                                 fs.close(fd, function(err){
-                                                    //if(err){console.log("\n", chalk.red(err), "\n");}
                                                 });
                                                 return;
                                             }
@@ -797,40 +712,41 @@ function startTask(){
                                             }
                                             else{
                                                 buffer.push(holdBuff);
-                                                //console.log(holdBuff)
                                                 readChunk();
                                     
                                             }
                                         })
                                     } 
                                     readChunk();
-                                    //console.log(buffer);
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                    while(!(fs.existsSync('./totalOrderAddress.txt'))){
-                                        //setTimeout(function(){} ,5000);
-                                        sleep.sleep(15);
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                    while(!(fs.existsSync('./totalOrderAddress.txt'))){
+                                        sleep.sleep(15);
                                     }
                                     fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
                                         console.log(ip);
-                                        console.log(maxTarget);
-                                        console.log(maxTime);
-                                        console.log(minPrice);
                                         console.log(web3.utils.asciiToHex(ip));
-                                        ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                                        ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
                                         const rawTransaction = {
                                             "from": userAddress,
                                             "to": addr,
-                                            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                                            "value": web3.utils.toHex(web3.utils.toWei("0.01", "ether")),
                                             "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
                                             "gas": 5000000,
                                             "chainId": 3,
                                             "data": ABIstartRequest
                                         }
-                                    //});
-                                    //console.log(ABIstartRequest);
-                                    
+                                        
                                         decryptedAccount.signTransaction(rawTransaction)
+                                        .catch(err =>{
+                                            if(err == "Error: Not enough ether"){
+                                                console.log(chalk.red("\nThere is not enough ether in this account to start a request. You must have at least 0.01 ETH to start a request...\n"));
+                                            }
+                                            else{
+                                                console.log(chalk.red("\n", err, "\n"));
+                                            }
+                                        })
                                         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                                         .then(receipt => {
                                             //console.log(chalk.cyan("\n\nTransaction receipt: "));
@@ -838,16 +754,13 @@ function startTask(){
                                             console.log(chalk.cyan("\n\nYour request has been submitted. You must choose a provider now to continue... \n\n"));
                                             prov = 1;
                                         })
-                                        .then(() => {//Pedro put your code here for start providing
+                                        .then(() => {
                                             askUser();
                                             //call subscribe here
 
                                             try{
                                                 web3.eth.subscribe('newBlockHeaders', (err, result) => {
                                                     if(err) console.log(chalk.red(err), result);
-                                                    //console.log("================================================   <- updated! #", result.number);
-                                                    //console.log(result);
-                                                    //showPools();
                                                     checkEvents();
                                                 })
                                             }
@@ -905,32 +818,17 @@ function startTask(){
             console.log("\n");
             inquirer.prompt([
                 {
-                    name : 'mTime',
-                    message: 'Enter max time: ',
-                },
-                {
-                    name : 'mTarget',
-                    message: 'Enter max target: ',
-                },
-                {
-                    name : 'mPrice',
-                    message: 'Enter min price: ',
-                },
-                {
                     name : 'filePath',
                     message: 'Enter file path: ',
                 }
             ])
             .then(settings => {
-                return [settings.mTime, settings.mTarget, settings.mPrice, settings.filePath];
+                return settings.filePath;
             })
-            .then(newSettings => {
+            .then(path => {
                 console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
                 var ABIstartRequest; //prepare abi for a function call
-                var maxTime = newSettings[0];
-                var maxTarget = newSettings[1];
-                var minPrice = newSettings[2];
-                filePath = newSettings[3];
+                var filePath = path;
                 if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
                 {
                     console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'start request' to try again..."), "\n")
@@ -938,16 +836,13 @@ function startTask(){
                 }
                 else{
                     fs.open(filePath, 'r', (err, fd)=>{
-                        //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
                         if(fd != undefined){
                             function readChunk(){
                                 chunkSize = 10*1024*1024;
                                 var holdBuff = Buffer.alloc(chunkSize);
                                 fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
-                                    //if(err){console.log("\n", chalk.red(err), "\n");}
                                     if(nread === 0){
                                         fs.close(fd, function(err){
-                                            //if(err){console.log("\n", chalk.red(err), "\n");}
                                         });
                                         return;
                                     }
@@ -961,50 +856,42 @@ function startTask(){
                                     }
                                     else{
                                         buffer.push(holdBuff);
-                                        //console.log(holdBuff)
                                         readChunk();
                             
                                     }
                                 })
-                            } 
+                            }
                             readChunk();
-                            //console.log(buffer);
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                             while(!(fs.exists('./totalOrderAddress.txt'))){
                                 setTimeout(Function.prototype() ,5000);
                             }
                             fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
-                                ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                                ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
                                 const rawTransaction = {
                                     "from": userAddress,
                                     "to": addr,
-                                    "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                                    "value": web3.utils.toHex(web3.utils.toWei("0.01", "ether")),
                                     "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
                                     "gas": 5000000,
                                     "chainId": 3,
                                     "data": ABIstartRequest
                                 }
-                            //});
-                            //console.log(ABIstartRequest);
                         
                                 decryptedAccount.signTransaction(rawTransaction)
                                 .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                                 .then(receipt => {
-                                    //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                                    //console.log(receipt);
                                     console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
                                     prov = 1;
                                 })
-                                .then(() => {//Pedro put your code here for start providing
+                                .then(() => {
                                     askUser();
                                     //call subscribe here
-
                                     try{
                                         web3.eth.subscribe('newBlockHeaders', (err, result) => {
                                             if(err) console.log(chalk.red(err), result);
-                                            //console.log("================================================   <- updated! #", result.number);
-                                            //console.log(result);
-                                            //showPools();
                                             checkEvents();
                                         })
                                     }
@@ -1029,6 +916,7 @@ function startTask(){
                                     }
                                 });
                             });
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         } 
@@ -1104,7 +992,6 @@ function stopTask(choice){
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
             console.log(chalk.cyan("\n\nYou have taken down your request for address " + userAddress + "...\n"))
             prov = 0;
         })
@@ -1140,120 +1027,7 @@ function stopTask(choice){
 }
 
 
-function updateTask(){
-    console.log("\n");
-        inquirer.prompt([
-            {
-                name : 'mTime',
-                message: 'Enter new max time: ',
-            },
-            {
-                name : 'mTarget',
-                message: 'Enter new max target: ',
-            },
-            {
-                name : 'mPrice',
-                message: 'Enter new min price: ',
-            },
-            {
-                name : 'filePath',
-                message: 'Enter file path: ',
-            }
-        ])
-        .then(settings => {
-            return [settings.mTime, settings.mTarget, settings.mPrice, settings.filePath];
-        })
-        .then(newSettings => {
-            console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
-            var ABIupdateProvider; //prepare abi for a function call
-            var maxTime = newSettings[0];
-            var maxTarget = newSettings[1];
-            var minPrice = newSettings[2];
-            var filePath = newSettings[3];
-            if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
-            {
-                console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'update request' to try again..."), "\n")
-                askUser();
-            }
-            else{
-                fs.open(filePath, 'r', (err, fd)=>{
-                    //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
-                    if(fd != undefined){
-                        function readChunk(){
-                            chunkSize = 10*1024*1024;
-                            var holdBuff = Buffer.alloc(chunkSize);
-                            fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
-                                //if(err){console.log("\n", chalk.red(err), "\n");}
-                                if(nread === 0){
-                                    fs.close(fd, function(err){
-                                        //if(err){console.log("\n", chalk.red(err), "\n");}
-                                    });
-                                    return;
-                                }
-                                if(nread < chunkSize){
-                                    try{
-                                        buffer.push(holdBuff.slice(0, nread));
-                                    }
-                                    catch(err){
-                                        console.log("You failed to select correct file path")
-                                    }
-                                }
-                                else{
-                                    buffer.push(holdBuff);
-                                    //console.log(holdBuff)
-                                    readChunk();
-        
-                                }
-                            })
-                        }     
-                        readChunk();
-                        ABIupdateProvider = myContract.methods.updateRequest(maxTime, maxTarget, minPrice).encodeABI();
-                        //console.log(ABIstartRequest);
-                        const rawTransaction = {
-                            "from": userAddress,
-                            "to": addr,
-                            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-                            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-                            "gas": 5000000,
-                            "chainId": 3,
-                            "data": ABIupdateProvider
-                        }
-                
-                        decryptedAccount.signTransaction(rawTransaction)
-                        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-                        .then(receipt => {
-                            console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
-                            console.log(chalk.cyan("\n\nYou have updated provider settings to: max time = " + maxTime.toString() +
-                                ", max target = " + maxTarget.toString() + ", and min price = " + minPrice.toString() + "...\n\n"));
-                        })
-                        .then(() => {askUser()})
-                        .catch(err => {
-                            console.log("\n", chalk.red(err), "\n");
-                            askUser();
-                        });
-                    }
-                    else{
-                        console.log("\n", chalk.red("Error: No file found with file path..."), "\n");
-                        askUser();
-                    }
-                                       
-                });
-                
-            }
-            
-        })
-        .catch( err => {
-            console.log("\n", chalk.red(err), "\n");
-            askUser();
-        });
-}
-
-
-
-
 function showPools(){
-    //Lists pool all pools
-    //checkEvents();
     return myContract.methods.getProviderPool().call().then(function(provPool){
 		console.log("\n\n=======================================================");
 		console.log("Active provider pool: Total = ", provPool.length);
@@ -1307,18 +1081,13 @@ checkEvents = async () => {
         if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr){
             //console.log("\n validator signed \n");
         }
-       // console.log("Validator signed/validation complete");
       }
     }
 
     // For pairing info events
     for (var i = 0; i < pastEvents.length; i++) {
-      //console.log(hex2ascii(pastEvents[i].returnValues.info))
       // Request Computation Complete
       if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Request Computation Completed") {
-          //console.log("\nIn complete block\n");
-          //console.log("\nuser address is ", userAddress, "\n");
-          //console.log(pastEvents[i].returnValues;
         if (userAddress === pastEvents[i].returnValues.reqAddr.toLowerCase()) {
             requestAssignedFlag = 0;
             reqCompCount+=1;
@@ -1337,7 +1106,6 @@ checkEvents = async () => {
         if (pastEvents[i].returnValues  && hex2ascii(pastEvents[i].returnValues.info) === "Request Assigned") {
             
             requestIP = hex2ascii(pastEvents[i].returnValues.extra);
-            //console.log("Request has been assigned.");
             finished = false;
             //offer();
         }
@@ -1386,15 +1154,7 @@ function listenWebsite(){
         
     });
     console.log(chalk.cyan('\nWebpage is now open check your default browser...\n'))
-    /*exec('sensible-browser https://localhost:3000', (err,stdout,stderr)=>{
-        if(err){
-
-          console.log(err);
-          return;
-        }
-        console.log(stdout);
-        
-    });*/
+    
     var app = express();
     app.listen(3000);
     //json of all available accounts for the user
@@ -1544,7 +1304,7 @@ function listenWebsite(){
                             setTimeout(Function.prototype() ,5000);
                         }
                         fs.readFile('./totalOrderAddress.txt', function(err, ip){
-                            ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
+                            ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
                         });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         //console.log(ABIstartRequest);
@@ -1561,22 +1321,13 @@ function listenWebsite(){
                         decryptedAccount.signTransaction(rawTransaction)
                         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                         .then(receipt => {
-                            //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                            //console.log(receipt);
                             console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
                             prov = 1;
                         })
-                        .then(() => {//Pedro put your code here for start providing
-                            //res.send(JSON.stringify({"Success": 0}));
-
-                            //call subscribe here
-
+                        .then(() => {
                             try{
                                 web3.eth.subscribe('newBlockHeaders', (err, result) => {
                                     if(err) console.log(chalk.red(err), result);
-                                    //console.log("================================================   <- updated! #", result.number);
-                                    //console.log(result);
-                                    //showPools();
                                     checkEvents();
                                 })
                             }
@@ -1639,175 +1390,6 @@ function listenWebsite(){
         }
 
     })
-
-    app.post('/updateTask', function(req, res) {
-        var ABIstartRequest;
-        var filename;
-        var maxTime = req.body["time"]
-        var maxTarget = req.body["accuracy"];
-        var minPrice = req.body["cost"];
-        filePath = req.body["file"];
-        var pass = String(req.body["password"]) // Later set this to req.body["password"]
-
-        //Get file path based on address passed
-        for(i = 0; i < UTCFileArray.length; i++){
-            if(String(req.body["Account"]) == userAddresses[i]){
-                filename = UTCFileArray[i];
-                break
-            }
-        }
-
-        var keystore;
-        var contents = fs.readFileSync(filename, 'utf8')
-        keystore = contents;
-        UTCfile = filename;
-        userAddress = String(req.body["Account"]);
-        try{
-            decryptedAccount = web3.eth.accounts.decrypt(keystore, pass);
-
-
-            if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
-            {
-                console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'start request' to try again..."), "\n")
-                app.get('/errors', function(req, res){
-                    var errorJSON = {"name" : "updateTask", "message" : "You must provide the task as a .zip file... Select 'start request' to try again..."};
-                    res.header("Content-Type", 'application/json');
-                    res.send(errorJSON);  
-                })
-            }
-            else{
-                fs.open(filePath, 'r', (err, fd)=>{
-                    //if(err){console.log(chalk.red("\n", chalk.red(err), "\n"));}
-                    if(fd != undefined){
-                        function readChunk(){
-                            chunkSize = 10*1024*1024;
-                            var holdBuff = Buffer.alloc(chunkSize);
-                            fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
-                                //if(err){console.log("\n", chalk.red(err), "\n");}
-                                if(nread === 0){
-                                    fs.close(fd, function(err){
-                                        //if(err){console.log("\n", chalk.red(err), "\n");}
-                                    });
-                                    return;
-                                }
-                                if(nread < chunkSize){
-                                    try{
-                                        buffer.push(holdBuff.slice(0, nread));
-                                    }
-                                    catch(err){
-                                        console.log("You failed to select correct file path")
-                                    }
-                                }
-                                else{
-                                    buffer.push(holdBuff);
-                                    //console.log(holdBuff)
-                                    readChunk();
-                        
-                                }
-                            })
-                        } 
-                        readChunk();
-                        //console.log(buffer);
-                        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                        while(!(fs.exists('./totalOrderAddress.txt'))){
-                            setTimeout(Function.prototype() ,5000);
-                        }
-                        fs.readFile('./totalOrderAddress.txt', function(err, ip){
-                            ABIstartRequest = myContract.methods.startRequest(maxTime, maxTarget, minPrice, web3.utils.asciiToHex(ip)).encodeABI();
-                        });
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                        //console.log(ABIstartRequest);
-                        const rawTransaction = {
-                            "from": String(req.body["Account"]),
-                            "to": addr,
-                            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-                            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-                            "gas": 5000000,
-                            "chainId": 3,
-                            "data": ABIstartRequest
-                        }
-                    
-                        decryptedAccount.signTransaction(rawTransaction)
-                        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-                        .then(receipt => {
-                            //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                            //console.log(receipt);
-                            console.log(chalk.cyan("\n\nYou have updated request settings to: max time = " + maxTime.toString() +
-                            ", max target = " + maxTarget.toString() + ", and min price = " + minPrice.toString() + "...\n\n"));
-
-                            prov = 1;
-                        })
-                        .then(() => {//Pedro put your code here for start providing
-                            //call subscribe here
-
-                            try{
-                                web3.eth.subscribe('newBlockHeaders', (err, result) => {
-                                    if(err) console.log(chalk.red(err), result);
-                                    //console.log("================================================   <- updated! #", result.number);
-                                    //console.log(result);
-                                    //showPools();
-                                    checkEvents();
-                                })
-                            }
-                            catch(error){
-                                alert(
-                                    `Failed to load web3, accounts, or contract. Check console for details.`
-                                );
-                                app.get('/errors', function(req, res){
-                                    var errorJSON = {"name" : "updateTask", "message" : "failed to load web3"};
-                                    res.header("Content-Type", 'application/json');
-                                    res.send(errorJSON);  
-                                })
-                                console.log("\n", chalk.red(err), "\n");
-                            }
-
-
-                        })
-                        .catch(err => {
-                            if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
-                            {
-                                console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                                app.get('/errors', function(req, res){
-                                    var errorJSON = {"name" : "updateTask", "message" : "This keystore account doesn't have enough Ether... Add funds or try a different account..."};
-                                    res.header("Content-Type", 'application/json');
-                                    res.send(errorJSON);  
-                                })
-                            }
-                            else{
-                                console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                                app.get('/errors', function(req, res){
-                                    var errorJSON = {"name" : "updateTask", "message" : "There was an error updating this task"};
-                                    res.header("Content-Type", 'application/json');
-                                    res.send(errorJSON);  
-                                })
-                            }
-                        });
-                    } 
-                    else{
-                        console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
-                        app.get('/errors', function(req, res){
-                            var errorJSON = {"name" : "updateTask", "message" : "No file found with file path"};
-                            res.header("Content-Type", 'application/json');
-                            res.send(errorJSON);  
-                        })
-                    }                 
-                });
-                
-            }
-        }
-        catch(err){
-            if (String(err).slice(0, 28) == "Error: Key derivation failed")
-            {
-                console.log(chalk.red("\nError: You have entered the wrong keystore password... Please try again...\n"))
-                app.get('/errors', function(req, res){
-                    var errorJSON = {"name" : "updateTask", "message" : "You have entered an incorrect password"};
-                    res.header("Content-Type", 'application/json');
-                    res.send(errorJSON);  
-                })
-            }
-        }
-    })
-
 
     app.post('/stopTask', function(req, res){
         var filename;
