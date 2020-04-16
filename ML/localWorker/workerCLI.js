@@ -992,6 +992,72 @@ function listenWebsite(){
 
     //API code
 
+    //Web page get balance
+    app.get('/balance', function(req, res) {
+        if(userAddress) {
+            var balancestring = "";
+            web3.eth.getBalance(userAddress)
+            .then((balance) => {
+                balancestring = web3.utils.fromWei(String(balance), 'ether') + " Ether"
+                var balanceJSON = {"Balance" : balancestring};
+                res.header("Content-Type", 'application/json');
+                res.send(balanceJSON);
+            })
+            .catch((err)=>{console.log(err)});
+        }
+    })
+
+    //Web page get rating
+    app.get('/rating', function(req, res) {
+        if(userAddress) {
+            //Set rating if necessary
+            if(curRating == null) {
+                for(var i = 1; i<ratingsTable.length; i+=1){
+                    if(userAddress.toLowerCase() == ratingsTable[i][1].toLowerCase()){
+                        console.log("Here2")
+                        curRating = ratingsTable[i][0];
+                    }
+                }
+            }
+            //Only send response if there is a rating, otherwise send nothing
+            if(curRating != undefined) {
+                var ratingJSON = {"Rating" : curRating};
+                res.header("Content-Type", 'application/json');
+                res.send(ratingJSON);
+            }
+            else {
+                var ratingJSON = {"Rating" : "0"};
+                res.header("Content-Type", 'application/json');
+                res.send(ratingJSON);
+            }
+        }
+    })
+
+    //Web page get status
+    app.get('/status', function(req, res) {
+        if(userAddress) {
+            fs.readFile('./stat.txt', function read(err, data){
+                if (err) throw err;
+                fileContent = data;
+                //console.log(fileContent.toString('utf8'));
+                var statusstring = "Waited to be chosen as provider."
+                if(fileContent.toString('utf8') === 'Ready') {
+                    statusstring = "Hosting and Validating.";
+                }
+                else if(fileContent.toString('utf8') === 'Executing') {
+                    statusstring = "Executing task file.";
+                }
+                else if(fileContent.toString('utf8').length > 0) { //Stat.txt contains address
+                    statusstring = "Selected as provider, downloading task from user.";
+                }
+                var statusJSON = {"Status" : statusstring};
+                res.header("Content-Type", 'application/json');
+                res.send(statusJSON);
+            })
+        }
+    })
+
+
     app.get('/pools', function(req, res) {
         if(userAddress != undefined){
             //checkEvents(false);
@@ -1062,9 +1128,6 @@ function listenWebsite(){
             decryptedAccount = web3.eth.accounts.decrypt(keystore, String(req.body["password"]))
             console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
             var ABIstartProviding; //prepare abi for a function call
-            var maxTime = parseInt(req.body["time"]);
-            var maxTarget = parseInt(req.body["accuracy"]);
-            var minPrice = parseInt(req.body["cost"]);
             ABIstartProviding = myContract.methods.startProviding().encodeABI();
             //console.log(chalk.cyan(ABIstartProviding);
             const rawTransaction = {
@@ -1076,7 +1139,6 @@ function listenWebsite(){
                 "chainId": 3,
                 "data": ABIstartProviding
             }
-        
             decryptedAccount.signTransaction(rawTransaction)
             .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
             .then(receipt => {
@@ -1084,6 +1146,9 @@ function listenWebsite(){
                 //console.log(receipt);
                 console.log(chalk.cyan("\n\nYou are now Providing... \n\n"));
                 prov = 1;
+                var successJSON = {"name" : "startProviding", "message" : "Started successfully"};
+                res.header("Content-Type", 'application/json');
+                res.send(successJSON); 
 
             })
             .then(() => {
@@ -1104,8 +1169,6 @@ function listenWebsite(){
                         res.send(errorJSON);  
                     })
                 }
-
-
             })
             .catch(err => {
                 console.log(String(err).slice(0, 41))

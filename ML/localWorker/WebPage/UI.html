@@ -35,44 +35,31 @@
                 </form>
         </div>
         
-        <div class="container-fluid text-center " id="actionSelect">
-            <h2 class="text-center">
-                Select An Action:
-            </h2>
-                <div class="btn-group text-center " role="group" id="actionSelectBar">
-                    <button type="button" class="btn btn-secondary" id="startActionSel">Start Providing</button>
-                    <button type="button" class="btn btn-secondary" id="updateActionSel">Update Provider</button>
-                    <button type="button" class="btn btn-secondary" id="stopActionSel">Stop Providing</button>
-                    <button type="button" class="btn btn-secondary selected" id="noneActionSel">none</button>
-                </div>    
-        </div>
+        <br />
+
         <div id="actionContainer" class="container-fluid text-center actioncontainer">
             <form id="startProvidingForm" class="container-fluid text-center  w-50">
-                <div class="form-group" id="startProvidingInputs">
-                    <h3>Start Providing</h3>
-                    <input type="text" class="form-control" id="startProvidingTime"     placeholder="Enter Time">
-                    <input type="text" class="form-control" id="startProvidingAccuracy" placeholder="Enter Accuracy">
-                    <input type="text" class="form-control" id="startProvidingCost"     placeholder="Enter Cost">
-                </div>
-                <button type="submit" class="btn btn-primary" id="startProvidingSubmit">Submit</button>
+                <button type="submit" class="btn btn-primary" id="startProvidingSubmit">Start Providing</button>
             </form>
-            <form id="updateProviderForm" class="container-fluid text-center  w-50">
-                <div class="form-group" id="updateProviderInputs">
-                        <h3>Update Provider</h3>
-                    <input type="text" class="form-control" id="updateProviderTime"     placeholder="Enter Time">
-                    <input type="text" class="form-control" id="updateProviderAccuracy" placeholder="Enter Accuracy">
-                    <input type="text" class="form-control" id="updateProviderCost"     placeholder="Enter Cost">
-                </div>
-                <button type="submit" class="btn btn-secondary" id="updateProviderSubmit">Submit</button>
-            </form>
+
             <form id="stopProvidingForm" class="container-fluid text-center">
                 <div class="form-group text-center" id="stopProvidingInputs">
-                    <h3>Stop Providing</h3>
-                    <button type="submit" class="btn btn-secondary text-center" id="stopProvidingSubmit">Stop Task</button>
+                    <button type="submit" class="btn btn-secondary text-center" id="stopProvidingSubmit">Stop Providing</button>
                 </div>
             </form>
         </div>
 
+        <div id="balanceContainer" class="container-fluid text-center">
+            <p id="balanceText"></p>
+        </div>
+
+        <div id="ratingContainer" class="container-fluid text-center">
+            <p id="ratingText"></p>
+        </div>
+
+        <div id="statusContainer" class="container-fluid text-center">
+            <p id="statusText"></p>
+        </div>
 
         <div class="container-fluid text-center  w-75" id="poolSelect">
             <h2 class="text-center">

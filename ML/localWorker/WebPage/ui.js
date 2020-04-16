@@ -23,29 +23,14 @@ var passwordVal       = document.getElementById("passwordVal");
 var submitPassword    = document.getElementById("submitPassword");
 
 var startProvidingForm     = document.getElementById("startProvidingForm");
-var updateProviderForm    = document.getElementById("updateProviderForm");
 var stopProvidingForm      = document.getElementById("stopProvidingForm");
-startProvidingForm.style.display  = "none";
-updateProviderForm.style.display = "none";
+startProvidingForm.style.display  = "block";
 stopProvidingForm.style.display   = "none";
 
 var startProvidingSubmit      = document.getElementById("startProvidingSubmit");
-var updateProviderSubmit     = document.getElementById("updateProviderSubmit");
 var stopProvidingSubmit       = document.getElementById("stopProvidingSubmit");
-   
-var startProvidingTime        = document.getElementById("startProvidingTime");
-var updateProviderTime       = document.getElementById("updateProviderTime");
-   
-var startProvidingAcc         = document.getElementById("startProvidingAccuracy");
-var updateProviderAcc        = document.getElementById("updateProviderAccuracy");
-   
-var startProvidingCost        = document.getElementById("startProvidingCost");
-var updateProviderCost       = document.getElementById("updateProviderCost");
-   
-var startActionSel       = document.getElementById("startActionSel");
-var updateActionSel      = document.getElementById("updateActionSel");
-var stopActionSel        = document.getElementById("stopActionSel");
-var noneActionSel        = document.getElementById("noneActionSel");
+
+var balanceText = document.getElementById('balanceText');
    
 var pendingPoolSel       = document.getElementById("pendingPoolSel");
 var providerPoolSel      = document.getElementById("providerPoolSel");
@@ -62,71 +47,17 @@ historyContainer.style.display   = "none";
 submitPassword.addEventListener("click", (event)=>{
     event.preventDefault();
     passHold = passwordVal.value;
-    console.log(passHold); //MAKE SURE TO REMOVE EVENTUALLY
     passwordContainer.style.display = "none";
 });
 
 //listeners
 startProvidingSubmit.addEventListener("click", ()=>{ 
     event.preventDefault();
-    // console.log(startProvidingTime.value)
-    // console.log(startProvidingAcc.value)
-    // console.log(startProvidingCost.value)
-    // console.log(startProvidingFile.value)
-    startProviding(startProvidingTime.value , startProvidingAcc.value , startProvidingCost.value )     
-});
-updateProviderSubmit.addEventListener("click", ()=>{ 
-    event.preventDefault();
-    // console.log(updateProvidingTime.value)
-    // console.log(updateProvidingAcc.value)
-    // console.log(updateProvidingCost.value)
-    // console.log(updateProvidingFile.value)
-    updateProvider(updateProviderTime.value , updateProviderAcc.value , updateProviderCost.value )    
+    startProviding()     
 });
 stopProvidingSubmit.addEventListener("click", ()=>{ 
     event.preventDefault();
     stopProviding();
-});
-
-startActionSel.addEventListener("click", ()=>{
-    event.preventDefault();
-    startProvidingForm.style.display  = "block";
-    updateProviderForm.style.display = "none";
-    stopProvidingForm.style.display   = "none";
-    $("#startActionSel").addClass("selected");
-    $("#updateActionSel").removeClass("selected");
-    $("#stopActionSel").removeClass("selected");
-    $("#noneActionSel").removeClass("selected");
-});
-updateActionSel.addEventListener("click", ()=>{
-    event.preventDefault();
-    startProvidingForm.style.display  = "none";
-    updateProviderForm.style.display = "block";
-    stopProvidingForm.style.display   = "none";
-    $("#startActionSel").removeClass("selected");
-    $("#updateActionSel").addClass("selected");
-    $("#stopActionSel").removeClass("selected");
-    $("#noneActionSel").removeClass("selected");
-});
-stopActionSel.addEventListener("click", ()=>{
-    event.preventDefault();
-    startProvidingForm.style.display  = "none";
-    updateProviderForm.style.display = "none";
-    stopProvidingForm.style.display   = "block";
-    $("#startActionSel").removeClass("selected");
-    $("#updateActionSel").removeClass("selected");
-    $("#stopActionSel").addClass("selected");
-    $("#noneActionSel").removeClass("selected");
-});
-noneActionSel.addEventListener("click", ()=>{
-    event.preventDefault();
-    startProvidingForm.style.display  = "none";
-    updateProviderForm.style.display = "none";
-    stopProvidingForm.style.display   = "none";
-    $("#startActionSel").removeClass("selected");
-    $("#updateActionSel").removeClass("selected");
-    $("#stopActionSel").removeClass("selected");
-    $("#noneActionSel").addClass("selected");
 });
 
 pendingPoolSel.addEventListener("click", ()=>{
@@ -204,7 +135,6 @@ nonePoolSel.addEventListener("click", ()=>{
 
 //Runs when page loads
 window.onload = function() { 
-    this.updateProviderSubmit.disabled = true;
     this.stopProvidingSubmit.disabled = true;
     getAddresses(); // run loadAddr when page loads
     loadAddr();
@@ -313,6 +243,9 @@ setInterval(function update(){
         getPools();
         getHistory();
         loadHistory();
+        getBalance();
+        getRating();
+        getStatus();
     }
 },5000);
 
@@ -333,6 +266,45 @@ function getAddresses(){
         }
     });
 }
+function getBalance() {
+    $.ajaxSetup({async: doasync});  
+    $.ajax({     
+        type: "GET",
+        url: baseurl + '/balance',
+        success: function (result) {
+            console.log(result);
+            var balance = result.Balance;
+            balanceText.innerText = "Balance: " + balance;
+        }
+    });
+}
+
+function getRating() {
+    $.ajaxSetup({async: doasync});  
+    $.ajax({     
+        type: "GET",
+        url: baseurl + '/rating',
+        success: function (result) {
+            console.log(result);
+            var rating = result.Rating;
+            ratingText.innerText = "Rating: " + rating;
+        }
+    });
+}
+
+function getStatus() {
+    $.ajaxSetup({async: doasync});  
+    $.ajax({     
+        type: "GET",
+        url: baseurl + '/status',
+        success: function (result) {
+            console.log(result);
+            var status = result.Status;
+            statusText.innerText = "Status: " + status;
+        }
+    });
+}
+
 function getPools(){
     $.ajaxSetup({async: doasync});  
     $.ajax({     
@@ -386,11 +358,8 @@ function getHistory(){
     });
 }
 
-function startProviding(startTime, startAccuracy, startCost) {
+function startProviding() {
     var data = {
-        time: startTime,
-        accuracy: startAccuracy,
-        cost: startCost,
         Account: address,
         password: passHold
     };
@@ -405,28 +374,9 @@ function startProviding(startTime, startAccuracy, startCost) {
         success: function (result) {
             console.log(result);
             startProvidingSubmit.disabled = true; //enable/disable appropriate buttons
-            updateProviderSubmit.disabled = false;
             stopProvidingSubmit.disabled = false;
-        }
-    });
-}
-
-function updateProvider(updateTime, updateAccuracy, updateCost) {
-    var data = {
-        time: updateTime,
-        accuracy: updateAccuracy,
-        cost: updateCost
-    };
-    $.ajaxSetup({ async: doasync });
-    $.ajax({
-        type: "POST",
-        url: baseurl + '/updateProvider',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: JSON.stringify(data), //this is the sent json data
-        success: function (result) {
-            console.log(result);
+            startProvidingForm.style.display = "none";
+            stopProvidingForm.style.display = "block";
         }
     });
 }
@@ -447,8 +397,9 @@ function stopProviding() {
         success: function (result) {
             console.log(result);
             startProvidingSubmit.disabled = false; //enable/disable appropriate buttons
-            updateProviderSubmit.disabled = true;
             stopProvidingSubmit.disabled = true;
+            startProvidingForm.style.display = "block";
+            stopProvidingForm.style.display = "none";
         }
     });
 }
