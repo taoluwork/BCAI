@@ -23,32 +23,15 @@ var passwordVal       = document.getElementById("passwordVal");
 var submitPassword    = document.getElementById("submitPassword");
 
 var startTaskForm     = document.getElementById("startTaskForm");
-var updateTaskForm    = document.getElementById("updateTaskForm");
 var stopTaskForm      = document.getElementById("stopTaskForm");
-startTaskForm.style.display  = "none";
-updateTaskForm.style.display = "none";
+
+startTaskForm.style.display  = "block";
 stopTaskForm.style.display   = "none";
 
 var startTaskSubmit      = document.getElementById("startTaskSubmit");
-var updateTaskSubmit     = document.getElementById("updateTaskSubmit");
 var stopTaskSubmit       = document.getElementById("stopTaskSubmit");
    
-var startTaskTime        = document.getElementById("startTaskTime");
-var updateTaskTime       = document.getElementById("updateTaskTime");
-   
-var startTaskAcc         = document.getElementById("startTaskAccuracy");
-var updateTaskAcc        = document.getElementById("updateTaskAccuracy");
-   
-var startTaskCost        = document.getElementById("startTaskCost");
-var updateTaskCost       = document.getElementById("updateTaskCost");
-   
 var startTaskFile        = document.getElementById("startTaskFilePath");
-var updateTaskFile       = document.getElementById("updateTaskFilePath");
-   
-var startActionSel       = document.getElementById("startActionSel");
-var updateActionSel      = document.getElementById("updateActionSel");
-var stopActionSel        = document.getElementById("stopActionSel");
-var noneActionSel        = document.getElementById("noneActionSel");
    
 var pendingPoolSel       = document.getElementById("pendingPoolSel");
 var providerPoolSel      = document.getElementById("providerPoolSel");
@@ -65,70 +48,16 @@ historyContainer.style.display   = "none";
 submitPassword.addEventListener("click", (event)=>{
     event.preventDefault();
     passHold = passwordVal.value;
-    console.log(passHold); //MAKE SURE TO REMOVE EVENTUALLY
     passwordContainer.style.display = "none";
 });
 
 startTaskSubmit.addEventListener("click", (event)=>{ 
     event.preventDefault();
-    // console.log(startTaskTime.value)
-    // console.log(startTaskAcc.value)
-    // console.log(startTaskCost.value)
-    // console.log(startTaskFile.value)
-    startTask(startTaskTime.value , startTaskAcc.value , startTaskCost.value, startTaskFile.value )
-});
-updateTaskSubmit.addEventListener("click", ()=>{ 
-    event.preventDefault();
-    // console.log(updateTaskTime.value)
-    // console.log(updateTaskAcc.value)
-    // console.log(updateTaskCost.value)
-    // console.log(updateTaskFile.value)
-    updateTask(updateTaskTime.value , updateTaskAcc.value , updateTaskCost.value, updateTaskFile.value )    
+    startTask(startTaskFile.value )
 });
 stopTaskSubmit.addEventListener("click", ()=>{ 
     event.preventDefault();
     stopTask()
-});
-
-startActionSel.addEventListener("click", ()=>{
-    event.preventDefault();
-    startTaskForm.style.display  = "block";
-    updateTaskForm.style.display = "none";
-    stopTaskForm.style.display   = "none";
-    $("#startActionSel").addClass("selected");
-    $("#updateActionSel").removeClass("selected");
-    $("#stopActionSel").removeClass("selected");
-    $("#noneActionSel").removeClass("selected");
-});
-updateActionSel.addEventListener("click", ()=>{
-    event.preventDefault();
-    startTaskForm.style.display  = "none";
-    updateTaskForm.style.display = "block";
-    stopTaskForm.style.display   = "none";
-    $("#startActionSel").removeClass("selected");
-    $("#updateActionSel").addClass("selected");
-    $("#stopActionSel").removeClass("selected");
-    $("#noneActionSel").removeClass("selected");
-});
-stopActionSel.addEventListener("click", ()=>{
-    event.preventDefault();
-    startTaskForm.style.display  = "none";
-    updateTaskForm.style.display = "none";
-    stopTaskForm.style.display   = "block";
-    $("#startActionSel").removeClass("selected");
-    $("#updateActionSel").removeClass("selected");
-    $("#stopActionSel").addClass("selected");
-    $("#noneActionSel").removeClass("selected");
-});
-noneActionSel.addEventListener("click", ()=>{
-    event.preventDefault();
-    startTaskForm.style.display  = "none";
-    updateTaskForm.style.display = "none";
-    stopTaskForm.style.display   = "none";
-    $("#startActionSel").removeClass("selected");
-    $("#updateActionSel").removeClass("selected");
-    $("#stopActionSel").removeClass("selected");
-    $("#noneActionSel").addClass("selected");
 });
 
 pendingPoolSel.addEventListener("click", ()=>{
@@ -205,7 +134,6 @@ nonePoolSel.addEventListener("click", ()=>{
 
 //Runs when page loads
 window.onload = function() { 
-    this.updateTaskSubmit.disabled = true;
     this.stopTaskSubmit.disabled = true;
     getAddresses(); // run loadAddr when page loads
     loadAddr();
@@ -386,11 +314,8 @@ function getHistory(){
         }
     });
 }
-function startTask(startTime, startAccuracy, startCost, startFile){
+function startTask(startFile){
     var data = {
-        time: startTime,
-        accuracy: startAccuracy,
-        cost: startCost,
         file: startFile,
         Account: address,
         password: passHold
@@ -406,32 +331,13 @@ function startTask(startTime, startAccuracy, startCost, startFile){
         success: function (result) {
             // console.log(result);
             startTaskSubmit.disabled = true; //enable/disable appropriate buttons
-            updateTaskSubmit.disabled = false;
             stopTaskSubmit.disabled = false;
+            startTaskForm.style.display = "none";
+            startTaskForm.style.display = "block";
         }
     });
 }
-function updateTask(updateTime, updateAccuracy, updateCost, updateFile){
-    var data = {
-        time: updateTime,
-        accuracy: updateAccuracy,
-        cost: updateCost,
-        file: updateFile,
-        Account: address
-      };
-    $.ajaxSetup({async: doasync});  
-    $.ajax({     
-        type: "POST",
-        url: baseurl + '/updateTask',
-        headers: {
-            'Content-Type':'application/json'
-        },
-        data: JSON.stringify(data), //this is the sent json data
-        success: function (result) {
-            // console.log(result);
-        }
-    });
-}
+
 function stopTask(){
     var data = {
         Account: address,
@@ -448,8 +354,9 @@ function stopTask(){
         success: function (result) {
             console.log(result);
             startTaskSubmit.disabled = false; //enable/disable appropriate buttons
-            updateTaskSubmit.disabled = true;
             stopTaskSubmit.disabled = true;
+            startTaskForm.style.display = "block";
+            startTaskForm.style.display = "none";
         }
     });
 }

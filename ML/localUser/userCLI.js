@@ -866,7 +866,7 @@ function startTask(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                             while(!(fs.exists('./totalOrderAddress.txt'))){
-                                setTimeout(Function.prototype() ,5000);
+                                sleep.sleep(5);
                             }
                             fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
                                 ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
@@ -1237,9 +1237,6 @@ function listenWebsite(){
         outChooseVal = 0;
         var ABIstartRequest;
         var filename;
-        var maxTime = parseInt(req.body["time"])
-        var maxTarget = parseInt(req.body["accuracy"])
-        var minPrice = parseInt(req.body["cost"])
         filePath = req.body["file"];
         var pass = String(req.body["password"]) // Later set this to req.body["password"]
         //Get file path based on address passed
@@ -1298,20 +1295,20 @@ function listenWebsite(){
                         } 
                         readChunk();
 
-                        console.log(chalk.cyan("\nmaxtime: " + maxTime + "\nmaxTarget: " + maxTarget + "\nminPrice: " + minPrice));
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                        while(!(fs.exists('./totalOrderAddress.txt'))){
-                            setTimeout(Function.prototype() ,5000);
+                        while(!(fs.existsSync('totalOrderAddress.txt'))){
+                            sleep.sleep(5);
                         }
-                        fs.readFile('./totalOrderAddress.txt', function(err, ip){
+                        fs.readFile('totalOrderAddress.txt', 'utf8', function(err, ip){
                             ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
                         });
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         //console.log(ABIstartRequest);
                         const rawTransaction = {
-                            "from": String(req.body["Account"]),
+                            "from": userAddress,
                             "to": addr,
-                            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                            "value": web3.utils.toHex(web3.utils.toWei("0.01", "ether")),
                             "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
                             "gas": 5000000,
                             "chainId": 3,
@@ -1323,6 +1320,9 @@ function listenWebsite(){
                         .then(receipt => {
                             console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
                             prov = 1;
+                            var successJSON = {"name" : "startTask", "message" : "Started successfully"};
+                            res.header("Content-Type", 'application/json');
+                            res.send(successJSON); 
                         })
                         .then(() => {
                             try{
@@ -1410,7 +1410,7 @@ function listenWebsite(){
             var ABIstopRequest; //prepare abi for a function call
             ABIstopRequest = myContract.methods.stopRequest().encodeABI();
             const rawTransaction = {
-                "from": String(req.body["Account"]),
+                "from": userAddress,
                 "to": addr,
                 "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
                 "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
