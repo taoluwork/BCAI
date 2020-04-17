@@ -484,11 +484,6 @@ def createThreadsReq():
             resetReq()
 
             print("Result finished downloading.")
-            f = open('webpagestatus.txt', 'w') #clear
-            f.close()
-            f = open('webpagestatus.txt', 'w')
-            f.write("Finished downloading result file. Please check it then provide a rating.")
-            f.close()
 
         #totalOrder.txt not yet received (Step 1)
         elif flagThree: 

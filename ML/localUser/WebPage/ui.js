@@ -6,16 +6,43 @@ var providerPool = [];
 var providingPool = [];
 var validatorPool = [];
 var historyPool = [];
+var choices = [];
 var currentPoolType = "none";
 var baseurl = "http://localhost:3000";
 var address = "";
 var passHold= "";
 var doasync = true;
 
+//Status from CLI webpagestatus.txt
+var status = undefined;
+//Make sure after it's submitted, doesn't make container visible again before status changed
+var provChoiceShown = false;
+var valChoiceShown = false;
+var ratingShown = false;
+
 //get elements
 var addressBar        = document.getElementById("AddressBar");
 var poolBody          = document.getElementById("poolBody");
 var historyBody       = document.getElementById("historyBody");
+
+var provChoiceContainer     = document.getElementById("provChoiceContainer");
+var provChoiceTable         = document.getElementById("provChoiceTable");
+var provChoiceBody          = document.getElementById("provChoiceBody");
+var provChoiceValue         = document.getElementById("provChoiceValue");
+var provChoiceSubmit        = document.getElementById("provChoiceSubmit");
+provChoiceContainer.style.display = "none";
+
+var valChoiceContainer     = document.getElementById("valChoiceContainer");
+var valChoiceTable         = document.getElementById("valChoiceTable");
+var valChoiceBody          = document.getElementById("valChoiceBody");
+var valChoiceValue         = document.getElementById("valChoiceValue");
+var valChoiceSubmit        = document.getElementById("valChoiceSubmit");
+valChoiceContainer.style.display = "none";
+
+var ratingContainer     = document.getElementById("ratingContainer");
+var ratingValue         = document.getElementById("ratingValue");
+var ratingSubmit        = document.getElementById("ratingSubmit");
+ratingContainer.style.display = "none";
 
 var passwordContainer = document.getElementById("passwordContainer");
 passwordContainer.style.display = "none";
@@ -61,6 +88,24 @@ startTaskSubmit.addEventListener("click", (event)=>{
 stopTaskSubmit.addEventListener("click", ()=>{ 
     event.preventDefault();
     stopTask()
+});
+
+provChoiceSubmit.addEventListener("click", ()=>{ 
+    event.preventDefault();
+    chooseProvider(provChoiceValue.value);
+    
+});
+
+valChoiceSubmit.addEventListener("click", ()=>{ 
+    event.preventDefault();
+    chooseValidator(valChoiceValue.value);
+    
+});
+
+ratingSubmit.addEventListener("click", ()=>{ 
+    event.preventDefault();
+    rate(ratingValue.value);
+    
 });
 
 pendingPoolSel.addEventListener("click", ()=>{
@@ -189,6 +234,51 @@ function loadAddr(){
     }
 }
 
+function loadProvChoices() {
+    var provchildElem = provChoiceBody.lastElementChild;
+    var valchildElem = valChoiceBody.lastElementChild;
+
+    provChoiceTable.deleterow
+
+provChoiceBody.deleter
+    //Clear current rows, excluding header row
+    for(var i = 1; i < provChoiceTable.rows.length; i++) {
+        provChoiceTable.deleteRow(1);
+        valChoiceTable.deleteRow(1);
+    }
+
+    for(var i = 0 ; i < choices.length; i++){
+
+        var row      = document.createElement("TR");
+        var headElem = document.createElement("TH");
+        headElem.innerHTML = i+1;
+        headElem.scope = "row";
+        
+        var reqAddr  = document.createElement("TD");
+        reqAddr.innerHTML =  choices[0];
+        
+        row.appendChild(headElem);
+        row.appendChild(reqAddr);
+
+        provChoiceBody.appendChild(row);
+    }
+    for(var i = 0 ; i < choices.length; i++){
+
+        var row      = document.createElement("TR");
+        var headElem = document.createElement("TH");
+        headElem.innerHTML = i+1;
+        headElem.scope = "row";
+        
+        var reqAddr  = document.createElement("TD");
+        reqAddr.innerHTML =  choices[0];
+        
+        row.appendChild(headElem);
+        row.appendChild(reqAddr);
+
+        valChoiceBody.appendChild(row);
+    }
+}
+
 function loadPool(pool){
 
     var childElem = poolBody.lastElementChild;
@@ -247,6 +337,9 @@ setInterval(function update(){
         loadHistory();
         getBalance();
         getStatus();
+        checkStatus();
+        getProvChoices();
+        loadProvChoices();
     }
 },5000);
 
@@ -281,6 +374,29 @@ function getBalance() {
     });
 }
 
+
+/* Statuses should occur in the following order:
+1) Set by execute.py when hosting starts
+    Waiting for file to finish hosting.
+    [Percentages of files hosting]
+2) Set by execute.py when hosting finishes
+***Will indicate to this page that it should open the provider choosing form
+    Finished hosting file. Please choose a provider, then we will start sending the file.
+    [Percentages of file transfer]
+3) Set by execute.py when /finish signal received
+    Provider downloaded file. Once they execute it, you must choose a validator.
+4) Set by userCLI.js once it's time to choose validator
+***Will indicate to this page that it should open the validator choosing form
+    Provider finished executing file. Please choose a validator.
+5) Set by execute.py once it starts downloading the file from the provider.
+    Downloading the result from the provider. This may take a while.
+6) Set by userCLI.js once a rating can go through
+***Will indicate to this page that it should open the rating/finalize form
+    Finished downloading result file. Please check it then provide a rating.
+7) Set by userCLI.js once request is finalized
+    Rating submitted. Your task is completed.
+*/
+
 function getStatus() {
     $.ajaxSetup({async: doasync});  
     $.ajax({     
@@ -288,8 +404,97 @@ function getStatus() {
         url: baseurl + '/status',
         success: function (result) {
             console.log(result);
-            var status = result.Status;
-            statusText.innerText = "Status: " + status;
+            status = result.Status;
+            statusText.innerText = "Status:\n" + status;
+        }
+    });
+}
+
+function checkStatus() {
+    if(status.includes("Please choose a provider") && !provChoiceShown) {
+        provChoiceContainer.style.display = "block";
+    }
+    else if(status.includes("Please choose a validator") && !valChoiceShown) {
+        valChoiceContainer.style.display = "block";
+    }
+    else if(status.includes("Please check it then provide a rating") && !ratingShown) {
+        ratingContainer.style.display = "block";
+    }
+}
+
+function getProvChoices() {
+    $.ajaxSetup({async: doasync});  
+    $.ajax({     
+        type: "GET",
+        url: baseurl + '/getProvChoices',
+        success: function (result) {
+            console.log(result);
+            choices = result.Choices;
+        }
+    });
+}
+
+function chooseProvider(choice){
+    //Send value of address and rating row
+    var choicevalue = provChoiceTable.rows[choice].cells[1].innerText;
+    var data = {
+        choice: choicevalue
+    };
+    $.ajaxSetup({async: doasync});  
+    $.ajax({     
+        type: "POST",
+        url: baseurl + '/chooseProvider',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        data: JSON.stringify(data), //this is the sent json data
+        success: function (result) {
+            // console.log(result);
+            provChoiceSubmit.disabled = true; //enable/disable appropriate buttons
+            provChoiceContainer.style.display = "none";
+        }
+    });
+}
+
+function chooseValidator(choice){
+    //Send value of address and rating row
+    var choicevalue = provChoiceTable.rows[choice].cells[1].innerText;
+    var data = {
+        choice: choicevalue
+    };
+    $.ajaxSetup({async: doasync});  
+    $.ajax({     
+        type: "POST",
+        url: baseurl + '/chooseValidator',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        data: JSON.stringify(data), //this is the sent json data
+        success: function (result) {
+            // console.log(result);
+            valChoiceSubmit.disabled = true; //enable/disable appropriate buttons
+            valChoiceContainer.style.display = "none";
+        }
+    });
+}
+
+function rate(rating){
+    //Send value of address and rating row
+    var data = {
+        rating: rating
+    };
+    $.ajaxSetup({async: doasync});  
+    $.ajax({     
+        type: "POST",
+        url: baseurl + '/rate',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        data: JSON.stringify(data), //this is the sent json data
+        success: function (result) {
+            // console.log(result);
+            ratingSubmit.disabled = true; //enable/disable appropriate buttons
+            ratingContainer.style.display = "none";
         }
     });
 }

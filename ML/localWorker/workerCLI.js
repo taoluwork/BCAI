@@ -963,7 +963,7 @@ function listenWebsite(){
     });
     console.log(chalk.cyan('\nWebpage is now open check your default browser...\n'))
     var app = express();
-    app.listen(3000);
+    app.listen(3001);
     //json of all available accounts for the user
     app.use(express.json()); //Use to read json of incoming request
 

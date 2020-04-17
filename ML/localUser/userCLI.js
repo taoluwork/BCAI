@@ -1077,6 +1077,17 @@ checkEvents = async () => {
             //console.log("\n validation complete move into ask for rating \n");
 
             canRate = true;
+
+            //Write to status txt for web page to indicate it's time to choose validator
+            //First clear file
+            fs.truncate('./webpagestatus.txt', 0, function(err){
+                if(err) throw err;
+            })
+            //Write msg to it
+            fs.appendFile('./webpagestatus.txt', "Finished downloading result file. Please check it then provide a rating.", function (err){
+                if (err) throw err;
+            })
+
         }
         if (pastEvents[i].returnValues && hex2ascii(pastEvents[i].returnValues.info) === "Validator Signed" && userAddress === pastEvents[i].returnValues.provAddr){
             //console.log("\n validator signed \n");
@@ -1093,6 +1104,18 @@ checkEvents = async () => {
             reqCompCount+=1;
                 //console.log("\nYou must now select a validator for validation\n");
             validationSelectFlag = true;
+
+            //Write to status txt for web page to indicate it's time to choose validator
+            //First clear file
+            fs.truncate('./webpagestatus.txt', 0, function(err){
+                if(err) throw err;
+            })
+            //Write msg to it
+            fs.appendFile('./webpagestatus.txt', "Provider finished executing file. Please choose a validator.", function (err){
+                if (err) throw err;
+            })
+
+
          // console.log("Awaiting validation", "You have completed a task an are waiting for validation");
 
          //requestIP = hex2ascii(pastEvents[i].returnValues.extra);
@@ -1205,6 +1228,131 @@ function listenWebsite(){
             var statusJSON = {"Status" : data.toString()};
             res.header("Content-Type", 'application/json');
             res.send(statusJSON);
+        })
+    })
+
+    //Get provider choices for choose provider and choose validator forms
+    app.get('/getProvChoices', function(req, res) {
+        setRatingVars();
+        var displayProvList = [];
+        var displayString = "";
+        for(var i = 0; i<rateProvs.length; i++){
+            displayString = rateProvs[i] + "- Rating: " + ratings[i];
+            displayProvList.push(displayString);
+        }
+        var choicesJSON = {"Choices" : displayProvList};
+        res.header("Content-Type", 'application/json');
+        res.send(choicesJSON);
+    })
+
+    //Web page choose provider
+    app.post('/chooseProvider', function(req, res) {
+
+        var choice = req.body["choice"];
+
+        console.log(chalk.cyan("\nYou have chosen ", choice, " as your provider\n"));
+        fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to provider\n", function (err){
+            if (err) throw err;
+        })
+        //address is chars 0-41
+        var chooseProvAddr = choice.slice(0, 42).toLowerCase();
+        console.log(chooseProvAddr)
+        var ABIChooseProvider; //prepare abi for a function call
+        ABIChooseProvider = myContract.methods.chooseProvider(chooseProvAddr).encodeABI();
+        const rawTransaction = {
+            "from": userAddress,
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIChooseProvider
+        }
+
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+            prov = 1;
+
+            var successJSON = {"name" : "chooseProvider", "message" : "Provider chosen."};
+            res.header("Content-Type", 'application/json');
+            res.send(successJSON); 
+        })
+    })
+
+    //Web page choose validator
+    app.post('/chooseValidator', function(req, res) {
+
+        var choice = req.body["choice"];
+
+        console.log(chalk.cyan("\nYou have chosen ", choice, " as your validator\n"));
+        fs.appendFile('./log.txt', "\n" + String(Date(Date.now())) + " Request has been assigned to validator\n", function (err){
+            if (err) throw err;
+        })
+        //address is chars 0-41
+        var chooseProvAddr = choice.slice(0, 42).toLowerCase();
+        var ABIChooseProvider; //prepare abi for a function call
+        ABIChooseProvider = myContract.methods.chooseProvider(chooseProvAddr).encodeABI();
+        const rawTransaction = {
+            "from": userAddress,
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIChooseProvider
+        }
+
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            console.log(chalk.cyan("\n\nYour request has been submitted for validation... \n\n"));
+            prov = 1;
+
+            var successJSON = {"name" : "chooseProvider", "message" : "Provider chosen."};
+            res.header("Content-Type", 'application/json');
+            res.send(successJSON); 
+        })
+    })
+
+    //Web page finalize request and rate
+    app.post('/rate', function(req, res) {
+
+        var rating = req.body["rating"];
+
+        var ABIfinalizeRequest; //prepare abi for a function call
+        ABIfinalizeRequest = myContract.methods.finalizeRequest(userAddress, true, rating).encodeABI();
+        const rawTransaction = {
+            "from": userAddress,
+            "to": addr,
+            "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+            "gas": 5000000,
+            "chainId": 3,
+            "data": ABIfinalizeRequest
+        }
+
+        decryptedAccount.signTransaction(rawTransaction)
+        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+        .then(receipt => {
+            //console.log(chalk.cyan("\n\nTransaction receipt: "), receipt)
+            console.log(chalk.cyan("\n\nYour rating has gone through. Your task is now complete...\n"))
+
+            //Write to status txt for web page to indicate it's time to choose validator
+            //First clear file
+            fs.truncate('./webpagestatus.txt', 0, function(err){
+                if(err) throw err;
+            })
+            //Write msg to it
+            fs.appendFile('./webpagestatus.txt', "Rating submitted. Your task is completed.", function (err){
+                if (err) throw err;
+            })
+
+            var successJSON = {"name" : "finalizeRequest", "message" : "Finished task."};
+            res.header("Content-Type", 'application/json');
+            res.send(successJSON); 
+
         })
     })
 
