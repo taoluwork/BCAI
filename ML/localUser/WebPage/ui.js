@@ -32,6 +32,9 @@ var startTaskSubmit      = document.getElementById("startTaskSubmit");
 var stopTaskSubmit       = document.getElementById("stopTaskSubmit");
    
 var startTaskFile        = document.getElementById("startTaskFilePath");
+
+var balanceText = document.getElementById('balanceText');
+var statusText = document.getElementById('statusText');
    
 var pendingPoolSel       = document.getElementById("pendingPoolSel");
 var providerPoolSel      = document.getElementById("providerPoolSel");
@@ -242,6 +245,8 @@ setInterval(function update(){
         getPools();
         getHistory();
         loadHistory();
+        getBalance();
+        getStatus();
     }
 },5000);
 
@@ -262,6 +267,33 @@ function getAddresses(){
         }
     });
 }
+
+function getBalance() {
+    $.ajaxSetup({async: doasync});  
+    $.ajax({     
+        type: "GET",
+        url: baseurl + '/balance',
+        success: function (result) {
+            console.log(result);
+            var balance = result.Balance;
+            balanceText.innerText = "Balance: " + balance;
+        }
+    });
+}
+
+function getStatus() {
+    $.ajaxSetup({async: doasync});  
+    $.ajax({     
+        type: "GET",
+        url: baseurl + '/status',
+        success: function (result) {
+            console.log(result);
+            var status = result.Status;
+            statusText.innerText = "Status: " + status;
+        }
+    });
+}
+
 function getPools(){
     $.ajaxSetup({async: doasync});  
     $.ajax({     

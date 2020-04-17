@@ -1183,6 +1183,30 @@ function listenWebsite(){
         res.send(accountJSON);
     })
 
+    //Web page get balance
+    app.get('/balance', function(req, res) {
+        if(userAddress) {
+            var balancestring = "";
+            web3.eth.getBalance(userAddress)
+            .then((balance) => {
+                balancestring = web3.utils.fromWei(String(balance), 'ether') + " Ether"
+                var balanceJSON = {"Balance" : balancestring};
+                res.header("Content-Type", 'application/json');
+                res.send(balanceJSON);
+            })
+            .catch((err)=>{console.log(err)});
+        }
+    })
+
+    //Web page get status
+    app.get('/status', function(req, res) {
+        fs.readFile('./webpagestatus.txt', function read(err, data){
+            if (err) throw err;
+            var statusJSON = {"Status" : data.toString()};
+            res.header("Content-Type", 'application/json');
+            res.send(statusJSON);
+        })
+    })
 
     app.get('/pools', function(req, res) {
 
@@ -1301,70 +1325,70 @@ function listenWebsite(){
                         }
                         fs.readFile('totalOrderAddress.txt', 'utf8', function(err, ip){
                             ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
+                            const rawTransaction = {
+                                "from": userAddress,
+                                "to": addr,
+                                "value": web3.utils.toHex(web3.utils.toWei("0.01", "ether")),
+                                "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                                "gas": 5000000,
+                                "chainId": 3,
+                                "data": ABIstartRequest
+                            }
+                                                    
+                            decryptedAccount.signTransaction(rawTransaction)
+                            .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                            .then(receipt => {
+                                console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+                                prov = 1;
+                                var successJSON = {"name" : "startTask", "message" : "Started successfully"};
+                                res.header("Content-Type", 'application/json');
+                                res.send(successJSON); 
+                            })
+                            .then(() => {
+                                try{
+                                    web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                                        if(err) console.log(chalk.red(err), result);
+                                        checkEvents();
+                                    })
+                                }
+                                catch(error){
+                                    alert(
+                                        `Failed to load web3, accounts, or contract. Check console for details.`
+                                    );
+                                    console.log("\n", chalk.red(err), "\n");
+                                    app.get('/errors', function(req, res){
+                                        var errorJSON = {"name" : "startTask", "message" : "Failed to load web3"};
+                                        res.header("Content-Type", 'application/json');
+                                        res.send(errorJSON);  
+                                    })
+                                }
+
+
+                            })
+                            .catch(err => {
+                                if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
+                                {
+                                    console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
+                                    res.send(JSON.stringify({"Success": 0, "Error":"Not enough ether"}));
+                                    app.get('/errors', function(req, res){
+                                        var errorJSON = {"name" : "startTask", "message" : "This keystore account doesn't have enough Ether... Add funds or try a different account..."};
+                                        res.header("Content-Type", 'application/json');
+                                        res.send(errorJSON);  
+                                    })
+                                }
+                                else{
+                                    console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
+                                    app.get('/errors', function(req, res){
+                                        var errorJSON = {"name" : "startTask", "message" : "There was an error when attempting to start task"};
+                                        res.header("Content-Type", 'application/json');
+                                        res.send(errorJSON);  
+                                    })
+                                }
+                            });
                         });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         //console.log(ABIstartRequest);
-                        const rawTransaction = {
-                            "from": userAddress,
-                            "to": addr,
-                            "value": web3.utils.toHex(web3.utils.toWei("0.01", "ether")),
-                            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-                            "gas": 5000000,
-                            "chainId": 3,
-                            "data": ABIstartRequest
-                        }
-                    
-                        decryptedAccount.signTransaction(rawTransaction)
-                        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-                        .then(receipt => {
-                            console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
-                            prov = 1;
-                            var successJSON = {"name" : "startTask", "message" : "Started successfully"};
-                            res.header("Content-Type", 'application/json');
-                            res.send(successJSON); 
-                        })
-                        .then(() => {
-                            try{
-                                web3.eth.subscribe('newBlockHeaders', (err, result) => {
-                                    if(err) console.log(chalk.red(err), result);
-                                    checkEvents();
-                                })
-                            }
-                            catch(error){
-                                alert(
-                                    `Failed to load web3, accounts, or contract. Check console for details.`
-                                );
-                                console.log("\n", chalk.red(err), "\n");
-                                app.get('/errors', function(req, res){
-                                    var errorJSON = {"name" : "startTask", "message" : "Failed to load web3"};
-                                    res.header("Content-Type", 'application/json');
-                                    res.send(errorJSON);  
-                                })
-                            }
-
-
-                        })
-                        .catch(err => {
-                            if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
-                            {
-                                console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                                res.send(JSON.stringify({"Success": 0, "Error":"Not enough ether"}));
-                                app.get('/errors', function(req, res){
-                                    var errorJSON = {"name" : "startTask", "message" : "This keystore account doesn't have enough Ether... Add funds or try a different account..."};
-                                    res.header("Content-Type", 'application/json');
-                                    res.send(errorJSON);  
-                                })
-                            }
-                            else{
-                                console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                                app.get('/errors', function(req, res){
-                                    var errorJSON = {"name" : "startTask", "message" : "There was an error when attempting to start task"};
-                                    res.header("Content-Type", 'application/json');
-                                    res.send(errorJSON);  
-                                })
-                            }
-                        });
                     } 
                     else{
                         console.log("\n", chalk.red("Error: No file found with file path..."), "\n")

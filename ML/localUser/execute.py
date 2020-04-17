@@ -118,16 +118,29 @@ def getTotalAddr():
                     flag = False 
         time.sleep(5)
     #Write address to file
-    print("Finished hosting. Once you choose a provider, we will start sending them the file.\r")
     f = open('totalOrderAddress.txt', 'w')
     f.write(totalAddr)
+    f.close()
+
+    print("Finished hosting. Once you choose a provider, we will start sending them the file.\r")
+    f = open('webpagestatus.txt', 'w') #clear
+    f.close()
+    f = open('webpagestatus.txt', 'w')
+    f.write("Finished hosting file. Please choose a provider, then we will start sending the file.")
     f.close()
 
 def threadRestarter():
     #for i in range(0,threads):
         #orderAddr.append(0)
     global orderAddr
+
     print("Hosting file.\r")
+    f = open('webpagestatus.txt', 'w') #clear
+    f.close()
+    f = open('webpagestatus.txt', 'w')
+    f.write("Waiting for file to finish hosting.")
+    f.close()
+
     while(True):
         #global orderAddr
         #print("addrs:"+ str(orderAddr))
@@ -206,6 +219,17 @@ def threadRestarter():
             except: pass
         print(toprint + "\r", end="") #recurrent character so it rewrites last line instead of making new lines
 
+        #only overwrite 2nd line
+        lines = open('webpagestatus.txt', 'r').readlines()
+        if(len(lines) == 1): #First time lines[1] does not exist so must append
+            lines.append('\n' + toprint)
+        else: #length 2
+            lines[1] = toprint
+        f = open('webpagestatus.txt', 'w') #clear
+        f.close()
+        f = open('webpagestatus.txt', 'w')
+        f.writelines(lines)
+        f.close()
 
         time.sleep(5)
 
@@ -389,6 +413,12 @@ def createThreadsReq():
         #Addresses written to file (Step 2)
         if os.path.isfile("totalOrder.txt") and flagTwo:
             print("Downloading file from host. This may take a while...")
+            f = open('webpagestatus.txt', 'w') #clear
+            f.close()
+            f = open('webpagestatus.txt', 'w')
+            f.write("Downloading the result from the provider. This may take a while.")
+            f.close()
+
             flagTwo = False
             #Need to make a thread for each address
             f = open("totalOrder.txt", 'r')
@@ -442,7 +472,8 @@ def createThreadsReq():
                 session.proxies['http'] = 'socks5h://localhost:9050'
                 session.proxies['https'] = 'socks5h://localhost:9050'
 
-                session.get(totalAddr + '/finish') #tell server finished downloading
+                session.get(totalAddr + '/finish') #tell server finished 
+                
             totalFile = open('image.zip', 'wb')
             for i in range(0, threads):
                 iterFile = open('image.zip' + str(i) + '.txt', 'rb')
@@ -451,6 +482,13 @@ def createThreadsReq():
             totalFile.close()
             flag = False
             resetReq()
+
+            print("Result finished downloading.")
+            f = open('webpagestatus.txt', 'w') #clear
+            f.close()
+            f = open('webpagestatus.txt', 'w')
+            f.write("Finished downloading result file. Please check it then provide a rating.")
+            f.close()
 
         #totalOrder.txt not yet received (Step 1)
         elif flagThree: 
@@ -555,6 +593,13 @@ def hostController(file):
             line = f.readline()
             while line != '':
                 if "/finish" in line :
+                    print("Provider finished downloading file.")
+                    f = open('webpagestatus.txt', 'w') #clear
+                    f.close()
+                    f = open('webpagestatus.txt', 'w')
+                    f.write("Provider downloaded file. Once they execute it, you must choose a validator.")
+                    f.close()
+
                     flag = False
                     try: #May or may not already be deleted
                         #errCorr._delete()
@@ -640,6 +685,7 @@ if __name__ == '__main__':
     while True:
         getMode()    
         if mode == 'user':
+            #Write webpagestatus.txt
             resetHost()
             hostController('image.zip')
             flag = True

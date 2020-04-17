@@ -31,6 +31,8 @@ var startProvidingSubmit      = document.getElementById("startProvidingSubmit");
 var stopProvidingSubmit       = document.getElementById("stopProvidingSubmit");
 
 var balanceText = document.getElementById('balanceText');
+var ratingText = document.getElementById('ratingText');
+var statusText = document.getElementById('statusText');
    
 var pendingPoolSel       = document.getElementById("pendingPoolSel");
 var providerPoolSel      = document.getElementById("providerPoolSel");

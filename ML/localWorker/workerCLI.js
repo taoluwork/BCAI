@@ -1040,7 +1040,7 @@ function listenWebsite(){
                 if (err) throw err;
                 fileContent = data;
                 //console.log(fileContent.toString('utf8'));
-                var statusstring = "Waited to be chosen as provider."
+                var statusstring = "Waiting to be chosen as provider."
                 if(fileContent.toString('utf8') === 'Ready') {
                     statusstring = "Hosting and Validating.";
                 }
