@@ -1318,7 +1318,7 @@ function listenWebsite(){
     //Web page finalize request and rate
     app.post('/rate', function(req, res) {
 
-        var rating = req.body["rating"];
+        var rating = parseInt(req.body["rating"]);
 
         var ABIfinalizeRequest; //prepare abi for a function call
         ABIfinalizeRequest = myContract.methods.finalizeRequest(userAddress, true, rating).encodeABI();
