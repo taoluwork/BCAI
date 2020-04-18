@@ -18,7 +18,7 @@ order   = []
 startTimes = []
 mainThread = None
 totalAddr = ''
-totalStartTime = 0
+totalStartTime = 0.0
 content = []
 for i in range(threads):
     content.append(b'')#inits list with threads number of empty byte arrays
@@ -34,7 +34,9 @@ def shareOrder():
     global totalStartTime
     while os.path.isfile('totalOrder.txt') != True:
         time.sleep(5)
+    print("about to set totalstarttime")
     totalStartTime = time.time()
+    print(totalStartTime)
     subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt"],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=True)
 def startShare(file, iter):
     #print(file + ":" + str(iter))
@@ -147,7 +149,7 @@ def threadRestarter():
         try:
             for i in range(0,len(startTimes)):
                 global orderAddr
-                if time.time() > startTimes[i] + 60 and orderAddr[i] == 0:
+                if time.time() > (startTimes[i] + 60) and orderAddr[i] == 0:
                     os.system('rm onionshare' + str(i) + '.txt')
                     #threadL[i]._delete()
                     threadL[i].terminate()
@@ -279,7 +281,7 @@ def totalThreadRestarter():
     global totalAddr
     global mainThread
     while (True):
-        if totalStartTime != 0 and time.time() > totalStartTime + 60 and totalAddr == '':
+        if totalStartTime != 0.0 and time.time() > (totalStartTime + 30) and totalAddr == '':
             os.system('rm onionshareOrder.txt')
             #restart thread
             #mainThread._delete()
@@ -293,11 +295,14 @@ def totalThreadRestarter():
             f.write("thread: for totalOrder has been restarted at:" + str(time.time()) + ' due to time issue\n')
             f.close()
 
-def resetHost():
+        time.sleep(5)
+
+def resetHost(resetStat):
     global threadL
     global orderAddr
     global order
     global startTimes
+    global totalStartTime
     global mode
     global lockModeAt
     global fileName
@@ -311,6 +316,7 @@ def resetHost():
     orderAddr = []
     order   = []
     startTimes = []
+    totalStartTime = 0.0
     mode = lockModeAt
     totalAddr = ''
     try:
@@ -319,6 +325,11 @@ def resetHost():
         pass
     fileName = ''
       
+    #only reset stat on startup
+    if(resetStat):
+        f = open('webpagestatus.txt', 'w') #clear
+        f.close()
+
     #new memory and command line reset
     os.system("reset")
     os.system("ps aux > ps.txt")
@@ -610,7 +621,7 @@ def hostController(file):
         #failThread._delete()
         failThread.terminate()
     except: pass
-    resetHost()
+    resetHost(False)
 
 def reqController():
     #failThread = threading.Thread(target=failingCheck)
@@ -681,7 +692,7 @@ if __name__ == '__main__':
         getMode()    
         if mode == 'user':
             #Write webpagestatus.txt
-            resetHost()
+            resetHost(True)
             hostController('image.zip')
             flag = True
             while flag:

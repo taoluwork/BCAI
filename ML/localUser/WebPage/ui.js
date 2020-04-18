@@ -413,12 +413,20 @@ function getStatus() {
 function checkStatus() {
     if(status.includes("Please choose a provider") && !provChoiceShown) {
         provChoiceContainer.style.display = "block";
+        provChoiceShown = true;
     }
     else if(status.includes("Please choose a validator") && !valChoiceShown) {
         valChoiceContainer.style.display = "block";
+        valChoiceShown = true;
     }
     else if(status.includes("Please check it then provide a rating") && !ratingShown) {
         ratingContainer.style.display = "block";
+        ratingShown = true;
+    }
+    else if(status.includes("Rating submitted")) { //reset flags after task is completed
+        provChoiceShown = false;
+        valChoiceShown = false;
+        ratingShown = false;
     }
 }
 
