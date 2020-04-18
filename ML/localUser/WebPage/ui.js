@@ -215,8 +215,13 @@ function loadProvChoices() {
     var valchildElem = valChoiceBody.lastElementChild;
     //Clear current rows, excluding header row
     for(var i = 1; i <= provChoiceTable.rows.length; i++) {
-        provChoiceTable.deleteRow(1);
-        valChoiceTable.deleteRow(1);
+        try {
+            provChoiceTable.deleteRow(1);
+            valChoiceTable.deleteRow(1);
+        }
+        catch(err) {
+
+        }
     }
 
     for(var i = 0 ; i < choices.length; i++){

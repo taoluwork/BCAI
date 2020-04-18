@@ -585,6 +585,13 @@ def reqController():
 def dockerExe():
     global mode
     time.sleep(30)
+
+    f = open('stat.txt', 'w')
+    f.close()
+    f = open('stat.txt', 'w')
+    f.write('Executing')
+    f.close()
+
     #this will load the image back into docker
     os.system("unzip image.zip")
     os.system("sudo docker load -i image.tgz")
@@ -640,6 +647,8 @@ def submitTask():
 
 
 if __name__ == '__main__':
+    f = open('mode.txt', 'w') #make sure mode is cleared on startup
+    f.close()
     while True:
         getMode()    
         if mode == 'user':
