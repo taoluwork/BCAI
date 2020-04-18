@@ -377,6 +377,7 @@ function checkStatus() {
         provChoiceShown = false;
         valChoiceShown = false;
         ratingShown = false;
+        taskSubmitted = false;
     }
 }
 

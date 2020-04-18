@@ -1,16 +1,4 @@
-Sat Apr 18 2020 15:48:10 GMT-0500 (CDT)
-Sat Apr 18 2020 15:51:36 GMT-0500 (CDT) Request has been validated
+Sat Apr 18 2020 17:03:20 GMT-0500 (CDT)
+Sat Apr 18 2020 17:15:40 GMT-0500 (CDT) Request has been assigned to provider
 
-Sat Apr 18 2020 15:53:38 GMT-0500 (CDT) Request has been validated
-
-Sat Apr 18 2020 15:53:39 GMT-0500 (CDT) Request has been assigned to provider
-
-Sat Apr 18 2020 15:55:22 GMT-0500 (CDT) Request has been assigned to provider
-
-Sat Apr 18 2020 15:55:39 GMT-0500 (CDT) Request has been assigned to provider
-
-Sat Apr 18 2020 15:57:39 GMT-0500 (CDT) Request has been assigned to provider
-
-Sat Apr 18 2020 16:14:16 GMT-0500 (CDT) Request has been completed. Needs validation
-
-Sat Apr 18 2020 16:14:47 GMT-0500 (CDT) Request has been assigned to validator
+Sat Apr 18 2020 17:15:50 GMT-0500 (CDT) Request has been validated
