@@ -406,7 +406,6 @@ def getShareWithoutIter(address):
     session.proxies = {}
     session.proxies['http'] = 'socks5h://localhost:9050'
     session.proxies['https'] = 'socks5h://localhost:9050'
-
     res = session.get(address) #download file
     open("totalOrder.txt", 'wb').write(res.content)
     
@@ -689,7 +688,6 @@ if __name__ == '__main__':
     while True:
         getMode()    
         if mode == 'user':
-            #Write webpagestatus.txt
             resetHost(True)
             hostController('image.zip')
             flag = True
