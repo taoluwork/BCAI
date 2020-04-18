@@ -34,9 +34,7 @@ def shareOrder():
     global totalStartTime
     while os.path.isfile('totalOrder.txt') != True:
         time.sleep(5)
-    print("about to set totalstarttime")
     totalStartTime = time.time()
-    print(totalStartTime)
     subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt"],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=True)
 def startShare(file, iter):
     #print(file + ":" + str(iter))
@@ -125,11 +123,11 @@ def getTotalAddr():
     f.close()
 
     print("Finished hosting. Once you choose a provider, we will start sending them the file.\r")
-    f = open('webpagestatus.txt', 'w') #clear
-    f.close()
-    f = open('webpagestatus.txt', 'w')
-    f.write("Finished hosting file. Please choose a provider, then we will start sending the file.")
-    f.close()
+    f2 = open('webpagestatus.txt', 'w') #clear
+    f2.close()
+    f2 = open('webpagestatus.txt', 'w')
+    f2.write("Finished hosting file. Please choose a provider, then we will start sending the file.")
+    f2.close()
 
 def threadRestarter():
     #for i in range(0,threads):
@@ -137,11 +135,11 @@ def threadRestarter():
     global orderAddr
 
     print("Hosting file.\r")
-    f = open('webpagestatus.txt', 'w') #clear
-    f.close()
-    f = open('webpagestatus.txt', 'w')
-    f.write("Waiting for file to finish hosting.")
-    f.close()
+    f2 = open('webpagestatus.txt', 'w') #clear
+    f2.close()
+    f2 = open('webpagestatus.txt', 'w')
+    f2.write("Waiting for file to finish hosting.")
+    f2.close()
 
     while(True):
         #global orderAddr
@@ -227,11 +225,11 @@ def threadRestarter():
             lines.append('\n' + toprint)
         else: #length 2
             lines[1] = toprint
-        f = open('webpagestatus.txt', 'w') #clear
-        f.close()
-        f = open('webpagestatus.txt', 'w')
-        f.writelines(lines)
-        f.close()
+        f2 = open('webpagestatus.txt', 'w') #clear
+        f2.close()
+        f2 = open('webpagestatus.txt', 'w')
+        f2.writelines(lines)
+        f2.close()
 
         time.sleep(5)
 
@@ -281,7 +279,7 @@ def totalThreadRestarter():
     global totalAddr
     global mainThread
     while (True):
-        if totalStartTime != 0.0 and time.time() > (totalStartTime + 30) and totalAddr == '':
+        if totalStartTime != 0.0 and time.time() > (totalStartTime + 60) and totalAddr == '':
             os.system('rm onionshareOrder.txt')
             #restart thread
             #mainThread._delete()
@@ -424,11 +422,11 @@ def createThreadsReq():
         #Addresses written to file (Step 2)
         if os.path.isfile("totalOrder.txt") and flagTwo:
             print("Downloading file from host. This may take a while...")
-            f = open('webpagestatus.txt', 'w') #clear
-            f.close()
-            f = open('webpagestatus.txt', 'w')
-            f.write("Downloading the result from the provider. This may take a while.")
-            f.close()
+            f2 = open('webpagestatus.txt', 'w') #clear
+            f2.close()
+            f2 = open('webpagestatus.txt', 'w')
+            f2.write("Downloading the result from the provider. This may take a while.")
+            f2.close()
 
             flagTwo = False
             #Need to make a thread for each address
@@ -600,11 +598,11 @@ def hostController(file):
             while line != '':
                 if "/finish" in line :
                     print("Provider finished downloading file.")
-                    f = open('webpagestatus.txt', 'w') #clear
-                    f.close()
-                    f = open('webpagestatus.txt', 'w')
-                    f.write("Provider downloaded file. Once they execute it, you must choose a validator.")
-                    f.close()
+                    f2 = open('webpagestatus.txt', 'w') #clear
+                    f2.close()
+                    f2 = open('webpagestatus.txt', 'w')
+                    f2.write("Provider downloaded file. Once they execute it, you must choose a validator.")
+                    f2.close()
 
                     flag = False
                     try: #May or may not already be deleted

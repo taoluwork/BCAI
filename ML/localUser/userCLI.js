@@ -722,7 +722,7 @@ function startTask(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                                     while(!(fs.existsSync('./totalOrderAddress.txt'))){
-                                        sleep.sleep(15);
+                                        sleep.sleep(5);
                                     }
                                     fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
                                         console.log(ip);
@@ -1256,7 +1256,6 @@ function listenWebsite(){
         })
         //address is chars 0-41
         var chooseProvAddr = choice.slice(0, 42).toLowerCase();
-        console.log(chooseProvAddr)
         var ABIChooseProvider; //prepare abi for a function call
         ABIChooseProvider = myContract.methods.chooseProvider(chooseProvAddr).encodeABI();
         const rawTransaction = {
@@ -1481,8 +1480,7 @@ function listenWebsite(){
                                 "gas": 5000000,
                                 "chainId": 3,
                                 "data": ABIstartRequest
-                            }
-                                                    
+                            }                 
                             decryptedAccount.signTransaction(rawTransaction)
                             .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                             .then(receipt => {

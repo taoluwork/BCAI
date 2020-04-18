@@ -5,7 +5,6 @@ var pendingPool = [];
 var providerPool = [];
 var providingPool = [];
 var validatorPool = [];
-var historyPool = [];
 var currentPoolType = "none";
 var baseurl = "http://localhost:3001";
 var address = "";
@@ -15,7 +14,6 @@ var doasync = true;
 //get elements
 var addressBar        = document.getElementById("AddressBar");
 var poolBody          = document.getElementById("poolBody");
-var historyBody       = document.getElementById("historyBody");
 
 var passwordContainer = document.getElementById("passwordContainer");
 passwordContainer.style.display = "none";
@@ -38,13 +36,10 @@ var pendingPoolSel       = document.getElementById("pendingPoolSel");
 var providerPoolSel      = document.getElementById("providerPoolSel");
 var providingPoolSel     = document.getElementById("providingPoolSel");
 var validatingPoolSel    = document.getElementById("validatingPoolSel");
-var historyPoolSel       = document.getElementById("historyPoolSel");
 var nonePoolSel          = document.getElementById("nonePoolSel");
 
 var poolContainer        = document.getElementById("poolContainer");
-var historyContainer     = document.getElementById("historyContainer");
 poolContainer.style.display      = "none";
-historyContainer.style.display   = "none";
 
 submitPassword.addEventListener("click", (event)=>{
     event.preventDefault();
@@ -66,71 +61,49 @@ pendingPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
     loadPool(pendingPool);
     poolContainer.style.display      = "block";
-    historyContainer.style.display   = "none";
     $("#pendingPoolSel").addClass("selected");
     $("#providerPoolSel").removeClass("selected");
     $("#providingPoolSel").removeClass("selected");
     $("#validatingPoolSel").removeClass("selected");
-    $("#historyPoolSel").removeClass("selected");
     $("#nonePoolSel").removeClass("selected");
 });
 providerPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
     loadPool(providerPool);
     poolContainer.style.display      = "block";
-    historyContainer.style.display   = "none";
     $("#pendingPoolSel").removeClass("selected");
     $("#providerPoolSel").addClass("selected");
     $("#providingPoolSel").removeClass("selected");
     $("#validatingPoolSel").removeClass("selected");
-    $("#historyPoolSel").removeClass("selected");
     $("#nonePoolSel").removeClass("selected");
 });
 providingPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
     loadPool(providingPool);
     poolContainer.style.display      = "block";
-    historyContainer.style.display   = "none";
     $("#pendingPoolSel").removeClass("selected");
     $("#providerPoolSel").removeClass("selected");
     $("#providingPoolSel").addClass("selected");
     $("#validatingPoolSel").removeClass("selected");
-    $("#historyPoolSel").removeClass("selected");
     $("#nonePoolSel").removeClass("selected");
 });
 validatingPoolSel.addEventListener("click", ()=>{
     event.preventDefault();
     loadPool(validatorPool);
     poolContainer.style.display      = "block";
-    historyContainer.style.display   = "none";
     $("#pendingPoolSel").removeClass("selected");
     $("#providerPoolSel").removeClass("selected");
     $("#providingPoolSel").removeClass("selected");
     $("#validatingPoolSel").addClass("selected");
-    $("#historyPoolSel").removeClass("selected");
     $("#nonePoolSel").removeClass("selected");
 }); 
-historyPoolSel.addEventListener("click", ()=>{
-    event.preventDefault();
-    loadHistory();
-    poolContainer.style.display      = "none";
-    historyContainer.style.display   = "block";
-    $("#pendingPoolSel").removeClass("selected");
-    $("#providerPoolSel").removeClass("selected");
-    $("#providingPoolSel").removeClass("selected");
-    $("#validatingPoolSel").removeClass("selected");
-    $("#historyPoolSel").addClass("selected");
-    $("#nonePoolSel").removeClass("selected");
-});
 nonePoolSel.addEventListener("click", ()=>{
     event.preventDefault();
     poolContainer.style.display      = "none";
-    historyContainer.style.display   = "none";
     $("#pendingPoolSel").removeClass("selected");
     $("#providerPoolSel").removeClass("selected");
     $("#providingPoolSel").removeClass("selected");
     $("#validatingPoolSel").removeClass("selected");
-    $("#historyPoolSel").removeClass("selected");
     $("#nonePoolSel").addClass("selected");
 });
 
@@ -205,36 +178,11 @@ function loadPool(pool){
         headElem.scope = "row";
         
         var reqAddr  = document.createElement("TD");
-        reqAddr.innerHTML =  pool[0];
+        reqAddr.innerHTML =  pool[i];
         
         row.appendChild(headElem);
         row.appendChild(reqAddr);
         poolBody.appendChild(row);
-    }
-}
-
-function loadHistory(){
-    var childElem = historyBody.lastElementChild;
-    while(childElem){
-        historyBody.removeChild(childElem);
-        childElem = historyBody.lastElementChild;
-    }
-    for(var i = 0 ; i < historyPool.length; i++){
-        var row      = document.createElement("TR");
-        var headElem = document.createElement("TH");
-        headElem.innerHTML = i+1;
-        headElem.scope = "row";
-
-        var type     = document.createElement("TD");
-        type.innerHTML =  historyPool[i][0];
-        
-        var reqAddr  = document.createElement("TD");
-        reqAddr.innerHTML =  historyPool[i][1];
-        
-        row.appendChild(headElem);
-        row.appendChild(type);
-        row.appendChild(reqAddr);
-        historyBody.appendChild(row);
     }
 }
 
@@ -243,8 +191,6 @@ setInterval(function update(){
     loadAddr();
     if(address != ""){
         getPools();
-        getHistory();
-        loadHistory();
         getBalance();
         getRating();
         getStatus();
@@ -337,30 +283,9 @@ function getPools(){
         }
     });
 }
-function getHistory(){
-    var data = {
-        Account: address
-    };
-    $.ajaxSetup({async: doasync});  
-    $.ajax({     
-        type: "POST",
-        url: baseurl + '/history',
-        headers: {
-            'Content-Type':'application/json'
-        },
-        data: JSON.stringify(data), //this is the sent json data
-        success: function (result) {
-            console.log(result);
-            var hist = result.History;
-            historyPool = []
-            for(var i= 0 ; i < hist.length; i++){
-                historyPool.push([hist[i].Action, hist[i].RequestAddr])
-            }
-        }
-    });
-}
 
 function startProviding() {
+    startProvidingSubmit.disabled = true;
     var data = {
         Account: address,
         password: passHold
@@ -384,6 +309,7 @@ function startProviding() {
 }
 
 function stopProviding() {
+    stopProvidingSubmit.disabled = true;
     var data = {
         Account: address,
         password: passHold

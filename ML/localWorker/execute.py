@@ -19,7 +19,7 @@ order   = []
 startTimes = []
 mainThread = None
 totalAddr = ''
-totalStartTime = 0
+totalStartTime = 0.0
 content = []
 for i in range(threads):
     content.append(b'')#inits list with threads number of empty byte arrays
@@ -253,7 +253,7 @@ def totalThreadRestarter():
     global totalAddr
     global mainThread
     while (True):
-        if totalStartTime != 0 and time.time() > totalStartTime + 60 and totalAddr == '':
+        if totalStartTime != 0.0 and time.time() > totalStartTime + 60 and totalAddr == '':
             os.system('rm onionshareOrder.txt')
             #restart thread
             #mainThread._delete()
@@ -272,6 +272,7 @@ def resetHost(resetMode):
     global orderAddr
     global order
     global startTimes
+    global totalStartTime
     global mode
     global fileName
     global totalAddr
@@ -284,6 +285,7 @@ def resetHost(resetMode):
     orderAddr = []
     order   = []
     startTimes = []
+    totalStartTime = 0.0
     if resetMode == True:
         mode = ''
     totalAddr = ''
