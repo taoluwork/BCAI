@@ -695,6 +695,7 @@ def dockerExe():
     os.system("sudo docker stop $(sudo docker container ls -q)")
 
     getTime('Image Unloaded and Ready For Transmission')
+    time.sleep(30)
 
 def getMode():
     global mode
