@@ -13,6 +13,7 @@ var hex2ascii= require("hex2ascii")
 var express = require('express');
 var Table = require('cli-table');
 var sleep = require('sleep')
+var price = require('crypto-price');
 
 require('events').EventEmitter.prototype._maxListeners = 100;
 
@@ -82,19 +83,21 @@ const myContract = new web3.eth.Contract(abi, addr);
 
 var prov = 0;
 var decryptedAccount = "";
+var depositAmt = 0.10;
+
 
 questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'check address a8 balance', 'quit'],
+    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'check address a8 balance', 'USD to ETH', 'quit'],
 };
 
 questions1 = {
     type : 'list',
     name : 'whatToDo1',
     message : 'What would you like to do?',
-    choices : ['stop request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'choose validator', 'show ETH balance', 'quit'],
+    choices : ['stop request', 'show pools', 'finalize request', 'show provider rating', 'choose provider', 'choose validator', 'show ETH balance', 'USD to ETH', 'quit'],
 };
 
 clearStat();
@@ -561,6 +564,15 @@ function choiceMade(choice){
         .then(()=>{askUser()})
         .catch((err)=>{console.log(err)});
     }
+    else if(choice == questions.choices[7] || choice == questions1.choices[7]){
+        price.getCryptoPrice('USD', 'ETH').then(obj => {
+            console.log(chalk.cyan("\nThe current amount of 1 ETH in USD is $", obj.price, "\n"));
+            askUser();
+        })
+        .catch(err =>{
+            console.log(chalk.red("\n", err, "\n"))
+        })
+    }
     else
     {
         if(prov == 1)
@@ -651,287 +663,322 @@ function startTask(){
         //Getting password from CLI
         if(decryptedAccount == "")
         {
-            console.log("\n\n");
-            
-                inquirer.prompt([
-                    {
-                        type: 'password',
-                        name: 'keystorePswd',
-                        message: 'Enter your keystore file password: ',
-                    },
-                ])
-                .then(answers => {return answers.keystorePswd})
-                .then((password)=>{
-                        //retrieving keystore file and decrypting with password
-                        var keystore;
-                        var contents = fs.readFileSync(UTCfile, 'utf8')
-                        keystore = contents;
-                        decryptedAccount = web3.eth.accounts.decrypt(keystore, password);
-                        return decryptedAccount;
-                    }
-                )
-                .then((decryptedAccount) =>{
+            console.log("\n");
+            price.getCryptoPrice('USD', 'ETH').then(obj => {
+                var calculatedPrice = depositAmt * obj.price;
+                inquirer.prompt([{
+                    name: 'confirmation',
+                    type: 'confirm',
+                    message: 'You are about to be charged ' + depositAmt + ' ETH. This is ' + calculatedPrice.toFixed(2) + ' in USD, is this okay?',
+                }])
+                .then(response =>{
                     console.log("\n");
-                    inquirer.prompt([
-                        {
-                            name : 'filePath',
-                            message: 'Enter file path: ',
-                        }
-                    ])
-                    .then(settings => {
-                        return settings.filePath;
-                    })
-                    .then(path => {
-                        console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
-                        var ABIstartRequest; //prepare abi for a function call
-                        var filePath = path;
-                        if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
-                        {
-                            console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'start request' to try again..."), "\n")
-                            askUser();
-                        }
-                        else{
-                            fs.open(filePath, 'r', (err, fd)=>{
-                                if(fd != undefined){
-                                    function readChunk(){
-                                        chunkSize = 10*1024*1024;
-                                        var holdBuff = Buffer.alloc(chunkSize);
-                                        fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
-                                            if(nread === 0){
-                                                fs.close(fd, function(err){
-                                                });
-                                                return;
-                                            }
-                                            if(nread < chunkSize){
-                                                try{
-                                                    buffer.push(holdBuff.slice(0, nread));
-                                                }
-                                                catch(err){
-                                                    console.log("You failed to select correct file path")
-                                                }
-                                            }
-                                            else{
-                                                buffer.push(holdBuff);
-                                                readChunk();
-                                    
-                                            }
-                                        })
-                                    } 
-                                    readChunk();
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                                    while(!(fs.existsSync('./totalOrderAddress.txt'))){
-                                        sleep.sleep(5);
-                                    }
-                                    fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
-                                        console.log(ip);
-                                        console.log(web3.utils.asciiToHex(ip));
-                                        ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
-                                        const rawTransaction = {
-                                            "from": userAddress,
-                                            "to": addr,
-                                            "value": web3.utils.toHex(web3.utils.toWei("0.01", "ether")),
-                                            "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-                                            "gas": 5000000,
-                                            "chainId": 3,
-                                            "data": ABIstartRequest
-                                        }
-                                        
-                                        decryptedAccount.signTransaction(rawTransaction)
-                                        .catch(err =>{
-                                            if(err == "Error: Not enough ether"){
-                                                console.log(chalk.red("\nThere is not enough ether in this account to start a request. You must have at least 0.01 ETH to start a request...\n"));
-                                            }
-                                            else{
-                                                console.log(chalk.red("\n", err, "\n"));
-                                            }
-                                        })
-                                        .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-                                        .then(receipt => {
-                                            //console.log(chalk.cyan("\n\nTransaction receipt: "));
-                                            //console.log(receipt);
-                                            console.log(chalk.cyan("\n\nYour request has been submitted. You must choose a provider now to continue... \n\n"));
-                                            prov = 1;
-                                        })
-                                        .then(() => {
-                                            askUser();
-                                            //call subscribe here
-
-                                            try{
-                                                web3.eth.subscribe('newBlockHeaders', (err, result) => {
-                                                    if(err) console.log(chalk.red(err), result);
-                                                    checkEvents();
-                                                })
-                                            }
-                                            catch(error){
-                                                alert(
-                                                    `Failed to load web3, accounts, or contract. Check console for details.`
-                                                );
-                                                console.log("\n", chalk.red(err), "\n");
-                                            }
-
-
-                                        })
-                                        .catch(err => {
-                                            if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
-                                            {
-                                                console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                                                askUser();
-                                            }
-                                            else{
-                                                console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                                                askUser();
-                                            }
-                                        });
-                                    });
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                                } 
-                                else{
-                                    console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
+                    if(response.confirmation == true){
+                        inquirer.prompt([
+                            {
+                                type: 'password',
+                                name: 'keystorePswd',
+                                message: 'Enter your keystore file password: ',
+                            },
+                        ])
+                        .then(answers => {return answers.keystorePswd})
+                        .then((password)=>{
+                                //retrieving keystore file and decrypting with password
+                                var keystore;
+                                var contents = fs.readFileSync(UTCfile, 'utf8')
+                                keystore = contents;
+                                decryptedAccount = web3.eth.accounts.decrypt(keystore, password);
+                                return decryptedAccount;
+                            }
+                        )
+                        .then((decryptedAccount) =>{
+                            console.log("\n");
+                            inquirer.prompt([
+                                {
+                                    name : 'filePath',
+                                    message: 'Enter file path: ',
+                                }
+                            ])
+                            .then(settings => {
+                                return settings.filePath;
+                            })
+                            .then(path => {
+                                console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
+                                var ABIstartRequest; //prepare abi for a function call
+                                var filePath = path;
+                                if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
+                                {
+                                    console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'start request' to try again..."), "\n")
                                     askUser();
-                                }                 
+                                }
+                                else{
+                                    fs.open(filePath, 'r', (err, fd)=>{
+                                        if(fd != undefined){
+                                            function readChunk(){
+                                                chunkSize = 10*1024*1024;
+                                                var holdBuff = Buffer.alloc(chunkSize);
+                                                fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
+                                                    if(nread === 0){
+                                                        fs.close(fd, function(err){
+                                                        });
+                                                        return;
+                                                    }
+                                                    if(nread < chunkSize){
+                                                        try{
+                                                            buffer.push(holdBuff.slice(0, nread));
+                                                        }
+                                                        catch(err){
+                                                            console.log("You failed to select correct file path")
+                                                        }
+                                                    }
+                                                    else{
+                                                        buffer.push(holdBuff);
+                                                        readChunk();
+                                            
+                                                    }
+                                                })
+                                            } 
+                                            readChunk();
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+                                            while(!(fs.existsSync('./totalOrderAddress.txt'))){
+                                                sleep.sleep(5);
+                                            }
+                                            fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
+                                                console.log(ip);
+                                                console.log(web3.utils.asciiToHex(ip));
+                                                ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
+                                                const rawTransaction = {
+                                                    "from": userAddress,
+                                                    "to": addr,
+                                                    "value": web3.utils.toHex(web3.utils.toWei("0.01", "ether")),
+                                                    "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                                                    "gas": 5000000,
+                                                    "chainId": 3,
+                                                    "data": ABIstartRequest
+                                                }
+                                                
+                                                decryptedAccount.signTransaction(rawTransaction)
+                                                .catch(err =>{
+                                                    if(err == "Error: Not enough ether"){
+                                                        console.log(chalk.red("\nThere is not enough ether in this account to start a request. You must have at least 0.01 ETH to start a request...\n"));
+                                                    }
+                                                    else{
+                                                        console.log(chalk.red("\n", err, "\n"));
+                                                    }
+                                                })
+                                                .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                                                .then(receipt => {
+                                                    //console.log(chalk.cyan("\n\nTransaction receipt: "));
+                                                    //console.log(receipt);
+                                                    console.log(chalk.cyan("\n\nYour request has been submitted. You must choose a provider now to continue... \n\n"));
+                                                    prov = 1;
+                                                })
+                                                .then(() => {
+                                                    askUser();
+                                                    //call subscribe here
+        
+                                                    try{
+                                                        web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                                                            if(err) console.log(chalk.red(err), result);
+                                                            checkEvents();
+                                                        })
+                                                    }
+                                                    catch(error){
+                                                        alert(
+                                                            `Failed to load web3, accounts, or contract. Check console for details.`
+                                                        );
+                                                        console.log("\n", chalk.red(err), "\n");
+                                                    }
+        
+        
+                                                })
+                                                .catch(err => {
+                                                    if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
+                                                    {
+                                                        console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
+                                                        askUser();
+                                                    }
+                                                    else{
+                                                        console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
+                                                        askUser();
+                                                    }
+                                                });
+                                            });
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+                                        } 
+                                        else{
+                                            console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
+                                            askUser();
+                                        }                 
+                                    });
+                                    
+                                }
+                            })
+                            .catch( err => {
+                                console.log("\n", chalk.red(err), "\n");
+                                askUser();
                             });
-                            
-                        }
-                    })
-                    .catch( err => {
-                        console.log("\n", chalk.red(err), "\n");
-                        askUser();
-                    });
-                        
-                })
-                .catch(err =>{
-                    if (String(err).slice(0, 28) == "Error: Key derivation failed")
-                    {
-                        console.log(chalk.red("\nError: You have entered the wrong keystore password... Please try again...\n"))
-                        askUser();
-                    }
+                                
+                        })
+                        .catch(err =>{
+                            if (String(err).slice(0, 28) == "Error: Key derivation failed")
+                            {
+                                console.log(chalk.red("\nError: You have entered the wrong keystore password... Please try again...\n"))
+                                askUser();
+                            }
+                            else{
+                                console.log("\nError: ", chalk.red(err), "\n");
+                                askUser();
+                            }
+                        })
+                  }
                     else{
-                        console.log("\nError: ", chalk.red(err), "\n");
                         askUser();
                     }
                 })
-            }
+                .catch(err =>console.log(err));
+            })
+            .catch(err => console.log(err));
+            
+        }
         else{
             console.log("\n");
-            inquirer.prompt([
-                {
-                    name : 'filePath',
-                    message: 'Enter file path: ',
-                }
-            ])
-            .then(settings => {
-                return settings.filePath;
-            })
-            .then(path => {
-                console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
-                var ABIstartRequest; //prepare abi for a function call
-                var filePath = path;
-                if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
-                {
-                    console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'start request' to try again..."), "\n")
-                    askUser();
-                }
-                else{
-                    fs.open(filePath, 'r', (err, fd)=>{
-                        if(fd != undefined){
-                            function readChunk(){
-                                chunkSize = 10*1024*1024;
-                                var holdBuff = Buffer.alloc(chunkSize);
-                                fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
-                                    if(nread === 0){
-                                        fs.close(fd, function(err){
-                                        });
-                                        return;
-                                    }
-                                    if(nread < chunkSize){
-                                        try{
-                                            buffer.push(holdBuff.slice(0, nread));
+            price.getCryptoPrice('USD', 'ETH').then(obj=>{
+                var calculatedPrice = depositAmt * obj.price;
+                inquirer.prompt([{
+                    name: 'confirmation',
+                    type: 'confirm',
+                    message: 'You are about to be charged ' + deposit + ' ETH. This is ' + calculatedPrice.toFixed(2) + ' in USD, is this okay?',
+                }])
+                .then(response =>{
+                    console.log("\n");
+                    if(response.confirmation == true){
+                        inquirer.prompt([
+                            {
+                                name : 'filePath',
+                                message: 'Enter file path: ',
+                            }
+                        ])
+                        .then(settings => {
+                            return settings.filePath;
+                        })
+                        .then(path => {
+                            console.log(chalk.cyan("\nWe are sending transaction to the blockchain... \n"));
+                            var ABIstartRequest; //prepare abi for a function call
+                            var filePath = path;
+                            if(filePath.slice(filePath.length-4, filePath.length) != ".zip")
+                            {
+                                console.log("\n", chalk.red("Error: You must provide the task as a .zip file... Select 'start request' to try again..."), "\n")
+                                askUser();
+                            }
+                            else{
+                                fs.open(filePath, 'r', (err, fd)=>{
+                                    if(fd != undefined){
+                                        function readChunk(){
+                                            chunkSize = 10*1024*1024;
+                                            var holdBuff = Buffer.alloc(chunkSize);
+                                            fs.read(fd, holdBuff, 0, chunkSize, null, function(err, nread){
+                                                if(nread === 0){
+                                                    fs.close(fd, function(err){
+                                                    });
+                                                    return;
+                                                }
+                                                if(nread < chunkSize){
+                                                    try{
+                                                        buffer.push(holdBuff.slice(0, nread));
+                                                    }
+                                                    catch(err){
+                                                        console.log("You failed to select correct file path")
+                                                    }
+                                                }
+                                                else{
+                                                    buffer.push(holdBuff);
+                                                    readChunk();
+                                        
+                                                }
+                                            })
                                         }
-                                        catch(err){
-                                            console.log("You failed to select correct file path")
-                                        }
-                                    }
-                                    else{
-                                        buffer.push(holdBuff);
                                         readChunk();
-                            
-                                    }
-                                })
-                            }
-                            readChunk();
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                            while(!(fs.exists('./totalOrderAddress.txt'))){
-                                sleep.sleep(5);
-                            }
-                            fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
-                                ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
-                                const rawTransaction = {
-                                    "from": userAddress,
-                                    "to": addr,
-                                    "value": web3.utils.toHex(web3.utils.toWei("0.01", "ether")),
-                                    "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-                                    "gas": 5000000,
-                                    "chainId": 3,
-                                    "data": ABIstartRequest
-                                }
-                        
-                                decryptedAccount.signTransaction(rawTransaction)
-                                .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
-                                .then(receipt => {
-                                    console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
-                                    prov = 1;
-                                })
-                                .then(() => {
-                                    askUser();
-                                    //call subscribe here
-                                    try{
-                                        web3.eth.subscribe('newBlockHeaders', (err, result) => {
-                                            if(err) console.log(chalk.red(err), result);
-                                            checkEvents();
-                                        })
-                                    }
-                                    catch(error){
-                                        alert(
-                                            `Failed to load web3, accounts, or contract. Check console for details.`
-                                        );
-                                        console.log("\n", chalk.red(err), "\n");
-                                    }
-
-
-                                })
-                                .catch(err => {
-                                    if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
-                                    {
-                                        console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
-                                        askUser();
-                                    }
+            
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+                                        while(!(fs.exists('./totalOrderAddress.txt'))){
+                                            sleep.sleep(5);
+                                        }
+                                        fs.readFile('./totalOrderAddress.txt', 'utf8', function(err, ip){
+                                            ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex(ip)).encodeABI();
+                                            const rawTransaction = {
+                                                "from": userAddress,
+                                                "to": addr,
+                                                "value": web3.utils.toHex(web3.utils.toWei("0.01", "ether")),
+                                                "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                                                "gas": 5000000,
+                                                "chainId": 3,
+                                                "data": ABIstartRequest
+                                            }
+                                    
+                                            decryptedAccount.signTransaction(rawTransaction)
+                                            .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                                            .then(receipt => {
+                                                console.log(chalk.cyan("\n\nYour request has been submitted... \n\n"));
+                                                prov = 1;
+                                            })
+                                            .then(() => {
+                                                askUser();
+                                                //call subscribe here
+                                                try{
+                                                    web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                                                        if(err) console.log(chalk.red(err), result);
+                                                        checkEvents();
+                                                    })
+                                                }
+                                                catch(error){
+                                                    alert(
+                                                        `Failed to load web3, accounts, or contract. Check console for details.`
+                                                    );
+                                                    console.log("\n", chalk.red(err), "\n");
+                                                }
+            
+            
+                                            })
+                                            .catch(err => {
+                                                if(String(err).slice(0, 41) == "Error: Returned error: insufficient funds")
+                                                {
+                                                    console.log(chalk.red("\nError: This keystore account doesn't have enough Ether... Add funds or try a different account...\n"))
+                                                    askUser();
+                                                }
+                                                else{
+                                                    console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
+                                                    askUser();
+                                                }
+                                            });
+                                        });
+            
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+                                    } 
                                     else{
-                                        console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
+                                        console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
                                         askUser();
-                                    }
+                                    }                 
                                 });
-                            });
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                        } 
-                        else{
-                            console.log("\n", chalk.red("Error: No file found with file path..."), "\n")
+                            }
+                        })
+                        .catch( err => {
+                            console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
                             askUser();
-                        }                 
-                    });
-                }
+                        });
+                    }
+                    else{
+                        askUser();
+                    }
+                })
+                .catch(err => console.log(err));
             })
-            .catch( err => {
-                console.log(chalk.red("\nError: ", chalk.red(err), "\n"))
-                askUser();
-            });
-        
+            .catch(err =>console.log(err));
         }
     })
 }

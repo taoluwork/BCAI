@@ -1,4 +1,2 @@
-Sat Apr 18 2020 17:03:20 GMT-0500 (CDT)
-Sat Apr 18 2020 17:15:40 GMT-0500 (CDT) Request has been assigned to provider
-
-Sat Apr 18 2020 17:15:50 GMT-0500 (CDT) Request has been validated
+Tue Apr 21 2020 13:21:00 GMT-0500 (CDT)
+Tue Apr 21 2020 13:21:01 GMT-0500 (CDT) Request has been validated
