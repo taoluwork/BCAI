@@ -175,6 +175,14 @@ else  #problem installing
     echo -e "\e[91mProblem installing stem. Aborting installation."
     exit
 fi
+#Install cryptography
+echo -e "\e[93mInstalling cryptography.\e[0m"
+if pip3 install cryptography > /dev/null 2>&1 ; then #if installed
+    echo -e "\e[92mcryptography successfully installed."
+else  #problem installing
+    echo -e "\e[91mProblem installing cryptography. Aborting installation."
+    exit
+fi
 #Download repo
 if [ "$downloadgit" = true ] ; then
     echo -e "\e[93m----------------------------Downloading github repo.----------------------------\e[0m"
