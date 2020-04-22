@@ -10,6 +10,8 @@ import math
 import subprocess
 import multiprocessing
 
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
 
 ##globals##
 threads = 8
@@ -26,15 +28,68 @@ for i in range(threads):
 mode = '' #user, provider, or validator
 fileName = ''
 
+encKey     = None
+encNonce   = None
+#######################################################################################################################################
+#######################################################encryption######################################################################
+#######################################################################################################################################
+
+def genKey():
+    keyFile = "key.txt"
+    nonceFile = "nonce.txt"
+    f = open(keyFile, 'w')
+    f.close()
+    f = open(nonceFile, 'w')
+    f.close()
+    key = os.urandom(32)
+    nonce = os.urandom(32)
+    f = open(keyFile, 'wb')
+    f.write(key)
+    f.close()
+    f = open(nonceFile, 'wb')
+    f.write(nonce)
+    f.close()    
+def getKey(keyFile="", nonceFile=""):
+    f = open(keyFile, 'rb')
+    key = f.read()
+    f.close()
+    f = open(nonceFile, 'rb')
+    nonce = f.read()
+    f.close()
+    return [key, nonce]
+
+def enc(key=b"", nonce=b"", mess=b""):
+    alg = algorithms.AES(key)
+    cipher = Cipher(alg, modes.GCM(nonce), default_backend())
+    encryptor = cipher.encryptor()
+    return encryptor.update(mess)
+
+def dec(key=b"", nonce=b"", mess=b""):
+    alg = algorithms.AES(key)
+    cipher = Cipher(alg, modes.GCM(nonce), default_backend())
+    decryptor = cipher.decryptor()
+    return decryptor.update(mess)
+
+genKey()
+
+
 #######################################################################################################################################
 ###########################################################host########################################################################
 #######################################################################################################################################
 def shareOrder():
     global totalStartTime
-    while os.path.isfile('totalOrder.txt') != True:
+    while os.path.isfile('totalOrder.txt') != True:        
         time.sleep(5)
-    totalStartTime = time.time()
-    subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website totalOrder.txt" + "\" -f onionshareOrder.txt"],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=True)
+        totalStartTime = time.time()
+
+    ######zip the total order, key, and nonce to share#########
+
+        os.system('zip totalOrder.zip totalOrder.txt key.txt nonce.txt')
+        time.sleep(5)    
+
+    ###########################################################
+
+    subprocess.Popen(["script -c \"../../../onionshare/dev_scripts/onionshare --website totalOrder.zip" + "\" -f onionshareOrder.txt"],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=True)
 def startShare(file, iter):
     #print(file + ":" + str(iter))
     #start onionshare server to host file
@@ -57,6 +112,20 @@ def splitFile(file):
         fw.writelines(lines[lo:hi])
         fw.close()
         order.append(file+str(i)+'.txt\n') 
+        keyFile = open("key.txt", 'rb')
+        key = keyFile.read()
+        keyFile.close()
+        nonceFile = open("nonce.txt", "rb")
+        nonce = nonceFile.read()
+        nonceFile.close()
+        fenc = open(file+str(i)+'.txt', "rb")
+        hold = enc(key, nonce, fenc.read())
+        fenc.close()
+        fenc = open(file + str(i) + ".txt", "w")
+        fenc.close
+        fenc = open(file+str(i)+".txt", "wb")
+        fenc.write(hold)
+        fenc.close()
     f.close()
     f = open('order.txt', 'w')
     f.writelines(order)
@@ -115,7 +184,7 @@ def getTotalAddr():
             f.close()
             for j in lines:
                 if (j.find("http://onionshare") >= 0): #found address
-                    totalAddr = j.strip('\n') + "/totalOrder.txt"
+                    totalAddr = j.strip('\n') + "/totalOrder.zip"
                     flag = False 
         time.sleep(5)
     #Write address to file
@@ -360,8 +429,15 @@ def getShare(address, iter):
 
     res = session.get(address) #download file
     #content[iter] = res.content #append this slice's content to total content list
+
+
+    ########################get key and nonce##################################
+    [key, nonce] = getKey("key.txt","nonce.txt")
+    ###########################################################################
+    
+    
     f = open("image.zip" + str(iter) + ".txt","wb" )
-    f.write(res.content)
+    f.write(dec(key, nonce, res.content))
     f.close()
     #print(type("-----Received content from thread " + iter))
     #for i in range(threads):
@@ -376,7 +452,12 @@ def getShareWithoutIter(address):
     session.proxies['https'] = 'socks5h://localhost:9050'
 
     res = session.get(address) #download file
-    open("totalOrder.txt", 'wb').write(res.content)
+
+    #########save the zip and unzip it#########
+    open("totalOrder.zip", 'wb').write(res.content)
+    time.sleep(5)
+    os.system("unzip -o totalOrder.zip")
+    ###########################################
     
 def createThreadsReq():
     global totalAddr
@@ -527,6 +608,7 @@ def getTime(mess):
     f.close()
 
 def hostController(file):
+    genKey()
     for i in range(0,threads):
         orderAddr.append(0)
     splitFile(file)
@@ -622,6 +704,7 @@ def dockerExe():
     os.system("sudo docker stop $(sudo docker container ls -q)")
 
     getTime('Image Unloaded and Ready For Transmission')
+    time.sleep(30)
 
 def getMode():
     global mode
