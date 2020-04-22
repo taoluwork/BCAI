@@ -159,6 +159,7 @@ def createThreadsHost():
 
 def runThreads():
     for i in threadL:
+        i.daemon = True
         i.start()
         startTimes.append(time.time())
         #print(startTimes)
@@ -226,6 +227,7 @@ def threadRestarter():
                     f.close()
                     #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i])
                     t=multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
+                    t.daemon = True
                     threadL[i] = t
                     threadL[i].start()
                     holdVal = startTimes[i]
@@ -247,6 +249,7 @@ def threadRestarter():
                             f.close()
                             #t=threading.Thread(target=startShare,args=[lines[i].strip('\n'),i])
                             t=multiprocessing.Process(target=startShare,args=(lines[i].strip('\n'),i,))
+                            t.daemon = True
                             threadL[i] = t
                             threadL[i].start()
                             startTimes[i] = time.time()
@@ -322,6 +325,7 @@ def reqFail():
                 failThread.terminate()
                 #failThread = threading.Thread(target=hostReqFail)
                 failThread = multiprocessing.Process(target=hostReqFail)
+                failThread.daemon = True
                 failThread.start()
                 threadOn = True
             else:
@@ -340,6 +344,7 @@ def totalThreadRestarter():
     global totalAddr
     global mainThread
     mainThread = multiprocessing.Process(target=shareOrder)
+    mainThread.daemon = True
     mainThread.start()
     while (True):
         if (totalStartTime.value != 0.0) and time.time() > (totalStartTime.value + 60) and totalAddr.value == '':
@@ -349,6 +354,7 @@ def totalThreadRestarter():
             mainThread.terminate()
             #t = threading.Thread(target=shareOrder)
             t = multiprocessing.Process(target=shareOrder)
+            t.daemon = True
             mainThread = t
             mainThread.start()
             f = open('restart.txt', 'a')
@@ -430,6 +436,7 @@ def failingCheck():
                 threadL[pos].terminate()
                 #threadL[pos] = threading.Thread(target=getShare,args=[lines[pos].rstrip(),pos])
                 threadL[pos] = multiprocessing.Process(target=getShare,args=(lines[pos].rstrip(),pos,))
+                threadL[pos].daemon = True
                 threadL[pos].start()
         except:
             pass
@@ -619,15 +626,18 @@ def hostController(file):
     createThreadsHost()
     runThreads()
     errCorr = multiprocessing.Process(target=threadRestarter)
+    errCorr.daemon = True
     errCorr.start()
     #getAddrs()
     #failThread = threading.Thread(target=reqFail)
     failThread = multiprocessing.Process(target=reqFail)
+    failThread.daemon = True
     failThread.start()
     global mainThread
     #Restarter for total share
     #errCorrMain = threading.Thread(target=totalThreadRestarter)
     errCorrMain = multiprocessing.Process(target=totalThreadRestarter)
+    errCorrMain.daemon = True
     errCorrMain.start()
     getTotalAddr()
     flag = True
@@ -657,6 +667,7 @@ def hostController(file):
 def reqController():
     #failThread = threading.Thread(target=failingCheck)
     failThread = multiprocessing.Process(target=failingCheck)
+    failThread.daemon = True
     failThread.start()
     createThreadsReq()
     try: #May or may not already be deleted
