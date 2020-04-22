@@ -626,7 +626,7 @@ def hostController(file):
     createThreadsHost()
     runThreads()
     errCorr = multiprocessing.Process(target=threadRestarter)
-    errCorr.daemon = True
+    #errCorr.daemon = True #demonic processes can't have children
     errCorr.start()
     #getAddrs()
     #failThread = threading.Thread(target=reqFail)
@@ -637,7 +637,7 @@ def hostController(file):
     #Restarter for total share
     #errCorrMain = threading.Thread(target=totalThreadRestarter)
     errCorrMain = multiprocessing.Process(target=totalThreadRestarter)
-    errCorrMain.daemon = True
+    #errCorrMain.daemon = True #demonic processes can't have children
     errCorrMain.start()
     getTotalAddr()
     flag = True
