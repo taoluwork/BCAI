@@ -502,32 +502,6 @@ def createThreadsReq():
                 t.start()
                 j += 1
         #Every slot in content has been written to (Step 3)
-        # elif not (b'' in content):
-        #     #print(content)
-        #     #Tell session it has finished
-
-        #     session = r.session()
-        #     session.proxies = {}
-        #     session.proxies['http'] = 'socks5h://localhost:9050'
-        #     session.proxies['https'] = 'socks5h://localhost:9050'
-
-        #     session.get(totalAddr + '/finish') #tell server finished downloading
-
-        #     try:
-        #         print(type(content))
-        #         print(type(content[0]))
-        #         print(type(content[0][0]))
-        #     except:
-        #         print("hello")
-
-        #     #Save in chunks, converting to bytes
-        #     with open("image.zip", "wb") as f:
-        #         for i in range(threads):
-        #                 f.write(content[i])  
-
-        #     resetReq()
-        #     flag = False
-        #Every slot in content has been written to (Step 3)
         allVal = True
         for i in range(0,threads):
             if os.path.isfile("image.zip" + str(i) + ".txt"):

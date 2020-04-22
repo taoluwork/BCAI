@@ -544,7 +544,7 @@ def createThreadsReq():
             #if file ready to be received from worker. totalAddr will hold the .onion address
             if totalAddr.value != '' and totalAddr.value != 'Executing' and totalAddr.value != 'Ready':
                 flagThree = False
-                #getShareWithoutIter(totalAddr) #Do not start transfer
+                getShareWithoutIter(totalAddr) #Still need to get this to get key and nonce
                 flag = False #This will cause loop to exit and image.zip to start running
                 #Tell user program to stop
                 if mode == 'provider':
@@ -552,7 +552,7 @@ def createThreadsReq():
                     session.proxies = {}
                     session.proxies['http'] = 'socks5h://localhost:9050'
                     session.proxies['https'] = 'socks5h://localhost:9050'
-                    session.get(totalAddr + '/finish') #tell server finished downloading
+                    session.get(totalAddr.value + '/finish') #tell server finished downloading
 
 def resetReq():
     global content
