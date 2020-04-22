@@ -172,6 +172,7 @@ def getAddrs():
         f.write(i + '\n')
     f.close()
 
+
 def getTotalAddr():
     global totalAddr
     flag = True
@@ -342,10 +343,15 @@ def reqFail():
             failThread.terminate()
             threadOn = False
 
+#################################################################################################################
+#################################################################################################################
+#################################################################################################################
 def totalThreadRestarter():
     global totalStartTime
     global totalAddr
     global mainThread
+    mainThread = multiprocessing.Process(target=shareOrder)
+    mainThread.start()
     while (True):
         if totalStartTime != 0.0 and time.time() > (totalStartTime + 60) and totalAddr == '':
             os.system('rm onionshareOrder.txt')
@@ -663,8 +669,10 @@ def hostController(file):
     #Total share
     global mainThread
     #mainThread = threading.Thread(target=shareOrder)
-    mainThread = multiprocessing.Process(target=shareOrder)
-    mainThread.start()
+    
+    # mainThread = multiprocessing.Process(target=shareOrder)
+    # mainThread.start()
+    
     #Restarter for total share
     #errCorrMain = threading.Thread(target=totalThreadRestarter)
     errCorrMain = multiprocessing.Process(target=totalThreadRestarter)
