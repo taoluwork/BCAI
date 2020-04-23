@@ -283,6 +283,7 @@ contract TaskContract is bcaiReputation{
                     // }
 
                     requestList[reqAddr].signature = result;
+                    requestList[reqAddr].isValid = result;
                     providerList[msg.sender].available = true;          //release validator
                     providerPool.push(msg.sender);
                     emit PairingInfo(reqAddr, msg.sender, 'Validator Signed');
