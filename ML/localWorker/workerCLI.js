@@ -409,12 +409,12 @@ function choiceMade(choice){
         .then(()=>{askUser()})
         .catch((err)=>{console.log(err)});
     }
-    else if(choice == questions1.choices[4] || choice == questions.choices[5]){
+    else if(choice == questions1.choices[3] || choice == questions.choices[5]){
         console.log("\n");
         console.log(ratingsTable.toString(), "\n\n")
         askUser();
     }
-    else if(choice == questions1.choices[5]){
+    else if(choice == questions1.choices[4]){
         console.log("\n");
         if(curRating != null){
             console.log(chalk.cyan("Your current rating is ", curRating, "\n"));
