@@ -544,7 +544,7 @@ def createThreadsReq():
             #if file ready to be received from worker. totalAddr will hold the .onion address
             if totalAddr.value != '' and totalAddr.value != 'Executing' and totalAddr.value != 'Ready':
                 flagThree = False
-                getShareWithoutIter(totalAddr) #Still need to get this to get key and nonce
+                #getShareWithoutIter(totalAddr) #Still need to get this to get key and nonce
                 flag = False #This will cause loop to exit and image.zip to start running
                 #Tell user program to stop
                 if mode == 'provider':
@@ -677,7 +677,7 @@ def reqController():
 
 def dockerExe():
     global mode
-    time.sleep(30)
+    #time.sleep(30) #not needed for demo
 
     f = open('stat.txt', 'w')
     f.close()
