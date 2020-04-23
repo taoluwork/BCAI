@@ -113,18 +113,16 @@ def startShare(file, iter):
 def splitFile(file):
     fileName = file
     f       = open(file,'rb')
-    lines   = f.readlines()
-    lineLen = len(lines)
+    content   = f.read()
+    contentLen = len(content)
     pos     = 0
 
     #print(lines)
-    print(lineLen)
     for i in range(0, threads):
         fw = open(file+str(i)+'.txt' ,'wb')
-        lo = int((i)*(lineLen/threads))
-        hi = int((i+1)*(lineLen/threads))
-        print("lo:" + str(lo) + " hi:" + str(hi))
-        fw.writelines(lines[lo:hi])
+        lo = int((i)*(contentLen/threads))
+        hi = int((i+1)*(contentLen/threads))
+        fw.write(content[lo:hi])
         fw.close()
         order.append(file+str(i)+'.txt\n') 
         keyFile = open("key.txt", 'rb')
@@ -615,7 +613,7 @@ def getTime(mess):
     #print(now.strftime("%a %b %d %Y %H:%M:%S" + end))
     time = now.strftime("%a %b %d %Y %H:%M:%S" + end)
     f = open('log.txt', 'a')
-    f.write(time + " "+ mess)
+    f.write('\n' + time + " "+ mess)
     f.close()
 
 def hostController(file):
