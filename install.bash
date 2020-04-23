@@ -58,6 +58,7 @@ fi
 if ! npm --version > /dev/null 2>&1 ; #npm not installed
 then
     echo -e "\e[93mnpm not installed, installing now.\e[0m"
+    sudo apt update > /dev/null 2>&1 
     if sudo apt install npm --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mnpm successfully installed."
     else  #problem installing
@@ -72,6 +73,7 @@ if ! node --version > /dev/null 2>&1 ; #node not installed
 then
     echo -e "\e[93mnode not installed, installing now.\e[0m"
     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+    sudo apt update > /dev/null 2>&1 
     if sudo apt install nodejs --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mnode successfully installed."
     else  #problem installing
@@ -85,6 +87,7 @@ fi
 if ! python3 --version > /dev/null 2>&1 ; #python not installed
 then
     echo -e "\e[93mpython not installed, installing now.\e[0m"
+    sudo apt update > /dev/null 2>&1 
     if sudo apt install python3 --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mpython successfully installed."
     else  #problem installing
@@ -98,6 +101,7 @@ fi
 if ! pip3 --version > /dev/null 2>&1 ; #pip3 not installed
 then
     echo -e "\e[93mpip3 not installed, installing now.\e[0m"
+    sudo apt update > /dev/null 2>&1 
     if sudo apt install python3-pip --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mpip3 successfully installed."
     else  #problem installing
@@ -111,6 +115,7 @@ fi
 if ! flask --version > /dev/null 2>&1 ; #flask not installed
 then
     echo -e "\e[93mflask not installed, installing now.\e[0m"
+    sudo apt update > /dev/null 2>&1 
     if sudo apt install python3-flask --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mflask successfully installed."
     else  #problem installing
@@ -124,6 +129,7 @@ fi
 if ! tor --version > /dev/null 2>&1 ; #tor not installed
 then
     echo -e "\e[93mtor not installed, installing now.\e[0m"
+    sudo apt update > /dev/null 2>&1 
     if sudo apt install tor --yes --force-yes > /dev/null 2>&1 ; then #if installed
         echo -e "\e[92mtor successfully installed."
     else  #problem installing
