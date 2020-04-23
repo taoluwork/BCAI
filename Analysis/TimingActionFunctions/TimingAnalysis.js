@@ -54,24 +54,24 @@ decryptedAccount.signTransaction(rawTransaction)
     }
     saveTime('./StartProviding.txt');
 })
-.then(()=>{ //Update Provider
-    ABIupdateProvider = myContract.methods.updateProvider(200, 200, 2000).encodeABI();
+.then(()=>{ //Stop Providing
+    ABIstopProviding = myContract.methods.stopProviding().encodeABI();
     rawTransaction = {
         "from": userAddress,
         "to": addr,
         "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
         "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-        "gas": 5000000,
+        "gas": 7000000,
         "chainId": 3,
         "nonce" : web3.eth.getTransactionCount(userAddress),
-        "data": ABIupdateProvider
+        "data": ABIstopProviding
     }
-    console.log(chalk.green("UPDATEPROVIDING"));
+    console.log(chalk.green("STOPPROVIDING"));
     stopwatch.start();
     decryptedAccount.signTransaction(rawTransaction)
     .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
     .then(receipt => {
-        console.log(chalk.cyan("\n\nupdate providing was successful... \n\n"));
+        console.log(chalk.cyan("\n\nstopped providing successful...\n"))
     })
     .then(() =>{
         try{
@@ -85,26 +85,26 @@ decryptedAccount.signTransaction(rawTransaction)
             );
             console.log("\n", chalk.red(err), "\n");
         }
-        saveTime('./UpdateProviding.txt');
+        saveTime('./StopProviding.txt');
     })
-    .then(()=>{ //Stop Providing
-        ABIstopProviding = myContract.methods.stopProviding().encodeABI();
+    .then(()=>{ //Start Task
+        ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex('216.3.128.12')).encodeABI();
         rawTransaction = {
             "from": userAddress,
             "to": addr,
             "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
             "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
-            "gas": 7000000,
+            "gas": 5000000,
             "chainId": 3,
             "nonce" : web3.eth.getTransactionCount(userAddress),
-            "data": ABIstopProviding
+            "data": ABIstartRequest
         }
-        console.log(chalk.green("STOPPROVIDING"));
+        console.log(chalk.green("STARTREQUEST"));
         stopwatch.start();
         decryptedAccount.signTransaction(rawTransaction)
         .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
         .then(receipt => {
-            console.log(chalk.cyan("\n\nstopped providing successful...\n"))
+            console.log(chalk.cyan("\n\nstart request successful...\n"))
         })
         .then(() =>{
             try{
@@ -118,26 +118,26 @@ decryptedAccount.signTransaction(rawTransaction)
                 );
                 console.log("\n", chalk.red(err), "\n");
             }
-            saveTime('./StopProviding.txt');
+            saveTime('./StartRequest.txt');
         })
-        .then(()=>{ //Start Task
-            ABIstartRequest = myContract.methods.startRequest(100, 100, 1000, web3.utils.asciiToHex('216.3.128.12')).encodeABI();
+        .then(()=>{ //Update Task
+            ABIupdateRequest = myContract.methods.updateRequest(web3.utils.asciiToHex('216.3.128.12')).encodeABI();
             rawTransaction = {
                 "from": userAddress,
                 "to": addr,
                 "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
                 "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
                 "gas": 5000000,
-                "chainId": 3,
                 "nonce" : web3.eth.getTransactionCount(userAddress),
-                "data": ABIstartRequest
+                "chainId": 3,
+                "data": ABIupdateRequest
             }
-            console.log(chalk.green("STARTREQUEST"));
+            console.log(chalk.green("UPDATEREQUEST"));
             stopwatch.start();
             decryptedAccount.signTransaction(rawTransaction)
             .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
             .then(receipt => {
-                console.log(chalk.cyan("\n\nstart request successful...\n"))
+                console.log(chalk.cyan("\n\nupdate request successful...\n"))
             })
             .then(() =>{
                 try{
@@ -151,26 +151,26 @@ decryptedAccount.signTransaction(rawTransaction)
                     );
                     console.log("\n", chalk.red(err), "\n");
                 }
-                saveTime('./StartRequest.txt');
+                saveTime('./UpdateRequest.txt');
             })
-            .then(()=>{ //Update Task
-                ABIupdateRequest = myContract.methods.updateRequest(100, 100, 1000, web3.utils.asciiToHex('216.3.128.12')).encodeABI();
+            .then(()=>{ //Start Task
+                ABIstopRequest = myContract.methods.stopRequest().encodeABI();
                 rawTransaction = {
                     "from": userAddress,
                     "to": addr,
                     "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
                     "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
                     "gas": 5000000,
-                    "nonce" : web3.eth.getTransactionCount(userAddress),
                     "chainId": 3,
-                    "data": ABIupdateRequest
+                    "nonce" : web3.eth.getTransactionCount(userAddress),
+                    "data": ABIstopRequest
                 }
-                console.log(chalk.green("UPDATEREQUEST"));
+                console.log(chalk.green("STOPREQUEST"));
                 stopwatch.start();
                 decryptedAccount.signTransaction(rawTransaction)
                 .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
                 .then(receipt => {
-                    console.log(chalk.cyan("\n\nupdate request successful...\n"))
+                    console.log(chalk.cyan("\n\nstop request successful...\n"))
                 })
                 .then(() =>{
                     try{
@@ -184,10 +184,10 @@ decryptedAccount.signTransaction(rawTransaction)
                         );
                         console.log("\n", chalk.red(err), "\n");
                     }
-                    saveTime('./UpdateRequest.txt');
-                })
-                .then(()=>{ //Start Task
-                    ABIstopRequest = myContract.methods.stopRequest().encodeABI();
+                    saveTime('./StopRequest.txt');
+                    process.exit();
+                }).then(()=>{ //Start Task
+                    ABIchooseProvider = myContract.methods.chooseProvider('0x458c5617e4f549578e181f12da8f840889e3c0a8').encodeABI();
                     rawTransaction = {
                         "from": userAddress,
                         "to": addr,
@@ -196,9 +196,9 @@ decryptedAccount.signTransaction(rawTransaction)
                         "gas": 5000000,
                         "chainId": 3,
                         "nonce" : web3.eth.getTransactionCount(userAddress),
-                        "data": ABIstopRequest
+                        "data": ABIchooseProvider
                     }
-                    console.log(chalk.green("STOPREQUEST"));
+                    console.log(chalk.green("CHOOSEPROVIDER"));
                     stopwatch.start();
                     decryptedAccount.signTransaction(rawTransaction)
                     .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
@@ -217,7 +217,7 @@ decryptedAccount.signTransaction(rawTransaction)
                             );
                             console.log("\n", chalk.red(err), "\n");
                         }
-                        saveTime('./StopRequest.txt');
+                        saveTime('./ChooseProvider.txt');
                         process.exit();
                     })
                 })
