@@ -663,6 +663,8 @@ def getTime(mess):
     f.close()
 
 def hostController(file):
+    global totalAddr
+    totalAddr = '' #Reset totalAddr for total thread restarter
     genKey()
     for i in range(0,threads):
         orderAddr.append(0)
