@@ -88,7 +88,7 @@ decryptedAccount.signTransaction(rawTransaction)
         saveTime('./StopProviding.txt');
     })
     .then(()=>{ //Start Task
-        ABIstartRequest = myContract.methods.startRequest(100, 100, 1000, web3.utils.asciiToHex('216.3.128.12')).encodeABI();
+        ABIstartRequest = myContract.methods.startRequest(web3.utils.asciiToHex('216.3.128.12')).encodeABI();
         rawTransaction = {
             "from": userAddress,
             "to": addr,
@@ -121,7 +121,7 @@ decryptedAccount.signTransaction(rawTransaction)
             saveTime('./StartRequest.txt');
         })
         .then(()=>{ //Update Task
-            ABIupdateRequest = myContract.methods.updateRequest(100, 100, 1000, web3.utils.asciiToHex('216.3.128.12')).encodeABI();
+            ABIupdateRequest = myContract.methods.updateRequest(web3.utils.asciiToHex('216.3.128.12')).encodeABI();
             rawTransaction = {
                 "from": userAddress,
                 "to": addr,
@@ -186,6 +186,40 @@ decryptedAccount.signTransaction(rawTransaction)
                     }
                     saveTime('./StopRequest.txt');
                     process.exit();
+                }).then(()=>{ //Start Task
+                    ABIchooseProvider = myContract.methods.chooseProvider('0x458c5617e4f549578e181f12da8f840889e3c0a8').encodeABI();
+                    rawTransaction = {
+                        "from": userAddress,
+                        "to": addr,
+                        "value": 0, //web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+                        "gasPrice": web3.utils.toHex(web3.utils.toWei("30", "GWei")),
+                        "gas": 5000000,
+                        "chainId": 3,
+                        "nonce" : web3.eth.getTransactionCount(userAddress),
+                        "data": ABIchooseProvider
+                    }
+                    console.log(chalk.green("CHOOSEPROVIDER"));
+                    stopwatch.start();
+                    decryptedAccount.signTransaction(rawTransaction)
+                    .then(signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                    .then(receipt => {
+                        console.log(chalk.cyan("\n\nstop request successful...\n"))
+                    })
+                    .then(() =>{
+                        try{
+                            web3.eth.subscribe('newBlockHeaders', (err, result) => {
+                                if(err) console.log(chalk.cyan("ERRRR", err, result));
+                            })
+                        }
+                        catch(error){
+                            alert(
+                                `Failed to load web3, accounts, or contract. Check console for details.`
+                            );
+                            console.log("\n", chalk.red(err), "\n");
+                        }
+                        saveTime('./ChooseProvider.txt');
+                        process.exit();
+                    })
                 })
             })
         })
