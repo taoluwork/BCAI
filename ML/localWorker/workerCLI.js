@@ -1010,26 +1010,38 @@ function listenWebsite(){
     //Web page get rating
     app.get('/rating', function(req, res) {
         if(userAddress) {
-            //Set rating if necessary
-            if(curRating == null) {
-                for(var i = 1; i<ratingsTable.length; i+=1){
-                    if(userAddress.toLowerCase() == ratingsTable[i][1].toLowerCase()){
-                        console.log("Here2")
-                        curRating = ratingsTable[i][0];
-                    }
-                }
-            }
-            //Only send response if there is a rating, otherwise send nothing
-            if(curRating != undefined) {
-                var ratingJSON = {"Rating" : curRating};
-                res.header("Content-Type", 'application/json');
-                res.send(ratingJSON);
-            }
-            else {
-                var ratingJSON = {"Rating" : "0"};
-                res.header("Content-Type", 'application/json');
-                res.send(ratingJSON);
-            }
+            myContract.methods.getProviderPool().call().then(function(provPool){
+                return provPool
+                //return provPool;
+                //console.log(provPool);
+            })
+            .then((provPool) => {
+                ratings.length = 0;
+                rateProvs.length = 0;
+                provPool.forEach(prov =>{
+                    myContract.methods.getAvgRating(prov).call().then(function(rating){
+                        pos+=1;
+        
+                        ratings.push(rating);
+                        rateProvs.push(prov);
+                        return [rating, pos, prov];
+                    })
+                    .then((arr) => {
+                        //console.log("\nThe rating is ", rating, " for provider", prov, "\n")
+                        console.log(arr[0].toString() + " " + arr[2].toString())
+                        if(userAddress.toUpperCase() == arr[2].toString().toUpperCase()) {
+                            console.log("ree")
+                            var ratingJSON = {"Rating" : arr[0].toString()};
+                            res.header("Content-Type", 'application/json');
+                            res.send(ratingJSON);
+                        }
+                        return arr[1];
+                    })
+                    i++;
+                }) 
+            })
+            //.then(() => askUser())
+            .catch((err) => console.log(err));
         }
     })
 

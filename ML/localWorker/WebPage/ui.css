@@ -60,3 +60,11 @@ body {
 .submitPassword {
     margin-top: 1%;
 }
+
+tr:hover > td {
+    color: #f0ead6;
+}
+
+tr:hover > th {
+    color: #f0ead6;
+}
