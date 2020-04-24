@@ -1,5 +1,3 @@
 cd ML/localWorker
-#TODO: If doesn't exist, create stat.txt
-#If not empty, make it empty
-sudo python3 execute.py 
-node workerCLI.js #start CLI, can start web page from here
+gnome-terminal --title="BCAI Worker Console" --tab -x node workerCLI.js 
+gnome-terminal --title="BCAI Worker File Hosting/Transfer" --tab -x sudo python3 execute.py
