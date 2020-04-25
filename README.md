@@ -1,11 +1,11 @@
 # BCAI
 This is a LSU project.
 
-##How to install
+## How to install
 Take file install.bash and run with 'sudo bash install.bash' in the directory which you would like the BCAI directory to be.
 It will download this repo, the onionshare repo, and install all required software/pip3 packages/npm packages needed to run the project.
 
-##How to run user
+## How to run user
 In ML/localUser place your docker task file named image.zip
 
 In the main directory run 'bash startUser.bash' this will open two terminal tabs:
@@ -32,7 +32,7 @@ The following steps must take place for your task to be completed:
 
 6) After receiving your result,  finalize your request, giving a rating to your provider based on the correctness and quality of the result.
 
-##How to run user
+## How to run user
 In the main directory run 'bash startUser.bash' this will open two terminal tabs:
 
 1) The CLI where you interact with the application to start providing or check things such as your rating and balance.
@@ -45,5 +45,7 @@ In the CLI you can either continue using the CLI to use the program or open the 
 
 Once you start providing, no interaction is needed to continue completing tasks.
 
-##Other info
+## Other info
 Please do not close any of the terminals or the web page until you have finished/stopped your request or providing.
+
+If you have any issues please contact with a copy of log.txt and describe the issue.
