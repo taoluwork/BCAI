@@ -6,6 +6,8 @@ Take file install.bash and run with 'sudo bash install.bash' in the directory wh
 It will download this repo, the onionshare repo, and install all required software/pip3 packages/npm packages needed to run the project.
 
 ## How to run user
+Users upload ML tasks to be performed by providers and pay them in ether cryptocurrency.
+
 In ML/localUser place your docker task file named image.zip
 
 In the main directory run 'bash startUser.bash' this will open two terminal tabs:
@@ -33,7 +35,9 @@ The following steps must take place for your task to be completed:
 6) After receiving your result,  finalize your request, giving a rating to your provider based on the correctness and quality of the result.
 
 ## How to run provider
-In the main directory run 'bash startUser.bash' this will open two terminal tabs:
+Providers execute ML tasks for users and are paid for their work in ether cryptocurrency.
+
+In the main directory run 'bash startWorker.bash' this will open two terminal tabs:
 
 1) The CLI where you interact with the application to start providing or check things such as your rating and balance.
 
