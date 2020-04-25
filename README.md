@@ -32,7 +32,7 @@ The following steps must take place for your task to be completed:
 
 6) After receiving your result,  finalize your request, giving a rating to your provider based on the correctness and quality of the result.
 
-## How to run user
+## How to run provider
 In the main directory run 'bash startUser.bash' this will open two terminal tabs:
 
 1) The CLI where you interact with the application to start providing or check things such as your rating and balance.
