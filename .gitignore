@@ -1,3 +1,5 @@
+image.*
+
 /bcai_deploy/node_modules/
 /bcai_deploy/client/build/
 
@@ -9,3 +11,13 @@
 
 /ML/localUser/curState.json
 /ML/localWorker/curState.json
+
+/ML/localWorker/screens/cap.png
+
+/ML/localUser/'user CLI'/node_modules
+/ML/localUser/'worker CLI'/node_modules
+/ML/localUser/'user CLI'/image.zip
+/ML/localUser/'worker CLI'/image.zip
+
+/cryptographic/privKey.txt
+/cryptographic/pubKey.txt

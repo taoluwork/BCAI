@@ -1,0 +1,56 @@
+Install necessary programs
+
+:::::Python:::::
+
+go to python www.python.org to download and install the most recent version
+
+:::::NodeJs:::::
+
+go to nodejs.org to download and install the most recent version
+
+:::::NPM packets:::::
+
+user$ sudo npm install
+
+:::::Docker:::::
+
+user$ sudo apt-get update
+user$ sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common
+user$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+user$ sudo apt-key fingerprint 0EBFCD88  ///make sure the key is 9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88
+user$ sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+user$ sudo apt-get update
+user$ sudo apt-get install docker-ce docker-ce-cli containerd.io
+user$ sudo docker run hello-world /// this line is to test if docker is properly installed
+
+:::::Nvidia Docker image:::::
+
+user$ sudo docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
+user$ sudo apt-get purge -y nvidia-docker
+user$ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \
+  sudo apt-key add -
+user$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+user$ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | \
+  sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+user$ sudo apt-get update
+user$ sudo apt-get install -y nvidia-docker2
+user$ sudo pkill -SIGHUP dockerd
+user$ sudo docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi //this is a test
+
+
+:::::tensorflow Docker image:::::
+user$ sudo docker pull tensorflow/tensorflow:{tag}
+
+{tag} = a chosen tag for the version of tensorflow that you choose 
+ex: user$ sudo docker pull tensorflow/tensorflow:1.13.0rc1
+see docker images for tensorflow at https://hub.docker.com/r/tensorflow/tensorflow
+
+

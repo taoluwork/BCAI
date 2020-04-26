@@ -1,0 +1,38 @@
+{
+    "ActiveProviders" : 1,
+    "ActiveProviderAddresses" : [
+      {
+        "Address": "0x40657BF5292750477fd7BC048078c7D39055E6a9"
+      },
+      {
+        "Address": "0x40657BF5292750477fd7BC048078c7D39055E6a9"
+      }
+    ],
+    "Pending" : 1,
+    "PendingAddresses" : [
+      {
+        "Address": "0x40657BF5292750477fd7BC048078c7D39055E6a9"
+      },
+      {
+        "Address": "0x40657BF5292750477fd7BC048078c7D39055E6a9"
+      }
+    ],
+    "Providing" : 1,
+    "ProvidingAddresses" : [
+      {
+        "Address": "0x40657BF5292750477fd7BC048078c7D39055E6a9"
+      },
+      {
+        "Address": "0x40657BF5292750477fd7BC048078c7D39055E6a9"
+      }
+    ],
+    "Validating" : 1,
+    "ValidatingAddresses" : [
+      {
+        "Address": "0x40657BF5292750477fd7BC048078c7D39055E6a9"
+      },
+      {
+        "Address": "0x40657BF5292750477fd7BC048078c7D39055E6a9"
+      }
+    ]
+  }

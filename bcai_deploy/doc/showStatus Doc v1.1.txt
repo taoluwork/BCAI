@@ -1,0 +1,94 @@
+////////////////////////////////////////////////////////////////////////
+//'showStatus.js' Documentation
+// version 1.0, this document is aligned with showStatus.js v2.0.1
+// Author: Samuel Pritchett
+////////////////////////////////////////////////////////////////////////
+// Monitors event emmisions from bcai and shows the status of new blocks
+////////////////////////////////////////////////////////////////////////
+main functions:
+Get the accounts from ganache: web3.eth.getAccounts(), if successful...
+Run showStatus on every account. If failed, exit main.
+Begin to monitor events with myContract.events."SystemInfo and PairingInfo"
+If these events are emitted, console.log the message recieved
+Subscribe to every new block and run showStatus on each one
+
+TODO: N/A
+
+////////////////////////////////////////////////////////////////////////// Setup
+
+Define 'version' which holds a string defining what version number the client is and the author's name
+Define the networkId that will be used (for testing purposes)
+
+'var argv = require('minimist')(process.argv.slice(2));' lets us use this file
+
+If statement to execute if the user types "--help"
+       Outputs to console what commands the user can type and what they Documentation
+
+If the user types "--v" or "--version", outputs to console the string with the version number
+
+Define variables 'Web3', 'web3', 'MyContract', 'mycontract' and 'myAccounts'
+
+init
+       Web3 uses the module 'web3' - a wrapper for ethereum related modules
+       web3 is defined as a new Web3
+       MyContract uses the module 'TaskContract.json'
+       mycontract is defined as a new MyContract
+
+
+//////////////////////////////////////////////////////////////////////////////// Main
+
+Call function init()
+Call the module web3.eth.getAccounts() which will return a list of addresses owned by the client
+Promise begins here on web3.eth.getAccounts(). If the promise is resolved, the function showStatus(myAccounts) is return.
+        If web3.eth.getAccounts is rejected, an error message is displayed
+Another promise begins here on web3.eth.getAccounts()
+        This code will be executed if the previous promise was resolved as well. Otherwise main would be done running. 
+
+        First, myContract.events.SystemInfo() runs whenever an event is emitted from bcai
+        If the event returns an error, an error message is logged
+        .on() attaches an event handing function to the event, 'data' allows the event object to be used as an argument
+        the function calls PrintEvent(event)
+
+        Next, myContract.events.PairingInfo() runs whenever an event is emitted from bcai
+        does the same as .SystemInfo()
+
+        Lastly, web3.eth.subscribe('newBlockHeaders', function(err, result) where newBlockHeaders is the type of subscription
+        Displays the status of every new block by subscribing and running showCurrentStatus() on every new block
+        If the function returns an err as true, an error message is output
+        Afterwards, regardless of if an error occurs, a message is output saying that the block has been updated
+        showCurrentStatus is then run on the block
+
+///////////////////////////////////////////////////////////////////////////////// Functions
+
+showCurrentStatus
+        if myAccounts is not undefined, the account list is printed
+        if the user runs the function with 'acc' or 'a', the process exits
+        the functions returns showStatistics() followed by a promise which executes showPools() if fufilled
+
+showStatistics
+        function to be called by showCurrentStatus
+        myContract.methods.getRequestCount().call().then(function(totalCount) is returned
+        the .then() is a promise, when fufilled, the function afterwards is executed
+        some text is output when the promise is fufilled
+        once that text is output, another promise
+
+showPools
+        returns the promise object
+        basically is a chain of promises, each that will log out each of the pools as well as their lengths
+
+PrintEvent
+        if the user types debug, logs out the event
+        otherwise it logs out the event and block number
+
+DisplayNonZeroInList
+        called by ListOutPool
+        if the type variable is a request 
+           For every element in the list
+           logs out the ID, providor and status of each request
+           if debug, also logs out the item itself
+        or if the type variable is a provider
+           logs out the providor ID and that said providor is available
+        else throw an error
+
+ListoutPool
+        Basically just calls DisplayNonZeroInList twice, one for request and once for providor

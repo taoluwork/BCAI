@@ -1,0 +1,417 @@
+/////////////////////////////////////////////////////////////////////////////
+//version v2.0.1, align with contract v2.0.1
+//Author: Taurus
+//copyright: tlu4@lsu.edu
+//
+//Abstract: this file describe the design principle and reference of smart contract
+//updated to v2.0.1, may expand to a yellowpaper in future
+/////////////////////////////////////////////////////////////////////////////
+
+Smart contract description on blockchain AI(BCAI):
+
+Terminology:
+    Provider (worker): the node who want to do the computation and earn award. Also called worker in web desgin.
+    Requester (user): who submit the computation task.
+    Request : the task itself, including parameters and dataID on IPFS.
+    Assign: the action of matching capable provider to request.
+
+Overall Desgin:
+An example scenario with following participants. Nodes: (A, B, C, D, E), Contract X
+    A: user (requestor), who has task need to be computed;
+        Task will be saved on the contract storage as a struct Request.	
+    B: worker (provider), who can do task and get payment
+        Contract maintains a dynamic list of active providers -- you can leave and rejoin at any time.
+    C,D,E: validators to validate whether result from B is acceptable.
+        In the contract, providers that are not currently assigned a task are considered validators.
+    X: the smart contract itself.
+
+
+A simple message flow:
+A -- requestTask -> X --assignTask -> B --completeTask -> X --validateTask -> B,C,D --submitValidation--> X --checkValidation -> All
+
+Status:
+	The lifetime of Request is defined as 'pending', 'providing', 'validating', 'complete'
+	byte Request.status is defined as follows:
+		0: 'pending',           //request is firstly added, not computed
+		1: 'providing',         //request being calculated for the first time
+		2: 'validating',        //request need to be validated, waiting to be assigned.
+		3: 'complete'           //request done
+
+Struct and list:
+	struct Request;
+	struct Provider;
+	
+	uint64  public providerCount; 		//total number of active providers in the mapping below	
+	uint128 public requestCount;		//total number of requests sent to contract
+	uint128 public pendingCount;					
+    	uint128 public providingCount;				
+	
+	address[] public providerPool;      	//tracing the active           
+    	uint128[] public requestPool;		//tracking the active
+	
+	mapping (address => Provider)  public providerList;
+	mapping (address => uint64)    public providerID;
+	mapping (uint128 => Request)   public requestList;
+	mapping (address => uint128[]) public requestID;
+	mapping (address => uint256)   public balanceList;
+	
+	startProviding();	//add sender as new provider
+	stopProviding();	//
+	requestTask();		//send new request
+	assignTask(req);	//find a provider for the req
+	findRequest();		//find a req for the provider
+	
+	
+	
+
+
+Smart contract Design:
+Global Struct:
+    struct Request {
+        address payable addr;       //payable is new feature from sol v5.0
+        address payable provider;   //addr of worker
+        uint128 reqID;              //requestID is the only identifier for each Request
+        uint64  dataID;             //dataID used to fetch the off-chain data
+        uint64  time;               //time
+        uint16  accuracy;           //target 0-100
+        uint256 price;              //the max amount he can pay
+        uint64  resultID;           //dataID to fetch the result
+        uint64  numValidationsNeeded;   //user defined the validation
+        bool[]  validations;        //multisignature from validations
+        bool    isValid;            //the final flag
+        bool    status;        		//one of the four stages
+    }
+    
+    struct Provider {
+        address payable addr;       //providers address
+        uint64  providedCount;      //reputaion-like reference for each provider, future use
+        uint64  requestedCount;     //
+        uint64  maxTime;            //max time
+        uint16  maxTarget;          //max target he need
+        uint256 minPrice;           //lowest price can accept
+        bool    available;          // Used to determine if provider is already doing something
+    }
+
+Global variables:
+	uint128 public requestCount; 
+	//total number of requests sent to the contract ever.
+	//also used as the Identifier for unique Requests.
+	
+	uint64  public providerCount;                   
+	//total number of providers ever registered
+	//not the identifier even now its unique for each provider
+	
+	uint128 public pendingCount;	
+	
+    	uint128 public providingCount;                  
+	//total number of requests that being computed (assgined)
+    
+	address[] public providerPool;                  
+	//record the available providers; active objects
+    	//NOTE: use providerPop() to safely remove item from the array.
+	//Editing array in solidity is costly, using some gas.
+	
+	uint128[] public requestPool;                   
+	//record the pending request;	active objects
+	
+	/////////uint64[] public spaces 			
+	//NOTE: this is deprecated since version v1.0, address is used as identifier 
+	//thus no need to keep tracking the empty spaces, no need to delete element from mapping 
+	//because every possible key is stored their.
+	//an array that saves the indexes of holes created in the provider mapping when stopProviding is called.
+	//By popping values from the array we can assign new providers these spots in the mapping.
+
+Global mappings:	
+	mapping (address => Provider) public providerList;   
+		//List of known providers. Record every provider addr ever registered.
+		//Maps provider address to Provider object.
+		//provider's address is the unique identifier of Provider objects.
+    
+	mapping (address => uint64) public providerID;      
+		//look up providerID using address, can be used to gather all the provider address from a same providerID (person).
+		//providerID is not the identifier of Provider object, address IS!
+		//ID could possibly be same between different address.
+    		//e.g. Tom has Two account with addr_1, addr_2, but he could be assigned an unique providerID.
+		//NOTE: right now ID is given by the providerCount.
+
+    	mapping (uint128 => Request) public requestList;    
+		//List of known requests. Record every request submitted. Storage.
+		//Maps requestID to Request object, requestID is the unique identifier for Request object.
+		//requestID is now assigned in sequence of submission, using requestCount.
+		//Requests' status change does not effect requestCount, only effect pendingCount and providingCount;
+		//Re-submit same request result in duplicate request for now.
+		//TODO: handle the duplication
+		
+	mapping (address => uint128[]) public requestID;       
+		//Look up requestID using user's address, gathering all the request submited by the same person
+		//NOTE: single user could have multiply requestID,
+		//For the requests, requestID (uint128) is the only identifier.
+    		//Address is not because multiple request could come from same address
+	
+	mapping (address => uint256) public balanceList;    
+		//for keeping track of how much money requesters have sent
+    	
+	//////uint64[] public spaces;      //space is deprecated                       
+	//Open spaces where providers left. should be filled when new provider comes
+    	
+	
+	
+    
+	
+	
+	
+	
+The whole scenario is working in following steps:
+0. Deploy X to the blockchain
+	Constructor is called,
+	list, pool, array initialized.
+	count initialized.
+	
+1. submit a task or add a provider	
+
+1.1 node B startProviding(maxTime, maxTarget, minPrice)..
+	PSUEDOCODE
+	check new or existed provider
+	new {
+		update providerList: set up new config
+		update providerID //for now , disable one ID refer to multiple address
+		update pool
+		increase count
+	existed{
+		update config
+	wait to be assigned.
+
+
+
+1.2 node A send requestTask to X
+	requestTask(uint64 dataID, uint16 target, uint64 time) payable public returns (bool)
+		1. dataID	//Let’s say raw data is stored off-chain. Use this ID to achieve data
+		2. target	//error target defined by A, lets say this is a fixed length percentage. E.g. correction rate = 95.1234%, then target = 951234. Correct rate greater than this is acceptable.
+		3. time		//time need to be done, deadline = Timelimit + now.
+		4. msg.value 	//the money willing to pay, this is passed in the value field of the Tx and saved in requestors balance
+	
+	Here the contract will create a struct Request using the parameters with the following values:
+	struct Request {
+		address addr; 			//msg.sender - address of the requestor
+		address provider;		//0x0 - updateed in assignTask if an available provider is found
+		uint128 reqID;			//requestCount -- global counter
+		uint64 dataID;			//parameter passed in as dataID
+		uint64 time;			//parameter passed in as time
+		uint16 accuracy;		//parameter passed in as target
+		uint256 price; 			//parameter passed in as msg.value
+		uint64 resultID;		//0 - changed in completeTask
+		uint64 numValidationsNeeded; 	//0 - changed when provider submits results and validations are needed
+		bool[] validations;		//emptyArray - filled in submitValidation calls
+		bool isValid;			//false - changed in checkValidation
+		byte status;			//set to '0' (pending) when submitted
+    	}
+	
+PSUEDOCODE
+	init emptyArray (for multi-sig)
+	init Request req.
+	update list, pool, count.
+	write to storage mapping.
+	return assignTask(req)
+	//NOTE: sequence of execution is important. In case of running out of gas, modifying the storage should
+	//be the last step.
+	
+	
+2. contract X executes assignTask or findRequest
+2.1 assignTask when task submitted.
+	assignTask( ) private returns (byte)
+	//assignTask should be triggered whenever new Request submitted, searching through the active provider pool.
+	//Return '0' if find a match and assigned.
+	//Return '1' if no match
+	//Return '2' if no available provider.
+	//called by requestTask() -- private.
+	
+	
+	
+PSUEDOCODE
+	check pool: if any availabel provider 
+	For each entry of provider pool:
+		get the provider's address from Pool(array)
+		get the provider's object from the List(mapping)
+		if (available && meet requirements)
+			//update providerList
+			provider.availability = false	//exec first to lock this provider
+			providerPOP
+			//update reqList
+			update Request.provider
+			status '0' to '1', pending to providing
+			requestPOP
+			
+			update balancesList
+			update count
+			emit event for provider to see and act upon
+			return '0'
+		else
+			try next provider entry in mapping //for loop
+	//upon failing to find provider (loop exited)
+	//send ether back to requestor	//handling ether is not fully considered and tested.
+	return '1'
+	if loop fail due to empty Pool, return '2'
+		
+2.2 findRequest when new provider added.
+	findRequest(Provider memory prov) private returns (byte)
+	//Should be triggered whenever new provider added, searching through the active requestPool.
+	//Return '0' if find a match and assigned.
+	//Return '1' if no match
+	//Return '2' if no available request.
+	//called by startProviding() -- private.
+
+PSUEDOCODE
+	For each entry of request pool:
+		get the request's reqID from Pool(array)
+		get the request's object from the List(mapping)
+		if (meet requirements)
+			provider.availability = false	//exec first to lock this provider
+			update Request.provider
+			status '0' to '1', pending to providing
+			save request to mapping
+			
+			update balancesList
+			update count
+			emit event for provider to see and act upon
+			return '0'
+		else
+			try next request entry in mapping //for loop
+	//upon failing to find request (loop exited)
+	//send ether back to requestor		//handling ether should be very careful
+	return '1'
+	if loop fail due to empty Pool, return '2'
+		
+2.3 TODO: maybe we can extract the common part of the previous two and put it into
+	function assgin(Request memory, Provider memory) private returns(bool)
+	
+	
+3. B sees event with his address, does the requested computation then sends completeTask to X
+	//event-listening,
+	// -->check<--  // dev , test
+	
+	
+	//computation offchain
+	
+	//completeTask
+	completeTask(uint128 reqID, uint64 resultID) public returns (bool)
+	1. reqID - the unique ID of the request that is being completed
+	2. resultID - similar to dataID. Let’s say raw data is stored off-chain. Use this ID to achieve data
+	
+	This function confirms that the msg.sender was the original chosen provider then calls validateTask if they were.
+	Also sets the provider to be available for a new request again.
+	
+	PSUEDOCODE
+	If msg.sender is the provider of request reqID
+		update request.complete
+		update request.resultID
+		provider.available = true
+		return validateTask(reqID)
+	else 
+		return false
+
+
+
+
+
+
+
+//////////////////////////////////////////////update stop here
+4. X executes validateTask
+	validateTask(uint128 reqID) private returns (bool)
+	1. reqID - unique ID of the request that is being validated
+	
+	This function selects a certain number of providers to validate the work done by the provider B.
+	If not enough providers are available for validation then the function returns false and the provider remains unavailable
+	Each validator gets paid a predetermined amount of the original offering from the requestor.
+	
+	PSUEDOCODE
+	validatorsFound = 0
+	update request.numValidationsNeeded (possibly 1/10th of total providers, but set to 3 right now)
+	For each entry in the provider mapping until validatorsFound == numValidators:
+		if provider is real and available
+			emit event for validator to see and act upon (nodes C,D,E)
+			incrememnt validatorsFound
+		else 
+			try next provider entry in mapping
+	if validatorsFound == numValidators return true
+	else return false
+	
+	
+5. C,D,E see event to validate with their address, do computation, and send result to submitValidation
+	submitValidation(uint128 reqID, bool result) public returns (bool)
+	1. reqID - unique ID used to refer to request being validated
+	2. result - true or false, whether results were validated or not
+	
+	CURRENTLY DOES NOT CHECK WHETHER THE VALIDATORS WERE THE ACTUAL ONES CHOSEN
+	ALSO DOES NOT ALSO HAVE A RETURN VALUE -- COULD BE BAD
+	
+	This function takes in validation results and saves them into the validations array within the request struct
+	When the contract sees that enough validations have been submitted it will call checkValidation to determine if the provider is paid.
+	
+	
+	PSUEDOCODE
+	init partialPayment - the amount each validator gets paid (currently 1/100th of original offer)
+	pay validator and deduct the cost from requestors on-contract balance
+	push result onto request.validations array
+	if all the validations have been submitted
+		payment = remaining ether for task after validators are paid
+		return checkValidation(reqID, payment)
+		
+
+	
+6. X calls checkValidation
+	checkValidation(uint128 reqID, uint payment) private returns (bool)
+	1. reqID - unique ID used to refer to request that was validated
+	2. payment - amount of ether that the provider will receive if work is successfully validated
+	
+	This function looks through each submitted validation and determines if 2/3 of the submissions were successful.
+	If so the work was valid, and the provider gets paid.
+	Otherwise the validations failed and the requestor gets some of the money back (validators are paid either way)
+	
+	PSUEDOCODE
+	successCount = 0
+	for each validation submitted:
+		if validation == true
+			successCount++
+	if successCount >= 2/3 of request.numValidationsNeeded
+		send payment to provider and deduct value from requestors on-contract balance
+		request.isValid <- true
+	else 
+		send payment back to requestor and deduct value from his on-contract balance
+	emit event saying task is done (whether successful or not) for requestor to see
+	return request.isValid
+	
+	
+	
+Registration System:
+	To become a provider you must register your provider address in the contracts system.
+	This works by determining what type of requests you are willing to fulfill 
+	and passing this information to the contract via startProviding function.
+	
+	1. startProviding(uint64 maxTime, uint16 maxTarget, uint64 minPrice) public 
+		1. maxTime - max time you are willing to spend on any given request
+		2. maxTarget - max accuracy you can be expected to meet for a request
+		3. minPrice - minimum price you will complete a request for
+
+		This function allows a new provider to register and also allows an old provider to 
+		update their parameters for the type of requests they will do.
+
+		PSUEDOCODE
+		if address isnt already a registered provider
+			create the provider and add them to first empty space in the mappings
+			numProviders++
+		else (address was found in mapping)
+			update maxTime, maxTarget, minPrice
+			
+	2. stopProviding() public
+		This function will be called when a provider is done offering his cpu to complete tasks.
+		It will remove his address from the mappings and create an empty space for a new provider to fill.
+		If they were the most recent provider to register then no empty space will be created, just remove them.
+		
+		PSUEDOCODE
+		if sender is a registered provider
+			provider.available = false
+			provider.addr = 0
+			if sender is not the most recent provider to register
+				save their index to spaces array so it can be filled by future provider
+			numProviders--

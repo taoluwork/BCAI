@@ -1,0 +1,9 @@
+Goal:
+  This python script will generate a txt file that states if validation is true or false
+note:
+  this file should only be called by localEnv.js so keep these files in the same directory
+process:
+  open result.txt and read in the stored accuracy and loss values as a string
+  open eval.txt   and read in the stored accuracy and loss values as a string
+  compare the two value and store it as a boolean
+  oepn fin .txt and store the boolean followed by the two strings into the new file

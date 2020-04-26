@@ -1,0 +1,18 @@
+List of tasks
+
+bcai_2.0.sol
+    add conflict detection of the address. Check whether existing req or prov from your address is 'not complete',(being proccessed)
+    assignRequest - need to add preference
+                    how to return payment
+    validateRequest - check whether selected validator capable with parameters (time, accuracy,....)
+    submitValidation - the money part is omitted
+    checkValidation - what if result is invalid, we got 3 false signature, will stuck here
+                      payment still left out here
+    findValidation - IDEA: Could be modified so that any available provider could call. For now it assumes only used on new providers in startProviding
+
+App.js
+    update appearance -- material-ui
+    fix the async function dependency. e.g. Need returned dataID to send Tx
+    use this.state.RequestStartTime to record block# and narrow down the searching range of events
+    change filesharing from IPFS
+    
