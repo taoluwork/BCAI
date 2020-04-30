@@ -1,3 +1,25 @@
+#This script is for the installation of the project. It is intended to be copied from the repo and run before downloading said repo
+#It will install the following things:
+#Software-
+#   git
+#   npm
+#   node.js
+#   python
+#   pip3
+#   flask
+#   tor
+#   docker
+##If any of these are already installed it will skip installing them
+#pip3 packages-
+#   pysocks
+#   flask-httpauth
+#   stem
+#   cryptography
+#BCAI Repository in specified directory, or current directory if none specified
+#Onionshare repository in the same directory as the BCAI repository
+#npm packages for user (see packages.json in ML/localUser for a complete list)
+#npm packages for worker (see packages.json in ML/localWorker for a complete list)
+
 #Initializing time
 start=$(date +%s%N | cut -b1-13) #time in milliseconds
 #Changing directory

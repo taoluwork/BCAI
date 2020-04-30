@@ -1,3 +1,9 @@
+/*
+This is the css for the user web page.
+It is used to define stylings to make the web page look nicer.
+The major thing it does is make the web page "night mode" so that it is a black background with white text.
+*/
+
 :root { /*default background and text colors*/
     --bg: #303030;
     --text: #F0F0F0;

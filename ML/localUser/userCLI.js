@@ -1,3 +1,10 @@
+/*
+This is the CLI file for user, one of two major components.
+It is how the user interacts with the project by selecting choices within it.
+It also gives the option to open the web page. If the web page is opened, it still makes calls to this file for functons.
+Important note is that this file uses web3 with infura to make transactions on our smart contract on the Ethereum blockchain.
+*/
+
 var inquirer = require('inquirer');
 var Web3 = require('web3');
 var fs = require('fs');
