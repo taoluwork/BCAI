@@ -97,7 +97,7 @@ questions = {
     type : 'list',
     name : 'whatToDo',
     message: 'What would you like to do?',
-    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'check address a8 balance', 'USD to ETH', 'quit'],
+    choices : ['start request', 'show pools', 'create new address','show addresses',  'help', 'show provider ratings', 'USD to ETH', 'quit'],
 };
 
 questions1 = {
@@ -565,13 +565,7 @@ function choiceMade(choice){
         .then(()=>{askUser()})
         .catch((err)=>{console.log(err)});
     }
-    else if(choice == questions.choices[6]){
-        web3.eth.getBalance("0x458c5617e4f549578e181f12da8f840889e3c0a8".toLowerCase())
-        .then((balance) => {console.log("\n\n", web3.utils.fromWei(String(balance), 'ether'), "Ether \n")})
-        .then(()=>{askUser()})
-        .catch((err)=>{console.log(err)});
-    }
-    else if(choice == questions.choices[7] || choice == questions1.choices[7]){
+    else if(choice == questions.choices[6] || choice == questions1.choices[7]){
         price.getCryptoPrice('USD', 'ETH').then(obj => {
             console.log(chalk.cyan("\nThe current amount of 1 ETH in USD is $", obj.price, "\n"));
             askUser();

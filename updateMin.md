@@ -28,4 +28,6 @@ Will create userCLI/workerCLI, cut into appropriate folder in min
 
 After running truffle, go to bcai_deploy/client/src/contracts, copy all files there to same folder in min
 
+Note: For some reason, it seems that after updating the contract, you must recompile the Javascript files as well
+
 
