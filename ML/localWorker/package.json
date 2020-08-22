@@ -16,7 +16,7 @@
     "figlet": "^1.2.4",
     "hex2ascii": "0.0.3",
     "inquirer": "^7.0.0",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.3",
     "prompts": "^2.2.1",
     "prop-types": "^15.7.2",
     "public-ip": "^3.2.0",
