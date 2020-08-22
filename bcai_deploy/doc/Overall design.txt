@@ -1,0 +1,116 @@
+/////////////////////////////////////////////////////////////////////////////
+//version v1.0.0
+//Author: Taurus
+//copyright: tlu4@lsu.edu
+//
+//Abstract: this file describe the overall design of project BCAI.
+//NOTE: For details of specific modules please refer to the module design descriptions.
+/////////////////////////////////////////////////////////////////////////////
+
+
+Major modules of design.
+	1. Smart Contract (blockchain)
+	2. IPFS (off-chain data exchange)
+	3. Client (interactive UI)
+	4. Local environment (machine learning training)
+	5. Developing Tools (not shown in figure)
+
+Smart Contract:
+    Smart Contract provides the major functionality of the design, including matching requests 
+    with providers and handle token issues (TODO). All users/workers has their own client but 
+    with same smart contract deployed on-chain. 
+
+IPFS
+    IPFS is a distributed file system. This serves as an intermedia of off-chain data transfer. 
+    Since the blockchain has a very limited ability to handle data transfer, all big data will
+    be uploaded to IPFS system and be retrieved later.
+
+Local Environment:
+    Local Environment is where ML training is done. We are using Tensorflow model, 
+    which has .js support to interact with client. Futher support is TBD. 
+    Environment adjustment is optional.
+
+Client:
+Client is a piece of software which interact between user local machine, blockchain and IPFS. 
+We provide both the web-based client and Command Line Interface (CLI) version.
+
+Clients do thess things:
+	A. Interact with blockchain (event-driven pattern)
+        1. Let user / worker log in and achieve their personal data, such as Ethereum accounts, 
+            costomized parameters (time, price etc). Browser plug-in metamask will be used. 
+            CLI version use only web3 library.
+        2. Monitor the events on blockchain, and do proper response. 
+            (Enabled by web3.js function calls)
+	
+	B. Interact with IPFS
+        1. Upload ML script onto IPFS (user end)
+        2. Retrive uploaded script (worker end)
+        3. When done computation, upload result onto IPFS (worker end)
+        4. Download ML result and reconstruct the NN locally
+
+	C. Interact with local hardware
+        1. Collect local environment settings, used to match different env requirements.
+        2. (optional, TBD) Adjust local env settings / parameters
+        3. Start the ML training calculation
+        4. Redo the training for validation
+        5. Pack the result and ready to upload.
+
+Developing tools:
+    Developing tools are tools to monitor blockchain behavior. Such as "showStatus.js" 
+    monitors the events, transaction and pool changes on blockchain. 
+    A bunch of well-formated unit test files are needed to proceed further real on-chain test.
+
+Interaction : Event-driven design pattern
+    Blockchain has a big limitation that smart contracts will only return value after 
+    that block was added to the main chain and got executed by the nodes. In addition, 
+    there is no way for smart contract to halt for a return value from other execution 
+    (say computation of ML in our case). Thus, we use the event-driven pattern in our design. 
+
+    Event-driven means whenever functions in smart contract need to interact with outside, 
+    it emits an event with address and info to pass. At the same time, user's client 
+    (both web-based and CLI) will monitor the events and respond to specific ones. 
+    These responds include interacting with blockchain (calling another smart contract 
+    function), interacting with ipfs (record and retrieve data via IPFS api) and 
+    interaction with local hardware (execute the machine learning calculation).
+
+    From another point of view, smart contract is designed like a state machine. 
+    Not like some server programming running all the time, smart contract stays their state 
+    quietly until a Tx is sent to them and trigger the state change. 
+    In other words, when smart contract is not called, no cost is used. 
+
+In summery, smart contract is triggered to change state (values) by Transactions. 
+Client is triggered to response by events sent from smart contract. This events 
+are part of the transaction receipt, thus can be monitored by the design.
+
+
+A life cycle of a request in  psudo code:
+    1. User submit a request R from his client to smart contract.
+    2. Contract add R to pending pool, followed by an instant pairing. //instant means handled in the same block clock.
+        if match
+            assignRequest()
+        if no match
+            nothing. (stay in pending pool)
+    3. Say R is assigned to Provider P.
+        Remove R from Pending pool
+        Add R to Providing pool
+        emit "paring" event
+    4. Upon receiving "pairing event", client do the computation
+        when finished, call completeRequest() by sending TX
+    5. Contract add R to validating pool, followed by an instant pairing
+        if match
+            validateRequest()
+        if no match
+            nothing (stay in validating pool)
+    6. Say R is assigned to Provider P2.
+        Remove R from Validating pool
+        emit "paring vali" event
+    7. Upon receiving "pairing vali", client do the validation
+        when finished, call submitValidation()
+    8. Contract add R to validatingPool or completePool
+        add signature to the endorse list.
+        check # of valid signature
+        if enough signature
+            add R to completePool
+        if not enough
+            add R to validatingPool
+            follow an instant pairing.` 

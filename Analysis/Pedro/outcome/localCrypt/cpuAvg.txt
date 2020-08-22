@@ -1,0 +1,1 @@
+average cpu usage: 23.117064987781394
