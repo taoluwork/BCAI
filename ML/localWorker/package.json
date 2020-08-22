@@ -1,29 +1,44 @@
 {
-  "name": "bcai_localworker",
-  "version": "1.0.0",
-  "description": "the local client for bcai v2.0 stable",
-  "main": "localEnv.js",
+  "name": "bcai_web",
+  "version": "2.0.1",
+  "description": "Developing version of BCAI project.",
+  "main": "./client/src/App.js",
+  "directories": {
+    "test": "test"
+  },
   "dependencies": {
-    "child_process": "^1.0.2",
+    "@material-ui/core": "^4.3.3",
+    "@material-ui/styles": "^4.3.3",
+    "bignumber.js": "^8.0.2",
+    "chalk": "^2.4.2",
+    "cli-table": "^0.3.1",
     "express": "^4.17.1",
-    "fs": "^0.0.1-security",
-    "http": "^0.0.0",
-    "json-stringify": "^1.0.0",
-    "json-stringify-safe": "^5.0.1",
+    "figlet": "^1.2.4",
+    "hex2ascii": "0.0.3",
+    "inquirer": "^7.0.0",
+    "minimist": "^1.2.0",
     "prompts": "^2.2.1",
-    "public-ip": "^3.1.0",
-    "socket.io": "^2.2.0",
-    "util": "^0.12.1"
+    "prop-types": "^15.7.2",
+    "public-ip": "^3.2.0",
+    "react-notifications-component": "^1.1.1",
+    "sleep": "^6.1.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "statman-stopwatch": "^2.11.1",
+    "system-health-monitor": "^1.2.0",
+    "tcomb-form": "^0.9.21",
+    "truffle-assertions": "^0.8.0",
+    "truffle-hdwallet-provider": "^1.0.10",
+    "web3": "^1.0.0-beta.51"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "ganache-cli": "^6.3.0",
+    "truffle": "^5.0.4"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "truffle test ./test/artTest.js",
+    "migrate": "truffle migrate --reset"
   },
-  "keywords": [
-    "client",
-    "user",
-    "bcai"
-  ],
-  "author": "Pedro R., Tao L.",
-  "license": "ISC"
+  "author": "Taurus tlu4@lsu.edu",
+  "license": "MIT"
 }
