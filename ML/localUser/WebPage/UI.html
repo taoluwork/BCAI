@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel = "stylesheet" type = "text/css" href = "ui.css" />
+    
+        <title>iChain User Console</title>
+
+    </head>
+
+    <body>
+        
+        
+        <div class="container-fluid" id="headerContainer">
+            <h1 class="display-1 text-center">iChain</h1>
+        </div>
+
+
+        <div class="container-fluid text-center w-75 addresscontainer" id="addressContainer">
+            <button class="btn btn-secondary dropdown-toggle text-center" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Addresses
+            </button>
+                <div class="dropdown-menu text-center" id="AddressBar">
+                </div>    
+        </div>
+
+        <div class="container-fluid text-center w-75" id="passwordContainer">
+            <form id="passwordForm" class="container-fluid text-center w-50">
+                <input type="password" class="form-control passwordVal" id="passwordVal" placeholder="Password">
+                <button type="button" class="btn btn-secondary submitPassword" id="submitPassword">Submit Password</button>
+            </form>
+        </div>
+
+        <br />
+        
+        <div id="actionContainer" class="container-fluid text-center actioncontainer">
+            <form id="startTaskForm" class="container-fluid text-center  w-50">
+                <div class="form-group" id="startTaskInputs">
+                    <input type="text" class="form-control" id="startTaskFilePath" placeholder="Enter File Path">
+                </div>
+                <button type="submit" class="btn btn-secondary" id="startTaskSubmit">Start Task</button>
+            </form>
+
+            <form id="stopTaskForm" class="container-fluid text-center">
+                <div class="form-group text-center" id="StopTaskInputs">
+                    <button type="submit" class="btn btn-secondary text-center" id="stopTaskSubmit">Stop Task</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="container-fluid text-center">
+            <p id="startTaskPSA">Before you can start task, file must finish hosting.</p>
+            <p>After you submit anything, the web page will become unresponsive for a bit as the blockchain message goes through.</p>
+        </div>
+
+        <div id="balanceContainer" class="container-fluid text-center">
+            <p id="balanceText"></p>
+        </div>
+
+        <div id="statusContainer" class="container-fluid text-center">
+            <p id="statusText"></p>
+        </div>
+
+        <div id="provChoiceContainer" class="container-fluid text-center">
+            <form id="provChoiceForm" class="container-fluid text-center  w-50">
+                <table id="provChoiceTable" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Address and Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody id="provChoiceBody">   
+                    </tbody>
+                </table>
+                <input type="text" id="provChoiceValue" class="form-control" placeholder="Type # of your choice">
+                <br />
+                <button type="button" class="btn btn-secondary" id="provChoiceSubmit">Submit Choice</button>
+                <br />
+                <br />
+            </form>
+        </div>
+
+        <div id="valChoiceContainer" class="container-fluid text-center">
+            <form id="valChoiceForm" class="container-fluid text-center  w-50">
+                <table id="valChoiceTable" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Address and Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody id="valChoiceBody">   
+                    </tbody>
+                </table>
+                <input type="text" id="valChoiceValue" class="form-control" placeholder="Type # of your choice">
+                <br />
+                <button type="button" class="btn btn-secondary" id="valChoiceSubmit">Submit Choice</button>
+                <br />
+                <br />
+            </form>
+        </div>
+
+        <div id="ratingContainer" class="container-fluid text-center">
+            <form id="ratingForm" class="container-fluid text-center  w-50">
+                <p>Please submit a rating from 1-100 for your provider.</p>
+                <input type="text" id="ratingValue" class="form-control" placeholder="Type your rating for your provider from 1-100.">
+                <br />
+                <button type="button" class="btn btn-secondary" id="ratingSubmit">Submit Rating</button>
+                <br />
+                <br />
+            </form>
+        </div>
+
+        <div class="container-fluid text-center  w-75" id="poolSelect">
+            <h2 class="text-center">
+                Select A Pool:
+            </h2>
+                <div class="btn-group" role="group" id="poolSelectBar">
+                        <button type="button" class="btn btn-secondary" id="pendingPoolSel">Pending Pool</button>
+                        <button type="button" class="btn btn-secondary" id="providerPoolSel">Provider Pool</button>
+                        <button type="button" class="btn btn-secondary" id="providingPoolSel">Providing Pool</button>
+                        <button type="button" class="btn btn-secondary" id="validatingPoolSel">Validation Pool</button>
+                        <button type="button" class="btn btn-secondary selected" id="nonePoolSel">none</button>
+                </div>    
+        </div>
+        <div id="poolContainer" class="container-fluid text-center  w-75">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Request Address</th>
+                    </tr>
+                </thead>
+                <tbody id="poolBody">   
+                </tbody>
+            </table>
+        </div>
+        
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="ui.js"></script>
+        <div class="container-fluid text-center">
+            
+          </div>
+    </body>
+</html>

@@ -1,0 +1,2 @@
+
+CPU usage is 1.88%, memory usage is 15932 MB and the CLI ran for 25 s
