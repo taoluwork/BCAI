@@ -1,3 +1,9 @@
+/*
+This is the javascript for the user web page.
+Its major purpose is to make requests to the CLI node.js and modify elements of the web page based on the results.
+It also makes requests to the CLI to submit things such as starting a task and choosing provider/validator.
+*/
+
 //load packages
 //variables
 var addresses = [];

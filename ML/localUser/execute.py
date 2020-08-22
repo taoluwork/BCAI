@@ -1,3 +1,6 @@
+#This is the python script for user, one of two major components.
+#It is used to set up file hosting using onionshare and make a GET request to an onionshare address.
+
 import os
 import sys
 import requests as r

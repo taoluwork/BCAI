@@ -1,3 +1,7 @@
+#This is the python script for worker, one of two major components.
+#It is used to set up file hosting using onionshare and make a GET request to an onionshare address.
+#It also is where the execution of the task file takes place in function dockerExe()
+
 import os
 import sys
 import requests as r
