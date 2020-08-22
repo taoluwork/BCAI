@@ -1,4 +1,0 @@
-Tests while internet is off : 100
-Number of failed connections: 100
-Tests while internet is on  : 100
-Number of good connections  : 100

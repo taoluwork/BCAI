@@ -1,2 +1,0 @@
-average CPU usage:22.975510204081633
-average MEM usage:13.577551020408158

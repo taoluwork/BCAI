@@ -1,7 +1,0 @@
-Feb 16, 2019
-v2.0 to v2.0.1
-0. comments added on top
-1. use updateProvider() within startProviding
-2. change systemInfo name in stopProviding() "unable" and updateProvider, added return
-3. added similar events to requestUpdate and requestStop
-4. Hard-coded # of validations needed to 3. (line 154)

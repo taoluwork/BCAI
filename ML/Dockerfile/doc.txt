@@ -1,8 +1,0 @@
-Rules:
-	The script must be written in python3
-	The script must be named execute.py
-	The script must allow for a single integer command line argument:
-		if the input is 0 then the program should train the model
-		If the input is 1 then the program should evaluate the model
-	Any packages must be written in the requirements.txt file
-		Note this must use the pip3 file based install format
