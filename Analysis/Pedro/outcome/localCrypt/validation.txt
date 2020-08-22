@@ -1,2 +1,0 @@
-Total Tests:   1000
-Total Correct: 1000
